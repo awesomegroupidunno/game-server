@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 )
 
 type UdpReceiver struct {
@@ -34,6 +35,8 @@ func (u *UdpReceiver) start() {
 			go sendResponse(connection, remoteAddress, buffer)
 
 		} else {
+			log.Println(udpReadError)
+			connection.SetWriteDeadline(1*time.Second)
 			connection.WriteToUDP([]byte("error "), remoteAddress)
 		}
 	}
@@ -42,5 +45,6 @@ func (u *UdpReceiver) start() {
 
 func sendResponse(conn *net.UDPConn, addr *net.UDPAddr, message []byte) {
 	fmt.Println(string(message))
+	conn.SetWriteDeadline(1*time.Second)
 	conn.WriteToUDP([]byte("Yes!!"), addr)
 }
