@@ -7,16 +7,30 @@ import (
 	"time"
 )
 
+const default_max_packet = 8192
+const default_port = ":10001"
+
 type UdpReceiver struct {
 	PortNumber string
+	MaxPacket  int
 }
 
 func (u *UdpReceiver) Run() {
+
+	if u.MaxPacket == nil || u.MaxPacket == 0 {
+		u.MaxPacket = default_max_packet
+	}
+
+	if u.PortNumber == nil {
+		u.PortNumber = default_port
+	}
+
 	go u.start()
 }
 
 func (u *UdpReceiver) start() {
 	server_address, err_add := net.ResolveUDPAddr("udp", u.PortNumber)
+
 	if err_add != nil {
 		log.Fatal(err_add)
 	}
@@ -28,7 +42,7 @@ func (u *UdpReceiver) start() {
 	}
 
 	for {
-		buffer := make([]byte, 2048)
+		buffer := make([]byte, u.MaxPacket)
 		_, remoteAddress, udpReadError := connection.ReadFromUDP(buffer)
 
 		if udpReadError == nil {
@@ -36,8 +50,7 @@ func (u *UdpReceiver) start() {
 
 		} else {
 			log.Println(udpReadError)
-			deadline := time.Now().Add(time.Second *1)
-			connection.SetWriteDeadline(deadline)
+			connection.SetWriteDeadline(time.Now().Add(time.Second * 1))
 			connection.WriteToUDP([]byte("error "), remoteAddress)
 		}
 	}
@@ -46,7 +59,6 @@ func (u *UdpReceiver) start() {
 
 func sendResponse(conn *net.UDPConn, addr *net.UDPAddr, message []byte) {
 	fmt.Println(string(message))
-	deadline := time.Now().Add(time.Second *1)
-	conn.SetWriteDeadline(deadline)
+	conn.SetWriteDeadline(time.Now().Add(time.Second * 1))
 	conn.WriteToUDP([]byte("Yes!!"), addr)
 }
