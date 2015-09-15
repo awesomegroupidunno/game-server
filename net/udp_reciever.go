@@ -17,11 +17,11 @@ type UdpReceiver struct {
 
 func (u *UdpReceiver) Run() {
 
-	if u.MaxPacket == nil || u.MaxPacket == 0 {
+	if u.MaxPacket == 0 {
 		u.MaxPacket = default_max_packet
 	}
 
-	if u.PortNumber == nil {
+	if u.PortNumber == "" {
 		u.PortNumber = default_port
 	}
 
