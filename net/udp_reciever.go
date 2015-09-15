@@ -36,7 +36,8 @@ func (u *UdpReceiver) start() {
 
 		} else {
 			log.Println(udpReadError)
-			connection.SetWriteDeadline(1*time.Second)
+			deadline := time.Now().Add(time.Second *1)
+			connection.SetWriteDeadline(deadline)
 			connection.WriteToUDP([]byte("error "), remoteAddress)
 		}
 	}
@@ -45,6 +46,7 @@ func (u *UdpReceiver) start() {
 
 func sendResponse(conn *net.UDPConn, addr *net.UDPAddr, message []byte) {
 	fmt.Println(string(message))
-	conn.SetWriteDeadline(1*time.Second)
+	deadline := time.Now().Add(time.Second *1)
+	conn.SetWriteDeadline(deadline)
 	conn.WriteToUDP([]byte("Yes!!"), addr)
 }
