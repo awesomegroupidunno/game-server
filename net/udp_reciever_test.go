@@ -7,7 +7,7 @@ import (
 
 func TestBasic(t *testing.T) {
 	Convey("Basic Test", t, func() {
-		a:=UdpReceiver{PortNumber:"1234"}
+		a := UdpReceiver{PortNumber: "1234"}
 		So(a.PortNumber, ShouldEqual, "1234")
 
 	})

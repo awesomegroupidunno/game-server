@@ -6,8 +6,9 @@ import (
 )
 
 func main() {
-	fmt.Println("hello world")
-	a:= net.UdpReceiver{PortNumber:":10001"}
-	fmt.Println(a)
-	a.Start();
+	a := net.UdpReceiver{PortNumber: ":10001"}
+	a.Run()
+
+	i:=0
+	fmt.Scanf("%i", i)
 }
