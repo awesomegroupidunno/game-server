@@ -14,12 +14,10 @@ const message = "Hi "
 
 func main() {
 
+	//get connection to host and sets a timeout for connection when completed
+	conn, err := net.DialTimeout("udp", host, 1*time.Second)
 	for i := 0; i < 1200; i++ {
 		response := make([]byte, 2048)
-
-		//get connection to host and sets a timeout for connection when completed
-		conn, err := net.DialTimeout("udp", host, 1*time.Second)
-		conn.SetDeadline(time.Now().Add(time.Second * seconds_timeout))
 
 		if err != nil {
 			log.Print(err)
@@ -36,7 +34,8 @@ func main() {
 				log.Println(err)
 			}
 		}
-
-		conn.Close()
 	}
+
+	conn.Close()
+
 }

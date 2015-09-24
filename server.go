@@ -8,7 +8,7 @@ import (
 
 func main() {
 
-	decoder := encoder.JsonDecoder{}
+	decoder := encoder.JsonEncoderDecoder{}
 	a := net.UdpReceiver{PortNumber: ":10001", MaxPacket: 8192, EncoderDecoder: &decoder}
 	a.Run()
 
