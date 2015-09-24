@@ -6,14 +6,15 @@ import (
 	"github.com/awesomegroupidunno/game-server/state"
 )
 
-type JsonDecoder struct {
+type JsonEncoderDecoder struct {
+	Tag string
 }
 
-func (j *JsonDecoder) Encode(state state.GameState) ([]byte, error) {
+func (j *JsonEncoderDecoder) Encode(state state.GameState) ([]byte, error) {
 	val, err := json.Marshal(state)
 	return val, err
 }
 
-func (j *JsonDecoder) Decode(b []byte) (cmd.Command, error) {
-	return make([]byte, 1024)
+func (j *JsonEncoderDecoder) Decode(b []byte) (cmd.Command, error) {
+	return cmd.Command{Type:"GET"}, nil
 }
