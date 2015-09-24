@@ -1,18 +1,18 @@
 package net
 
 import (
-	"fmt"
+	"github.com/awesomegroupidunno/game-server/encoder"
 	"log"
 	"net"
-	"time"
 )
 
 const default_max_packet = 8192
 const default_port = ":10001"
 
 type UdpReceiver struct {
-	PortNumber string
-	MaxPacket  int
+	PortNumber     string
+	MaxPacket      int
+	EncoderDecoder encoder.EncoderDecoder
 }
 
 func (u *UdpReceiver) Run() {
@@ -24,7 +24,6 @@ func (u *UdpReceiver) Run() {
 	if u.PortNumber == "" {
 		u.PortNumber = default_port
 	}
-
 	go u.start()
 }
 
@@ -42,23 +41,22 @@ func (u *UdpReceiver) start() {
 	}
 
 	for {
-		buffer := make([]byte, u.MaxPacket)
-		_, remoteAddress, udpReadError := connection.ReadFromUDP(buffer)
-
-		if udpReadError == nil {
-			go sendResponse(connection, remoteAddress, buffer)
-
-		} else {
-			log.Println(udpReadError)
-			connection.SetWriteDeadline(time.Now().Add(time.Second * 1))
-			connection.WriteToUDP([]byte("error "), remoteAddress)
-		}
+		u.handleUdp(connection)
 	}
 
 }
 
-func sendResponse(conn *net.UDPConn, addr *net.UDPAddr, message []byte) {
-	fmt.Println(string(message))
-	conn.SetWriteDeadline(time.Now().Add(time.Second * 1))
-	conn.WriteToUDP([]byte("Yes!!"), addr)
+func (u *UdpReceiver) handleUdp(conn *net.UDPConn) {
+	buffer := make([]byte, u.MaxPacket)
+
+	n, address, readError := conn.ReadFromUDP(buffer[0:])
+
+	if readError == nil {
+		conn.WriteToUDP([]byte("Ack"), address)
+	} else {
+		log.Println(readError)
+		log.Println(n)
+		log.Println(address)
+	}
+
 }
