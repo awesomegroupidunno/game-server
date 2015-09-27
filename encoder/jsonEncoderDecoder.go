@@ -16,5 +16,7 @@ func (j *JsonEncoderDecoder) Encode(state state.GameState) ([]byte, error) {
 }
 
 func (j *JsonEncoderDecoder) Decode(b []byte) (cmd.Command, error) {
-	return cmd.Command{Type:"GET"}, nil
+	c := cmd.Command{}
+	error := json.Unmarshal(b, &c)
+	return c, error
 }
