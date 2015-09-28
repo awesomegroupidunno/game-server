@@ -1,12 +1,12 @@
 package encoder_test
 
 import (
+	"encoding/json"
+	"github.com/awesomegroupidunno/game-server/cmd"
 	"github.com/awesomegroupidunno/game-server/encoder"
+	"github.com/awesomegroupidunno/game-server/state"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
-	"github.com/awesomegroupidunno/game-server/cmd"
-	"encoding/json"
-	"github.com/awesomegroupidunno/game-server/state"
 )
 
 func TestInstantiation(t *testing.T) {
@@ -20,7 +20,7 @@ func TestDecode(t *testing.T) {
 	Convey("Decode", t, func() {
 		formatter := encoder.JsonEncoderDecoder{Tag: "DecodeTest"}
 
-		data := cmd.Command{Type:"GET", Subtype:"STATE", UniqueId:"ABC123"}
+		data := cmd.Command{Type: "GET", Subtype: "STATE", UniqueId: "ABC123"}
 		buffer, error := json.Marshal(data)
 
 		command, error := formatter.Decode(buffer)
@@ -35,7 +35,7 @@ func TestDecode(t *testing.T) {
 func TestEncode(t *testing.T) {
 	Convey("Encode", t, func() {
 		formatter := encoder.JsonEncoderDecoder{Tag: "EncodeTest"}
-		data := state.GameState{Val:"test Val"}
+		data := state.GameState{Val: "test Val"}
 
 		decoded := state.GameState{}
 

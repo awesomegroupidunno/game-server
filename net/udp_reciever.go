@@ -57,7 +57,7 @@ func (u *UdpReceiver) handleUdp(conn *net.UDPConn) {
 	n, address, readError := conn.ReadFromUDP(buffer)
 	a, encode_error := u.EncoderDecoder.Decode(buffer[:n])
 
-	if readError == nil && encode_error == nil{
+	if readError == nil && encode_error == nil {
 		log.Println(a)
 		conn.WriteToUDP([]byte("Ack"), address)
 	} else {

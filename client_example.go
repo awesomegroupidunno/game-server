@@ -2,17 +2,16 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
+	"github.com/awesomegroupidunno/game-server/cmd"
 	"log"
 	"net"
 	"time"
-	"encoding/json"
-	"github.com/awesomegroupidunno/game-server/cmd"
 )
 
 const host = "127.0.0.1:10001"
 const seconds_timeout = 2
-const message = "Hi "
 
 func main() {
 
@@ -24,11 +23,8 @@ func main() {
 		if err != nil {
 			log.Print(err)
 		} else {
-			goodmess, err := json.Marshal(&cmd.Command{Type:"GET", Subtype:"STATE", UniqueId:"ABC123"})
-			//sends message to server
-			//fmt.Fprintf(conn, goodmess, i)
-			conn.Write(goodmess)
-
+			message, err := json.Marshal(&cmd.Command{Type: "GET", Subtype: "STATE", UniqueId: "ABC123"})
+			conn.Write(message)
 
 			_, err = bufio.NewReader(conn).Read(response)
 
