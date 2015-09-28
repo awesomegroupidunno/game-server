@@ -24,6 +24,11 @@ func (u *UdpReceiver) Run() {
 	if u.PortNumber == "" {
 		u.PortNumber = default_port
 	}
+
+	if u.EncoderDecoder == nil {
+		u.EncoderDecoder = &encoder.JsonEncoderDecoder{Tag: "Default"}
+	}
+
 	go u.start()
 }
 
@@ -49,13 +54,15 @@ func (u *UdpReceiver) start() {
 func (u *UdpReceiver) handleUdp(conn *net.UDPConn) {
 	buffer := make([]byte, u.MaxPacket)
 
-	n, address, readError := conn.ReadFromUDP(buffer[0:])
+	n, address, readError := conn.ReadFromUDP(buffer)
+	a, encode_error := u.EncoderDecoder.Decode(buffer[:n])
 
-	if readError == nil {
+	if readError == nil && encode_error == nil{
+		log.Println(a)
 		conn.WriteToUDP([]byte("Ack"), address)
 	} else {
 		log.Println(readError)
-		log.Println(n)
+		log.Println(encode_error)
 		log.Println(address)
 	}
 

@@ -6,6 +6,8 @@ import (
 	"log"
 	"net"
 	"time"
+	"encoding/json"
+	"github.com/awesomegroupidunno/game-server/cmd"
 )
 
 const host = "127.0.0.1:10001"
@@ -22,9 +24,11 @@ func main() {
 		if err != nil {
 			log.Print(err)
 		} else {
-
+			goodmess, err := json.Marshal(&cmd.Command{Type:"GET", Subtype:"STATE", UniqueId:"ABC123"})
 			//sends message to server
-			fmt.Fprintf(conn, message, i)
+			//fmt.Fprintf(conn, goodmess, i)
+			conn.Write(goodmess)
+
 
 			_, err = bufio.NewReader(conn).Read(response)
 
