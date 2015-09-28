@@ -3,8 +3,8 @@ package state
 type Vehicle struct {
 	X             int
 	Y             int
-	Velocity      FloatType
-	Angle         FloatType
+	Velocity      float32
+	Angle         float32
 	Endurance     int
 	Team_id       int
 	Max_health    int

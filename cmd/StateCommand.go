@@ -4,6 +4,6 @@ type StateCommand struct {
 	Command
 }
 
-func newState(v FloatType) StateCommand {
+func newState() StateCommand {
 	return StateCommand{Command{Type: "GET", Subtype: "STATE"}}
 }

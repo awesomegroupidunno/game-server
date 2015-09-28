@@ -1,10 +1,10 @@
 package cmd
 
-type Acceleration struct {
-	value FloatType
+type AccelerationCommand struct {
 	Command
+	Value float32
 }
 
-func newAcceleration(v FloatType) Acceleration {
-	return TurnCommand{Command{Type: "POST", Subtype: "ACCELERATION"}, value: v}
+func newAcceleration(v float32) AccelerationCommand {
+	return AccelerationCommand{Command{Type: "POST", Subtype: "ACCELERATION", UniqueId: ""}, v}
 }
