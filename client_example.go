@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/awesomegroupidunno/game-server/cmd"
 	"log"
+	"math/rand"
 	"net"
 	"time"
 )
@@ -23,7 +24,22 @@ func main() {
 		if err != nil {
 			log.Print(err)
 		} else {
-			message, err := json.Marshal(&cmd.Command{Type: "GET", Subtype: "STATE", UniqueId: "ABC123"})
+			var message []byte
+
+			randType := rand.Intn(3)
+			if randType == 0 {
+				a := cmd.NewTurn(.5)
+				message, err = json.Marshal(a)
+			}
+			if randType == 1 {
+				a := cmd.NewAcceleration(.5)
+				message, err = json.Marshal(a)
+			}
+			if randType == 2 {
+				a := cmd.NewState()
+				message, err = json.Marshal(a)
+			}
+
 			conn.Write(message)
 
 			_, err = bufio.NewReader(conn).Read(response)

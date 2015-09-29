@@ -7,5 +7,5 @@ import (
 
 type EncoderDecoder interface {
 	Encode(state state.GameState) ([]byte, error)
-	Decode(b []byte) (cmd.Command, error)
+	Decode(b []byte) (cmd.GameCommand, error)
 }

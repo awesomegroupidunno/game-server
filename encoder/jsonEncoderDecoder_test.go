@@ -20,15 +20,15 @@ func TestDecode(t *testing.T) {
 	Convey("Decode", t, func() {
 		formatter := encoder.JsonEncoderDecoder{Tag: "DecodeTest"}
 
-		data := cmd.Command{Type: "GET", Subtype: "STATE", UniqueId: "ABC123"}
+		data := cmd.BaseCommand{Type: "GET", Subtype: "STATE", UniqueId: "ABC123"}
 		buffer, error := json.Marshal(data)
 
 		command, error := formatter.Decode(buffer)
 
 		So(error, ShouldEqual, nil)
-		So(command.Type, ShouldEqual, "GET")
-		So(command.Subtype, ShouldEqual, "STATE")
-		So(command.UniqueId, ShouldEqual, "ABC123")
+		So(command.Command().Type, ShouldEqual, "GET")
+		So(command.Command().Subtype, ShouldEqual, "STATE")
+		So(command.Command().UniqueId, ShouldEqual, "ABC123")
 	})
 }
 
