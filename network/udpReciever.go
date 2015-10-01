@@ -62,10 +62,12 @@ func (u *UdpReceiver) startReceiver() {
 		u.receiveUdp()
 	}
 }
+
+// writes gamestate back to client
 func (u *UdpReceiver) startSender() {
 	for {
 		state := <-u.Responses
-		buffer, error := u.EncoderDecoder.Encode(state.GameState)
+		buffer, error := u.EncoderDecoder.Encode(state.State)
 
 		if error == nil {
 			u.connection.WriteToUDP(buffer, state.Address)
@@ -75,15 +77,16 @@ func (u *UdpReceiver) startSender() {
 		}
 	}
 }
+
+// writes acks back to client
 func (u *UdpReceiver) startAcker() {
 	for {
 		ack := <-u.Acks
-		log.Println("AckerRead")
-
 		u.connection.WriteToUDP([]byte(ack.Uuid), ack.Address)
 	}
 }
 
+// listens for new udp packets
 func (u *UdpReceiver) receiveUdp() {
 	buffer := make([]byte, u.MaxPacket)
 
@@ -93,7 +96,6 @@ func (u *UdpReceiver) receiveUdp() {
 	if readError == nil && encode_error == nil {
 		log.Println(a)
 		u.Router.RouteCommand(&a, address)
-		//u.connection.WriteToUDP([]byte(a.Command().UniqueId), address)
 	} else {
 		log.Println(readError)
 		log.Println(encode_error)

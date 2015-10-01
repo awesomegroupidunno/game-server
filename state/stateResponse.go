@@ -5,6 +5,6 @@ import (
 )
 
 type StateResponse struct {
-	GameState
+	State   GameState
 	Address *net.UDPAddr
 }

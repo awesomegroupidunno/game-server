@@ -7,8 +7,9 @@ import (
 )
 
 type CommandRouter struct {
-	Responses chan state.StateResponse
-	Acks      chan state.Ack
+	Responses   chan state.StateResponse
+	Acks        chan state.Ack
+	GameManager GameManager
 }
 
 func (r *CommandRouter) RouteCommand(c *cmd.GameCommand, address *net.UDPAddr) {
@@ -22,7 +23,8 @@ func (r *CommandRouter) RouteCommand(c *cmd.GameCommand, address *net.UDPAddr) {
 }
 
 func (r *CommandRouter) routeGet(c *cmd.GameCommand, address *net.UDPAddr) {
-	r.Acks <- state.Ack{Uuid: (*c).Command().UniqueId, Address: address}
+	currentState := r.GameManager.TakeState()
+	r.Responses <- state.StateResponse{State: currentState, Address: address}
 }
 func (r *CommandRouter) routePost(c *cmd.GameCommand, address *net.UDPAddr) {
 	r.Acks <- state.Ack{Uuid: (*c).Command().UniqueId, Address: address}
