@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/awesomegroupidunno/game-server/cmd"
+	"github.com/pborman/uuid"
 	"log"
 	"math/rand"
 	"net"
@@ -26,17 +27,22 @@ func main() {
 		} else {
 			var message []byte
 
+			uuid := uuid.NewUUID().String()
+
 			randType := rand.Intn(3)
 			if randType == 0 {
 				a := cmd.NewTurn(.5)
+				a.UniqueId = uuid
 				message, err = json.Marshal(a)
 			}
 			if randType == 1 {
 				a := cmd.NewAcceleration(.5)
+				a.UniqueId = uuid
 				message, err = json.Marshal(a)
 			}
 			if randType == 2 {
 				a := cmd.NewState()
+				a.UniqueId = uuid
 				message, err = json.Marshal(a)
 			}
 
