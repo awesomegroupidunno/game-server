@@ -18,11 +18,13 @@ func (j *JsonEncoderDecoder) Encode(state state.GameState) ([]byte, error) {
 
 func (j *JsonEncoderDecoder) Decode(b []byte) (cmd.GameCommand, error) {
 	c := cmd.BaseCommand{}
+
 	error := json.Unmarshal(b, &c)
 	fmt.Println(string(b))
 
 	if c.Type == "GET" {
-		if c.Subtype == "STATE" {
+		switch c.Subtype {
+		case "STATE":
 			s := cmd.StateCommand{}
 			e := json.Unmarshal(b, &s)
 			return &s, e
@@ -30,18 +32,17 @@ func (j *JsonEncoderDecoder) Decode(b []byte) (cmd.GameCommand, error) {
 	}
 
 	if c.Type == "POST" {
-
-		if c.Subtype == "TURN" {
+		switch c.Subtype {
+		case "TURN":
 			s := cmd.TurnCommand{}
 			e := json.Unmarshal(b, &s)
 			return &s, e
-		}
-
-		if c.Subtype == "ACCELERATION" {
+		case "ACCELERATION":
 			s := cmd.AccelerationCommand{}
 			e := json.Unmarshal(b, &s)
 			return &s, e
 		}
+
 	}
 	return &c, error
 }

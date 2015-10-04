@@ -5,4 +5,5 @@ type GameState struct {
 	Vehicles        []Vehicle
 	Bases           []Base
 	ShieldGenerator []ShieldGenerator
+	GameOver        bool
 }
