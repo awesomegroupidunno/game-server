@@ -35,4 +35,6 @@ func main() {
 
 	i := 0
 	fmt.Scanf("%i", i)
+	log.Println("Shutting down")
+
 }
