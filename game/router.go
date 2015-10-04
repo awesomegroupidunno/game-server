@@ -9,7 +9,7 @@ import (
 type CommandRouter struct {
 	Responses   chan state.StateResponse
 	Acks        chan state.Ack
-	GameManager GameManager
+	GameManager *GameManager
 }
 
 func (r *CommandRouter) RouteCommand(c *cmd.GameCommand, address *net.UDPAddr) {

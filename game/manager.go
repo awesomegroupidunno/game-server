@@ -17,15 +17,18 @@ type GameManager struct {
 	stateMutex        sync.Mutex
 	commandMutex      sync.Mutex
 	gameState         state.GameState
-	commandsToProcess []cmd.GameCommand
+	commandsToProcess []*cmd.GameCommand
 	commandFactory    processor.CommandProcessorFactory
 }
 
 func (g *GameManager) Start() {
 	g.stateMutex = sync.Mutex{}
 	g.commandMutex = sync.Mutex{}
+	g.commandMutex.Lock()
 
-	g.commandsToProcess = make([]cmd.GameCommand, 0, 100)
+	g.commandsToProcess = []*cmd.GameCommand{}
+
+	g.commandMutex.Unlock()
 
 	g.isStarted = true
 	g.isPaused = false
@@ -49,9 +52,7 @@ func (g *GameManager) Resume() {
 }
 func (g *GameManager) AddCommand(c cmd.GameCommand) {
 	g.commandMutex.Lock()
-	g.commandsToProcess = append(g.commandsToProcess, c)
-	i := len(g.commandsToProcess)
-	log.Println(i)
+	g.commandsToProcess = append(g.commandsToProcess, &c)
 	g.commandMutex.Unlock()
 }
 func (g *GameManager) TakeState() state.GameState {
@@ -61,11 +62,12 @@ func (g *GameManager) TakeState() state.GameState {
 }
 func (g *GameManager) tick() {
 	g.commandMutex.Lock()
-
-	//copy(commands[:], g.commandsToProcess[:i])
+	commands := g.commandsToProcess
+	g.commandsToProcess = g.commandsToProcess[:0]
 	g.commandMutex.Unlock()
-	if len(g.commandsToProcess) > 0 {
-		log.Printf("Instance size %i", len(g.commandsToProcess))
+
+	if len(commands) > 0 {
+		log.Printf("Ticking with %d commands", len(commands))
 	}
 
 	g.stateMutex.Lock()

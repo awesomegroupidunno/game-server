@@ -26,7 +26,7 @@ func main() {
 	state_channel := make(chan state.StateResponse, 100)
 	log.Println("State channel created")
 
-	router := game.CommandRouter{Acks: ack_channel, Responses: state_channel, GameManager: manager}
+	router := game.CommandRouter{Acks: ack_channel, Responses: state_channel, GameManager: &manager}
 	log.Println("Router created")
 
 	a := network.UdpReceiver{PortNumber: ":10001", MaxPacket: 8192, EncoderDecoder: &decoder, Router: router, Acks: ack_channel, Responses: state_channel}
