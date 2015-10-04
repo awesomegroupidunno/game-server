@@ -50,9 +50,8 @@ func (g *GameManager) AddCommand(c cmd.GameCommand) {
 }
 func (g *GameManager) TakeState() state.GameState {
 	g.stateMutex.Lock()
-	a := g.gameState
-	g.stateMutex.Unlock()
-	return a
+	defer g.stateMutex.Unlock()
+	return g.gameState
 }
 func (g *GameManager) tick() {
 

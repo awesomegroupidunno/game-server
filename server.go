@@ -1,15 +1,18 @@
 package main
 
 import (
-	"fmt"
 	"github.com/awesomegroupidunno/game-server/encoder"
 	"github.com/awesomegroupidunno/game-server/game"
 	"github.com/awesomegroupidunno/game-server/network"
 	"github.com/awesomegroupidunno/game-server/state"
 	"log"
+	"sync"
 )
 
 func main() {
+
+	var waiter sync.WaitGroup
+	waiter.Add(1)
 	log.Println("Server starting up")
 	decoder := encoder.JsonEncoderDecoder{}
 	log.Println("Encoder created")
@@ -30,11 +33,9 @@ func main() {
 	log.Println("Udp reciever created")
 
 	a.Run()
-	log.Println("Udp reciever running, enter a number to shutdown")
+	log.Println("Udp reciever running, press ctr+c to shutdown")
 
-
-	i := 0
-	fmt.Scanf("%i", i)
+	waiter.Wait()
 	log.Println("Shutting down")
 
 }
