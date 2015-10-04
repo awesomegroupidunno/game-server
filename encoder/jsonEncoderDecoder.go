@@ -2,7 +2,6 @@ package encoder
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/awesomegroupidunno/game-server/cmd"
 	"github.com/awesomegroupidunno/game-server/state"
 )
@@ -20,7 +19,6 @@ func (j *JsonEncoderDecoder) Decode(b []byte) (cmd.GameCommand, error) {
 	c := cmd.BaseCommand{}
 
 	error := json.Unmarshal(b, &c)
-	fmt.Println(string(b))
 
 	if c.Type == "GET" {
 		switch c.Subtype {
