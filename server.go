@@ -31,6 +31,8 @@ func main() {
 
 	a := network.UdpReceiver{PortNumber: ":10001", MaxPacket: 8192, EncoderDecoder: &decoder, Router: router, Acks: ack_channel, Responses: state_channel}
 	log.Println("Udp reciever created")
+	go manager.Start()
+	log.Println("Gamemanager started")
 
 	a.Run()
 	log.Println("Udp reciever running, press ctr+c to shutdown")

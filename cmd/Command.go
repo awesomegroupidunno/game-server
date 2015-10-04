@@ -1,5 +1,8 @@
 package cmd
 
+const Post = "POST"
+const Get = "GET"
+
 type BaseCommand struct {
 	Type     string `json:"Type"`
 	Subtype  string `json:"Subtype"`

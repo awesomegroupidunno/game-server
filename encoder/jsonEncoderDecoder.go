@@ -20,22 +20,22 @@ func (j *JsonEncoderDecoder) Decode(b []byte) (cmd.GameCommand, error) {
 
 	error := json.Unmarshal(b, &c)
 
-	if c.Type == "GET" {
+	if c.Type == cmd.Get {
 		switch c.Subtype {
-		case "STATE":
+		case cmd.State:
 			s := cmd.StateCommand{}
 			e := json.Unmarshal(b, &s)
 			return &s, e
 		}
 	}
 
-	if c.Type == "POST" {
+	if c.Type == cmd.Post {
 		switch c.Subtype {
-		case "TURN":
+		case cmd.Turn:
 			s := cmd.TurnCommand{}
 			e := json.Unmarshal(b, &s)
 			return &s, e
-		case "ACCELERATION":
+		case cmd.Acceleration:
 			s := cmd.AccelerationCommand{}
 			e := json.Unmarshal(b, &s)
 			return &s, e

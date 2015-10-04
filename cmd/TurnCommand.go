@@ -1,12 +1,14 @@
 package cmd
 
+const Turn = "TURN"
+
 type TurnCommand struct {
 	BaseCommand
 	Value float32
 }
 
 func NewTurn(v float32) TurnCommand {
-	tc := TurnCommand{BaseCommand{Type: "POST", Subtype: "TURN", UniqueId: ""}, v}
+	tc := TurnCommand{BaseCommand{Type: Post, Subtype: Turn, UniqueId: ""}, v}
 	return tc
 }
 
