@@ -9,7 +9,8 @@ import (
 	"time"
 )
 
-var managerLock sync.Mutex
+var stateMutex sync.Mutex
+var commandsMutex sync.Mutex
 
 type GameManager struct {
 	startTime         time.Time
@@ -22,7 +23,8 @@ type GameManager struct {
 }
 
 func (g *GameManager) Start() {
-	managerLock.Lock()
+	stateMutex.Lock()
+	commandsMutex.Lock()
 
 	g.commandsToProcess = []*cmd.GameCommand{}
 	g.gameState = state.GameState{}
@@ -30,7 +32,8 @@ func (g *GameManager) Start() {
 	g.isPaused = false
 	g.startTime = time.Now()
 
-	managerLock.Unlock()
+	commandsMutex.Unlock()
+	stateMutex.Unlock()
 
 	for g.isStarted && !g.isPaused && !g.gameState.GameOver {
 		g.tick()
@@ -39,34 +42,37 @@ func (g *GameManager) Start() {
 
 }
 func (g *GameManager) Pause() {
-	managerLock.Lock()
+	stateMutex.Lock()
 	g.isPaused = true
-	managerLock.Unlock()
+	stateMutex.Unlock()
 }
 func (g *GameManager) Resume() {
-	managerLock.Lock()
+	stateMutex.Lock()
 	g.isPaused = false
-	managerLock.Unlock()
+	stateMutex.Unlock()
 }
 func (g *GameManager) AddCommand(c cmd.GameCommand) {
-	managerLock.Lock()
+	commandsMutex.Lock()
 	g.commandsToProcess = append(g.commandsToProcess, &c)
-	managerLock.Unlock()
+	commandsMutex.Unlock()
 }
 func (g *GameManager) TakeState() state.GameState {
-	managerLock.Lock()
+	stateMutex.Lock()
 	a := g.gameState.Copy()
-	managerLock.Unlock()
+	stateMutex.Unlock()
 	return a
 }
 func (g *GameManager) tick() {
-	managerLock.Lock()
+	commandsMutex.Lock()
 	commands := g.commandsToProcess
 	g.commandsToProcess = g.commandsToProcess[:0]
-	managerLock.Unlock()
+	commandsMutex.Unlock()
 
 	if len(commands) > 0 {
 		log.Printf("Ticking with %d commands", len(commands))
 	}
+
+	stateMutex.Lock()
+	stateMutex.Unlock()
 
 }
