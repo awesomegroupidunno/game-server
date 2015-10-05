@@ -14,21 +14,24 @@ type GameManager struct {
 	lastTick          time.Time
 	isStarted         bool
 	isPaused          bool
-	stateMutex        sync.Mutex
-	commandMutex      sync.Mutex
+	stateMutex        *sync.Mutex
+	commandMutex      *sync.Mutex
 	gameState         state.GameState
 	commandsToProcess []*cmd.GameCommand
 	commandFactory    processor.CommandProcessorFactory
 }
 
 func (g *GameManager) Start() {
-	g.stateMutex = sync.Mutex{}
-	g.commandMutex = sync.Mutex{}
+	g.stateMutex = &sync.Mutex{}
+	g.commandMutex = &sync.Mutex{}
+
 	g.commandMutex.Lock()
-
 	g.commandsToProcess = []*cmd.GameCommand{}
-
 	g.commandMutex.Unlock()
+
+	g.stateMutex.Lock()
+	g.gameState = state.GameState{}
+	g.stateMutex.Unlock()
 
 	g.isStarted = true
 	g.isPaused = false
@@ -57,8 +60,9 @@ func (g *GameManager) AddCommand(c cmd.GameCommand) {
 }
 func (g *GameManager) TakeState() state.GameState {
 	g.stateMutex.Lock()
-	defer g.stateMutex.Unlock()
-	return g.gameState
+	a := g.gameState.Copy()
+	g.stateMutex.Unlock()
+	return a
 }
 func (g *GameManager) tick() {
 	g.commandMutex.Lock()
