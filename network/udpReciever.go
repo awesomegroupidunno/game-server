@@ -6,10 +6,13 @@ import (
 	"github.com/awesomegroupidunno/game-server/state"
 	"log"
 	"net"
+	"sync"
 )
 
 const default_max_packet = 8192
 const default_port = ":10001"
+
+var clientMutex sync.Mutex
 
 type UdpReceiver struct {
 	PortNumber     string
@@ -19,6 +22,7 @@ type UdpReceiver struct {
 	Router         game.CommandRouter
 	Responses      chan state.StateResponse
 	Acks           chan state.Ack
+	clients        map[string]*net.UDPAddr
 }
 
 func (u *UdpReceiver) Run() {
@@ -34,6 +38,9 @@ func (u *UdpReceiver) Run() {
 	if u.EncoderDecoder == nil {
 		u.EncoderDecoder = &encoder.JsonEncoderDecoder{Tag: "Default"}
 	}
+	clientMutex.Lock()
+	u.clients = map[string]*net.UDPAddr{}
+	clientMutex.Unlock()
 
 	u.start()
 }
@@ -69,12 +76,17 @@ func (u *UdpReceiver) startSender() {
 		state := <-u.Responses
 		buffer, error := u.EncoderDecoder.Encode(state.State)
 
-		if error == nil {
-			u.connection.WriteToUDP(buffer, state.Address)
-		} else {
-			log.Println(error)
-			u.connection.WriteToUDP([]byte("error"), state.Address)
+		clientMutex.Lock()
+		for c := range u.clients {
+			client := u.clients[c]
+			if error == nil {
+				u.connection.WriteToUDP(buffer, client)
+			} else {
+				log.Println(error)
+				u.connection.WriteToUDP([]byte("error"), client)
+			}
 		}
+		clientMutex.Unlock()
 	}
 }
 
@@ -92,6 +104,10 @@ func (u *UdpReceiver) receiveUdp() {
 
 	n, address, readError := u.connection.ReadFromUDP(buffer)
 	a, encode_error := u.EncoderDecoder.Decode(buffer[:n])
+
+	clientMutex.Lock()
+	u.clients[address.String()] = address
+	clientMutex.Unlock()
 
 	if readError == nil && encode_error == nil {
 		u.Router.RouteCommand(&a, address)

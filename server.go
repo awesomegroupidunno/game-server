@@ -17,16 +17,16 @@ func main() {
 	decoder := encoder.JsonEncoderDecoder{}
 	log.Println("Encoder created")
 
-	manager := game.GameManager{}
-	log.Println("Gamemanager created")
-
 	ack_channel := make(chan state.Ack, 100)
 	log.Println("Acking channel created")
 
-	state_channel := make(chan state.StateResponse, 100)
+	state_channel := make(chan state.StateResponse)
 	log.Println("State channel created")
 
-	router := game.CommandRouter{Acks: ack_channel, Responses: state_channel, GameManager: &manager}
+	manager := game.GameManager{Responses: state_channel}
+	log.Println("Gamemanager created")
+
+	router := game.CommandRouter{Acks: ack_channel, GameManager: &manager}
 	log.Println("Router created")
 
 	a := network.UdpReceiver{PortNumber: ":10001", MaxPacket: 8192, EncoderDecoder: &decoder, Router: router, Acks: ack_channel, Responses: state_channel}

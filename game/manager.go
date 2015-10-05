@@ -20,6 +20,7 @@ type GameManager struct {
 	gameState         state.GameState
 	commandsToProcess []*cmd.GameCommand
 	commandFactory    processor.CommandProcessorFactory
+	Responses         chan state.StateResponse
 }
 
 func (g *GameManager) Start() {
@@ -38,6 +39,7 @@ func (g *GameManager) Start() {
 	for g.isStarted && !g.isPaused && !g.gameState.GameOver {
 		g.tick()
 		time.Sleep(5 * time.Millisecond)
+		g.Responses <- state.StateResponse{State: g.gameState}
 	}
 
 }
