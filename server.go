@@ -29,7 +29,7 @@ func main() {
 	router := game.CommandRouter{Acks: ack_channel, GameManager: &gameManager}
 	log.Println("Router created")
 
-	reciever := network.UdpReceiver{PortNumber: ":10001",
+	receiver := network.UdpReceiver{PortNumber: ":10001",
 		MaxPacket:      8192,
 		EncoderDecoder: &decoder,
 		Router:         router,
@@ -40,7 +40,7 @@ func main() {
 	go gameManager.Start()
 	log.Println("Gamemanager started")
 
-	reciever.Run()
+	receiver.Run()
 	log.Println("Udp reciever running, press ctr+c to shutdown")
 
 	waiter.Wait()
