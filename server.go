@@ -23,18 +23,24 @@ func main() {
 	state_channel := make(chan state.StateResponse)
 	log.Println("State channel created")
 
-	manager := game.GameManager{Responses: state_channel}
+	gameManager := game.NewManager(state.NewGameState(), state_channel)
 	log.Println("Gamemanager created")
 
-	router := game.CommandRouter{Acks: ack_channel, GameManager: &manager}
+	router := game.CommandRouter{Acks: ack_channel, GameManager: &gameManager}
 	log.Println("Router created")
 
-	a := network.UdpReceiver{PortNumber: ":10001", MaxPacket: 8192, EncoderDecoder: &decoder, Router: router, Acks: ack_channel, Responses: state_channel}
+	reciever := network.UdpReceiver{PortNumber: ":10001",
+		MaxPacket:      8192,
+		EncoderDecoder: &decoder,
+		Router:         router,
+		Acks:           ack_channel,
+		Responses:      state_channel}
+
 	log.Println("Udp reciever created")
-	go manager.Start()
+	go gameManager.Start()
 	log.Println("Gamemanager started")
 
-	a.Run()
+	reciever.Run()
 	log.Println("Udp reciever running, press ctr+c to shutdown")
 
 	waiter.Wait()

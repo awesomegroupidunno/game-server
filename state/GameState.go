@@ -1,11 +1,11 @@
 package state
 
 type GameState struct {
-	Val             string
-	Vehicles        []Vehicle
-	Bases           []Base
+	Val              string
+	Vehicles         []Vehicle
+	Bases            []Base
 	ShieldGenerators []ShieldGenerator
-	GameOver        bool
+	GameOver         bool
 }
 
 func (g *GameState) Copy() GameState {
@@ -19,12 +19,12 @@ func (g *GameState) Copy() GameState {
 	return stateCopy
 }
 
-func NewGameState() GameState  {
+func NewGameState() GameState {
 	state := GameState{
-		Val:"",
-		Vehicles: []Vehicle{},
-		Bases: []Base{},
+		Val:              "",
+		Vehicles:         []Vehicle{},
+		Bases:            []Base{},
 		ShieldGenerators: []ShieldGenerator{},
-		GameOver: true}
+		GameOver:         false}
 	return state
 }
