@@ -4,17 +4,27 @@ type GameState struct {
 	Val             string
 	Vehicles        []Vehicle
 	Bases           []Base
-	ShieldGenerator []ShieldGenerator
+	ShieldGenerators []ShieldGenerator
 	GameOver        bool
 }
 
 func (g *GameState) Copy() GameState {
-	n := GameState{}
-	n.Val = g.Val
-	n.GameOver = g.GameOver
-	copy(n.Vehicles, g.Vehicles)
-	copy(n.Bases, g.Bases)
-	copy(n.ShieldGenerator, g.ShieldGenerator)
+	stateCopy := GameState{}
+	stateCopy.Val = g.Val
+	stateCopy.GameOver = g.GameOver
+	copy(stateCopy.Vehicles, g.Vehicles)
+	copy(stateCopy.Bases, g.Bases)
+	copy(stateCopy.ShieldGenerators, g.ShieldGenerators)
 
-	return n
+	return stateCopy
+}
+
+func NewGameState() GameState  {
+	state := GameState{
+		Val:"",
+		Vehicles: []Vehicle{},
+		Bases: []Base{},
+		ShieldGenerators: []ShieldGenerator{},
+		GameOver: true}
+	return state
 }
