@@ -11,6 +11,8 @@ type CommandRouter struct {
 	GameManager *GameManager
 }
 
+// Routes the command to the proper place
+// Currently just puts commands in the GameManager's commands list
 func (r *CommandRouter) RouteCommand(c *cmd.GameCommand, address *net.UDPAddr) {
 
 	commandType := (*c).Command().Type
@@ -20,6 +22,9 @@ func (r *CommandRouter) RouteCommand(c *cmd.GameCommand, address *net.UDPAddr) {
 	}
 }
 
+// Sends a Post Command to the right place
+// Adds command to the GameManager's commands list
+// Places an ack in the Ack channel
 func (r *CommandRouter) routePost(c *cmd.GameCommand, address *net.UDPAddr) {
 	r.GameManager.AddCommand((*c))
 	r.Acks <- state.Ack{Uuid: (*c).Command().UniqueId, Address: address}

@@ -59,6 +59,7 @@ func (g *GameManager) Start() {
 	}
 
 }
+
 // Pauses execution of the game_manager
 // while paused, it will no longer produce StateResponses
 // Threadsafe

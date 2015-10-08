@@ -25,6 +25,8 @@ type UdpReceiver struct {
 	clients        map[string]*net.UDPAddr
 }
 
+// Starts UDP Server
+// Does Spawns 3 goroutines to deal with incoming and outgoing traffic
 func (u *UdpReceiver) Run() {
 
 	if u.MaxPacket == 0 {
@@ -45,6 +47,8 @@ func (u *UdpReceiver) Run() {
 	u.start()
 }
 
+// Actually starts UDP listening and brodcastring
+// spawns 3 goroutines
 func (u *UdpReceiver) start() {
 	server_address, err_add := net.ResolveUDPAddr("udp", u.PortNumber)
 
@@ -64,6 +68,7 @@ func (u *UdpReceiver) start() {
 
 }
 
+// Runs in a loop to read incoming udp messages
 func (u *UdpReceiver) startReceiver() {
 	for {
 		u.receiveUdp()
@@ -71,6 +76,7 @@ func (u *UdpReceiver) startReceiver() {
 }
 
 // writes gamestate back to client
+// consumes from u.Responses
 func (u *UdpReceiver) startSender() {
 	for {
 		state := <-u.Responses
@@ -91,6 +97,7 @@ func (u *UdpReceiver) startSender() {
 }
 
 // writes acks back to client
+// consumes from u.Acks
 func (u *UdpReceiver) startAcker() {
 	for {
 		ack := <-u.Acks
@@ -99,6 +106,8 @@ func (u *UdpReceiver) startAcker() {
 }
 
 // listens for new udp packets
+// decodes packet into commands
+// forwards commands to router
 func (u *UdpReceiver) receiveUdp() {
 	buffer := make([]byte, u.MaxPacket)
 

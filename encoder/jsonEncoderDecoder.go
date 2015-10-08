@@ -6,15 +6,21 @@ import (
 	"github.com/awesomegroupidunno/game-server/state"
 )
 
+// Implements EncoderDecoder
 type JsonEncoderDecoder struct {
 	Tag string
 }
 
+// Converts a GameState to a byte array
+// byte array is actually a formatted JSON string
 func (j *JsonEncoderDecoder) Encode(state state.GameState) ([]byte, error) {
 	val, err := json.Marshal(state)
 	return val, err
 }
 
+// Converts a byte array to a command
+// also converts the command to the proper implementation of the command when possible
+// byte array is actually a formatted JSON string
 func (j *JsonEncoderDecoder) Decode(b []byte) (cmd.GameCommand, error) {
 	c := cmd.BaseCommand{}
 
