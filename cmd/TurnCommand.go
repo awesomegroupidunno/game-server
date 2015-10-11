@@ -15,4 +15,3 @@ func NewTurn(v float32) TurnCommand {
 func (b *TurnCommand) Command() *BaseCommand {
 	return &(b.BaseCommand)
 }
-

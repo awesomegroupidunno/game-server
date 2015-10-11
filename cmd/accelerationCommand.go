@@ -14,4 +14,3 @@ func NewAcceleration(v float32) AccelerationCommand {
 func (b *AccelerationCommand) Command() *BaseCommand {
 	return &(b.BaseCommand)
 }
-

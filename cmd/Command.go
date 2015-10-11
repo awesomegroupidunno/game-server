@@ -17,4 +17,3 @@ type GameCommand interface {
 func (b *BaseCommand) Command() *BaseCommand {
 	return b
 }
-
