@@ -45,6 +45,7 @@ func (g *GameManager) Start() {
 	commandsMutex.Lock()
 
 	g.commandsToProcess = []*cmd.GameCommand{}
+	g.commandFactory = processor.CommandProcessorFactory{}
 	g.isStarted = true
 	g.isPaused = false
 	g.startTime = time.Now()
@@ -107,6 +108,10 @@ func (g *GameManager) tick() {
 
 	if len(commands) > 0 {
 		log.Printf("Ticking with %d commands", len(commands))
+	}
+	for _, command := range commands {
+		proc := g.commandFactory.GetCommandProcessor(command)
+		proc.Run(&(g.gameState), *command)
 	}
 
 	stateMutex.Lock()

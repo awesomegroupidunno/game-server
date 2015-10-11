@@ -12,9 +12,9 @@ type CommandProcessor interface {
 type CommandProcessorFactory struct {
 }
 
-func (f *CommandProcessorFactory) GetCommandProcessor(c cmd.GameCommand) CommandProcessor {
+func (f *CommandProcessorFactory) GetCommandProcessor(c *cmd.GameCommand) CommandProcessor {
 
-	switch c.Command().Subtype {
+	switch (*c).Command().Subtype {
 	case cmd.Turn:
 		return &TurnCommandProcessor{}
 	case cmd.Acceleration:

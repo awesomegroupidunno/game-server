@@ -34,18 +34,23 @@ func main() {
 
 			// creates unique identifier to be returned for the packet ack
 			uuid := uuid.NewUUID().String()
-
-			// randomly select between commands
-			randType := rand.Intn(2)
-			if randType == 0 {
-				a := cmd.NewTurn(.5)
+			if i == 0 {
+				a := cmd.NewConnect("Dan")
 				a.UniqueId = uuid
 				message, err = json.Marshal(a)
-			}
-			if randType == 1 {
-				a := cmd.NewAcceleration(.5)
-				a.UniqueId = uuid
-				message, err = json.Marshal(a)
+			} else {
+				// randomly select between commands
+				randType := rand.Intn(2)
+				if randType == 0 {
+					a := cmd.NewTurn(.5)
+					a.UniqueId = uuid
+					message, err = json.Marshal(a)
+				}
+				if randType == 1 {
+					a := cmd.NewAcceleration(.5)
+					a.UniqueId = uuid
+					message, err = json.Marshal(a)
+				}
 			}
 
 			//send the message

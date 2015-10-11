@@ -9,4 +9,5 @@ type Vehicle struct {
 	Team_id       int
 	Max_health    int
 	Current_heath int
+	Owner         string
 }
