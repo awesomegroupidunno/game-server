@@ -90,3 +90,23 @@ func TestDecodeTurn(t *testing.T) {
 		So(turn.Command().UniqueId, ShouldEqual, "ABC123")
 	})
 }
+func TestDecodeConnect(t *testing.T) {
+	Convey("Connect Decode", t, func() {
+		formatter := encoder.JsonEncoderDecoder{Tag: "DecodeTest"}
+
+		data := cmd.NewConnect("myname")
+		data.UniqueId = "ABC123"
+		buffer, error := json.Marshal(data)
+
+		command, err := formatter.Decode(buffer)
+
+		turn := command.(*cmd.ConnectCommand)
+
+		So(error, ShouldEqual, nil)
+		So(turn.Command().Type, ShouldEqual, cmd.Post)
+		So(turn.Command().Subtype, ShouldEqual, cmd.Connect)
+		So(err, ShouldEqual, nil)
+		So(turn.Value, ShouldEqual, "myname")
+		So(turn.Command().UniqueId, ShouldEqual, "ABC123")
+	})
+}

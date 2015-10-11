@@ -12,7 +12,7 @@ func NewAcceleration(v float32) AccelerationCommand {
 }
 
 func (b *AccelerationCommand) Command() BaseCommand {
-	return BaseCommand{Type: b.Type, Subtype: b.Subtype, UniqueId: b.UniqueId, UserId: b.UserId}
+	return b.BaseCommand
 }
 
 func (b *AccelerationCommand) OwnerId() string {
