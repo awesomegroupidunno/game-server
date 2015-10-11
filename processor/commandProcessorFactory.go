@@ -19,6 +19,8 @@ func (f *CommandProcessorFactory) GetCommandProcessor(c cmd.GameCommand) Command
 		return &TurnCommandProcessor{}
 	case cmd.Acceleration:
 		return &AccelerationCommandProcessor{}
+	case cmd.Connect:
+		return &ConnectCommandProcessor{}
 	}
 	return &TurnCommandProcessor{}
 }
