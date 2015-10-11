@@ -11,19 +11,10 @@ type BaseCommand struct {
 }
 
 type GameCommand interface {
-	Command() BaseCommand
-	OwnerId() string
-	SetOwnerId(s string)
+	Command() *BaseCommand
 }
 
-func (b *BaseCommand) Command() BaseCommand {
-	return *b
+func (b *BaseCommand) Command() *BaseCommand {
+	return b
 }
 
-func (b *BaseCommand) OwnerId() string {
-	return b.UserId
-}
-
-func (b *BaseCommand) SetOwnerId(s string) {
-	b.UserId = s
-}

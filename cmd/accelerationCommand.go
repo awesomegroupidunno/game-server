@@ -11,14 +11,7 @@ func NewAcceleration(v float32) AccelerationCommand {
 	return AccelerationCommand{BaseCommand{Type: Post, Subtype: Acceleration, UniqueId: ""}, v}
 }
 
-func (b *AccelerationCommand) Command() BaseCommand {
-	return b.BaseCommand
+func (b *AccelerationCommand) Command() *BaseCommand {
+	return &(b.BaseCommand)
 }
 
-func (b *AccelerationCommand) OwnerId() string {
-	return b.UserId
-}
-
-func (b *AccelerationCommand) SetOwnerId(s string) {
-	b.UserId = s
-}

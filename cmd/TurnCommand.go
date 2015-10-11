@@ -12,14 +12,7 @@ func NewTurn(v float32) TurnCommand {
 	return tc
 }
 
-func (b *TurnCommand) Command() BaseCommand {
-	return b.BaseCommand
+func (b *TurnCommand) Command() *BaseCommand {
+	return &(b.BaseCommand)
 }
 
-func (b *TurnCommand) OwnerId() string {
-	return b.UserId
-}
-
-func (b *TurnCommand) SetOwnerId(s string) {
-	b.UserId = s
-}

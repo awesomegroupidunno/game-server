@@ -12,14 +12,6 @@ func NewConnect(v string) ConnectCommand {
 	return tc
 }
 
-func (b *ConnectCommand) Command() BaseCommand {
-	return b.BaseCommand
-}
-
-func (b *ConnectCommand) OwnerId() string {
-	return b.UserId
-}
-
-func (b *ConnectCommand) SetOwnerId(s string) {
-	b.UserId = s
+func (b *ConnectCommand) Command() *BaseCommand {
+	return &(b.BaseCommand)
 }
