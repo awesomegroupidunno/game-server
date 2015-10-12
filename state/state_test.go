@@ -22,3 +22,14 @@ func TestFindVehicle(t *testing.T) {
 
 	})
 }
+
+func TestStateCopy(t *testing.T) {
+	Convey("Copy State", t, func() {
+		a := state.NewGameState()
+		theCopy := a.Copy()
+		So(len(theCopy.Vehicles), ShouldEqual, len(a.Vehicles))
+		So(len(theCopy.Bases), ShouldEqual, len(a.Bases))
+		So(len(theCopy.ShieldGenerators), ShouldEqual, len(a.ShieldGenerators))
+		So(theCopy.GameOver, ShouldEqual, a.GameOver)
+	})
+}
