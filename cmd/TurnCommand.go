@@ -4,10 +4,10 @@ const Turn = "TURN"
 
 type TurnCommand struct {
 	BaseCommand
-	Value float32
+	Value float64
 }
 
-func NewTurn(v float32) TurnCommand {
+func NewTurn(v float64) TurnCommand {
 	tc := TurnCommand{BaseCommand{Type: Post, Subtype: Turn, UniqueId: ""}, v}
 	return tc
 }

@@ -4,10 +4,10 @@ const Acceleration = "ACCELERATION"
 
 type AccelerationCommand struct {
 	BaseCommand
-	Value float32
+	Value float64
 }
 
-func NewAcceleration(v float32) AccelerationCommand {
+func NewAcceleration(v float64) AccelerationCommand {
 	return AccelerationCommand{BaseCommand{Type: Post, Subtype: Acceleration, UniqueId: ""}, v}
 }
 

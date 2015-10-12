@@ -3,7 +3,7 @@ package processor
 import (
 	"github.com/awesomegroupidunno/game-server/cmd"
 	"github.com/awesomegroupidunno/game-server/state"
-	"log"
+	"math"
 )
 
 type TurnCommandProcessor struct {
@@ -11,6 +11,13 @@ type TurnCommandProcessor struct {
 
 func (t *TurnCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 	command := c.(*cmd.TurnCommand)
-	log.Println(command)
 
+	vehicle := g.GetVehicle(command.UserId)
+	if vehicle == nil {
+		return
+	}
+	temp := vehicle
+
+	temp.Angle = math.Mod(temp.Angle+command.Value, 1)
+	vehicle = temp
 }

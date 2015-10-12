@@ -92,3 +92,44 @@ func TestAccelerationProcessor(t *testing.T) {
 
 	})
 }
+
+func TestTurnProcessor(t *testing.T) {
+	Convey("Turn Processor", t, func() {
+		conn_processor := processor.TurnCommandProcessor{}
+
+		c := cmd.NewTurn(.5)
+		c2 := cmd.NewTurn(.2)
+		c.UserId = "abc123"
+		c2.UserId = "abc123"
+
+		accelerate := cmd.GameCommand(&c)
+		accelerate2 := cmd.GameCommand(&c2)
+
+		game_state := state.NewGameState()
+
+		game_state.Vehicles = append(game_state.Vehicles, &(state.Vehicle{Owner: "abc123", Velocity: 0}))
+
+		So(len(game_state.Vehicles), ShouldEqual, 1)
+		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, 0, .0001)
+
+		conn_processor.Run(&game_state, accelerate)
+		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, .5, .0001)
+
+		conn_processor.Run(&game_state, accelerate2)
+		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, .7, .0001)
+
+		accelerate2.Command().UserId = "blach"
+		conn_processor.Run(&game_state, accelerate2)
+		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, .7, .0001)
+
+		//check rollover
+		conn_processor.Run(&game_state, accelerate)
+		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, .2, .0001)
+
+		// check negative rollover
+		c.Value = -.4
+		conn_processor.Run(&game_state, accelerate)
+		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, -.2, .0001)
+
+	})
+}
