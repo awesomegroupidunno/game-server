@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-const host = "172.31.1.42:10001"
+const host = "127.0.0.1:10001"
 const seconds_timeout = 2
 
 func main() {

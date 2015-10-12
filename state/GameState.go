@@ -2,9 +2,9 @@ package state
 
 type GameState struct {
 	Val              string
-	Vehicles         []Vehicle
-	Bases            []Base
-	ShieldGenerators []ShieldGenerator
+	Vehicles         []*Vehicle
+	Bases            []*Base
+	ShieldGenerators []*ShieldGenerator
 	GameOver         bool
 }
 
@@ -22,9 +22,9 @@ func (g *GameState) Copy() GameState {
 func NewGameState() GameState {
 	state := GameState{
 		Val:              "",
-		Vehicles:         []Vehicle{},
-		Bases:            []Base{},
-		ShieldGenerators: []ShieldGenerator{},
+		Vehicles:         []*Vehicle{},
+		Bases:            []*Base{},
+		ShieldGenerators: []*ShieldGenerator{},
 		GameOver:         false}
 	return state
 }
@@ -34,7 +34,7 @@ func NewGameState() GameState {
 func (g *GameState) GetVehicle(owner string) *Vehicle {
 	for _, vehicle := range g.Vehicles {
 		if vehicle.Owner == owner {
-			return &vehicle
+			return vehicle
 		}
 	}
 

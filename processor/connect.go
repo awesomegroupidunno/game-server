@@ -13,7 +13,7 @@ func (t *ConnectCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 	command := c.(*cmd.ConnectCommand)
 
 	// if the user already has a vehicle, ignore
-	vehicle := g.GetVehicle(c.Command().UserId)
+	vehicle := g.GetVehicle(command.UserId)
 	if vehicle != nil {
 		return
 	}
@@ -31,6 +31,6 @@ func (t *ConnectCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 		Max_health:    100,
 		Current_heath: 100,
 		Owner:         command.UserId}
-	g.Vehicles = append(g.Vehicles, newVehicle)
+	g.Vehicles = append(g.Vehicles, &newVehicle)
 
 }
