@@ -16,15 +16,21 @@ func TestProcessorFactory(t *testing.T) {
 
 		ac := cmd.NewAcceleration(1)
 		a_comm := cmd.GameCommand(&ac)
+
 		connect := cmd.NewConnect("test")
 		c_comm := cmd.GameCommand(&connect)
+
+		base := cmd.BaseCommand{}
+		b_comm := cmd.GameCommand(&base)
 
 		turn_cp := a.GetCommandProcessor(&t_comm)
 		acceleration_cp := a.GetCommandProcessor(&a_comm)
 		connect_cp := a.GetCommandProcessor(&c_comm)
+		base_cp := a.GetCommandProcessor(&b_comm)
 
 		So(turn_cp, ShouldHaveSameTypeAs, &processor.TurnCommandProcessor{})
 		So(acceleration_cp, ShouldHaveSameTypeAs, &processor.AccelerationCommandProcessor{})
 		So(connect_cp, ShouldHaveSameTypeAs, &processor.ConnectCommandProcessor{})
+		So(base_cp, ShouldEqual, nil)
 	})
 }

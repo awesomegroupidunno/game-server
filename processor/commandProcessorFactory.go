@@ -13,6 +13,8 @@ type CommandProcessor interface {
 type CommandProcessorFactory struct {
 }
 
+// Returns a command processor for the command passed
+// if no processor is available nil is returned
 func (f *CommandProcessorFactory) GetCommandProcessor(c *cmd.GameCommand) CommandProcessor {
 
 	switch (*c).Command().Subtype {
@@ -25,5 +27,5 @@ func (f *CommandProcessorFactory) GetCommandProcessor(c *cmd.GameCommand) Comman
 	}
 
 	log.Println("Error Occured getting command processor")
-	return &TurnCommandProcessor{}
+	return nil
 }
