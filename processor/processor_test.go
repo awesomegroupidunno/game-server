@@ -1,10 +1,10 @@
 package processor_test
 
 import (
+	"github.com/awesomegroupidunno/game-server/cmd"
+	"github.com/awesomegroupidunno/game-server/processor"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
-	"github.com/awesomegroupidunno/game-server/processor"
-	"github.com/awesomegroupidunno/game-server/cmd"
 )
 
 func TestProcessorFactory(t *testing.T) {
@@ -23,8 +23,8 @@ func TestProcessorFactory(t *testing.T) {
 		acceleration_cp := a.GetCommandProcessor(&a_comm)
 		connect_cp := a.GetCommandProcessor(&c_comm)
 
-		So(turn_cp, ShouldHaveSameTypeAs, &processor.TurnCommandProcessor{} )
-		So(acceleration_cp, ShouldHaveSameTypeAs, &processor.AccelerationCommandProcessor{} )
-		So(connect_cp, ShouldHaveSameTypeAs, &processor.ConnectCommandProcessor{} )
+		So(turn_cp, ShouldHaveSameTypeAs, &processor.TurnCommandProcessor{})
+		So(acceleration_cp, ShouldHaveSameTypeAs, &processor.AccelerationCommandProcessor{})
+		So(connect_cp, ShouldHaveSameTypeAs, &processor.ConnectCommandProcessor{})
 	})
 }
