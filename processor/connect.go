@@ -13,10 +13,9 @@ func (t *ConnectCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 	command := c.(*cmd.ConnectCommand)
 
 	// if the user already has a vehicle, ignore
-	for _, vehicle := range g.Vehicles {
-		if vehicle.Owner == c.Command().UserId {
-			return
-		}
+	vehicle := g.GetVehicle(c.Command().UserId)
+	if vehicle == nil {
+		return
 	}
 
 	// For now, randomly join team 0 or 1

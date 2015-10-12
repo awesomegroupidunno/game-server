@@ -28,3 +28,15 @@ func NewGameState() GameState {
 		GameOver:         false}
 	return state
 }
+
+// returns a pointer to the vehicle with the owner's string id
+// returns nil if no vehicle is found
+func (g *GameState) GetVehicle(owner string) *Vehicle {
+	for _, vehicle := range g.Vehicles {
+		if vehicle.Owner == owner {
+			return &vehicle
+		}
+	}
+
+	return nil
+}
