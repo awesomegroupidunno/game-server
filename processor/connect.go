@@ -14,7 +14,7 @@ func (t *ConnectCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 
 	// if the user already has a vehicle, ignore
 	vehicle := g.GetVehicle(c.Command().UserId)
-	if vehicle == nil {
+	if vehicle != nil {
 		return
 	}
 
