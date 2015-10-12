@@ -3,6 +3,7 @@ package processor
 import (
 	"github.com/awesomegroupidunno/game-server/cmd"
 	"github.com/awesomegroupidunno/game-server/state"
+	"log"
 )
 
 type CommandProcessor interface {
@@ -22,5 +23,7 @@ func (f *CommandProcessorFactory) GetCommandProcessor(c *cmd.GameCommand) Comman
 	case cmd.Connect:
 		return &ConnectCommandProcessor{}
 	}
+
+	log.Println("Error Occured getting command processor")
 	return &TurnCommandProcessor{}
 }
