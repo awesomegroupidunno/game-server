@@ -3,9 +3,9 @@ package processor_test
 import (
 	"github.com/awesomegroupidunno/game-server/cmd"
 	"github.com/awesomegroupidunno/game-server/processor"
+	"github.com/awesomegroupidunno/game-server/state"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
-	"github.com/awesomegroupidunno/game-server/state"
 )
 
 func TestProcessorFactory(t *testing.T) {
@@ -75,7 +75,7 @@ func TestAccelerationProcessor(t *testing.T) {
 
 		game_state := state.NewGameState()
 
-		game_state.Vehicles = append(game_state.Vehicles, &(state.Vehicle{Owner:"abc123", Velocity:0}))
+		game_state.Vehicles = append(game_state.Vehicles, &(state.Vehicle{Owner: "abc123", Velocity: 0}))
 
 		So(len(game_state.Vehicles), ShouldEqual, 1)
 		So(game_state.Vehicles[0].Velocity, ShouldAlmostEqual, 0, .0001)

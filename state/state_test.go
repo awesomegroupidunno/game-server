@@ -10,7 +10,7 @@ func TestFindVehicle(t *testing.T) {
 	Convey("Find Vehicle", t, func() {
 		a := state.NewGameState()
 		So(a.Vehicles, ShouldBeEmpty)
-		a.Vehicles = make([]*state.Vehicle,4)
+		a.Vehicles = make([]*state.Vehicle, 4)
 		a.Vehicles[0] = &(state.Vehicle{Endurance: 1, Owner: "me"})
 		a.Vehicles[1] = &(state.Vehicle{Endurance: 2, Owner: "you"})
 		a.Vehicles[2] = &(state.Vehicle{Endurance: 3, Owner: "austin"})

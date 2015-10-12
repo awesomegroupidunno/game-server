@@ -11,11 +11,9 @@ type AccelerationCommandProcessor struct {
 
 func (t *AccelerationCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 	command := c.(*cmd.AccelerationCommand)
-	log.Println("something")
 
 	vehicle := g.GetVehicle(command.UserId)
 	if vehicle == nil {
-		log.Print("no vehicle")
 		return
 	}
 	temp := vehicle
@@ -24,8 +22,6 @@ func (t *AccelerationCommandProcessor) Run(g *state.GameState, c cmd.GameCommand
 
 	vehicle = temp
 
-
-	log.Printf("%v",vehicle)
-
+	log.Printf("%v", vehicle)
 
 }
