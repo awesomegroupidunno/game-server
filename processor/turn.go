@@ -7,6 +7,7 @@ import (
 )
 
 type TurnCommandProcessor struct {
+	Physics *Physics
 }
 
 func (t *TurnCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
@@ -18,6 +19,6 @@ func (t *TurnCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 	}
 	temp := vehicle
 
-	temp.Angle = math.Mod(temp.Angle+command.Value, 1)
+	temp.Angle = math.Mod(temp.Angle+(command.Value*t.Physics.TurnCommandModifier), 1)
 	vehicle = temp
 }

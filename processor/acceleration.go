@@ -6,6 +6,7 @@ import (
 )
 
 type AccelerationCommandProcessor struct {
+	Physics *Physics
 }
 
 func (t *AccelerationCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
@@ -17,7 +18,7 @@ func (t *AccelerationCommandProcessor) Run(g *state.GameState, c cmd.GameCommand
 	}
 	temp := vehicle
 
-	temp.Velocity = temp.Velocity + command.Value
+	temp.Velocity = temp.Velocity + (command.Value * t.Physics.AccelerationCommandModifier)
 
 	vehicle = temp
 }

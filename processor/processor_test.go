@@ -10,22 +10,23 @@ import (
 
 func TestProcessorFactory(t *testing.T) {
 	Convey("ProcessorFactory", t, func() {
-		factory := processor.CommandProcessorFactory{}
+		physics := processor.DefaultPhysics()
+		factory := processor.CommandProcessorFactory{Physics: &physics}
 
 		t := cmd.NewTurn(1)
 		t_comm := cmd.GameCommand(&t)
 		turn_cp := factory.GetCommandProcessor(&t_comm)
-		So(turn_cp, ShouldHaveSameTypeAs, &processor.TurnCommandProcessor{})
+		So(turn_cp, ShouldHaveSameTypeAs, &processor.TurnCommandProcessor{Physics: &physics})
 
 		a := cmd.NewAcceleration(1)
 		a_comm := cmd.GameCommand(&a)
 		acceleration_cp := factory.GetCommandProcessor(&a_comm)
-		So(acceleration_cp, ShouldHaveSameTypeAs, &processor.AccelerationCommandProcessor{})
+		So(acceleration_cp, ShouldHaveSameTypeAs, &processor.AccelerationCommandProcessor{Physics: &physics})
 
 		c := cmd.NewConnect("test")
 		c_comm := cmd.GameCommand(&c)
 		connect_cp := factory.GetCommandProcessor(&c_comm)
-		So(connect_cp, ShouldHaveSameTypeAs, &processor.ConnectCommandProcessor{})
+		So(connect_cp, ShouldHaveSameTypeAs, &processor.ConnectCommandProcessor{Physics: &physics})
 
 		b := cmd.BaseCommand{}
 		b_comm := cmd.GameCommand(&b)
@@ -36,7 +37,8 @@ func TestProcessorFactory(t *testing.T) {
 
 func TestConnectionProcessor(t *testing.T) {
 	Convey("Connection Processor", t, func() {
-		conn_processor := processor.ConnectCommandProcessor{}
+		physics := processor.DefaultPhysics()
+		conn_processor := processor.ConnectCommandProcessor{Physics: &physics}
 
 		c := cmd.NewConnect("abc123")
 		c2 := cmd.NewConnect("abc")
@@ -63,7 +65,8 @@ func TestConnectionProcessor(t *testing.T) {
 
 func TestAccelerationProcessor(t *testing.T) {
 	Convey("Acceleration Processor", t, func() {
-		conn_processor := processor.AccelerationCommandProcessor{}
+		physics := processor.DefaultPhysics()
+		conn_processor := processor.AccelerationCommandProcessor{Physics: &physics}
 
 		c := cmd.NewAcceleration(.5)
 		c2 := cmd.NewAcceleration(.2)
@@ -95,7 +98,8 @@ func TestAccelerationProcessor(t *testing.T) {
 
 func TestTurnProcessor(t *testing.T) {
 	Convey("Turn Processor", t, func() {
-		conn_processor := processor.TurnCommandProcessor{}
+		physics := processor.DefaultPhysics()
+		conn_processor := processor.TurnCommandProcessor{Physics: &physics}
 
 		c := cmd.NewTurn(.5)
 		c2 := cmd.NewTurn(.2)

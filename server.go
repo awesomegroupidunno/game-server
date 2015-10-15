@@ -4,6 +4,7 @@ import (
 	"github.com/awesomegroupidunno/game-server/encoder"
 	"github.com/awesomegroupidunno/game-server/game"
 	"github.com/awesomegroupidunno/game-server/network"
+	"github.com/awesomegroupidunno/game-server/processor"
 	"github.com/awesomegroupidunno/game-server/state"
 	"log"
 	"sync"
@@ -23,7 +24,13 @@ func main() {
 	state_channel := make(chan state.StateResponse)
 	log.Println("State channel created")
 
-	gameManager := game.NewManager(state.NewGameState(), state_channel)
+	physics := processor.DefaultPhysics()
+	log.Println("Default Physics created")
+
+	factory := processor.CommandProcessorFactory{Physics: &physics}
+	log.Println("Command Processor Factory created")
+
+	gameManager := game.NewManager(state.NewGameState(), state_channel, &factory)
 	log.Println("Gamemanager created")
 
 	router := game.CommandRouter{Acks: ack_channel, GameManager: &gameManager}

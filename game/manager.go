@@ -24,7 +24,7 @@ type GameManager struct {
 	isPaused          bool
 	gameState         state.GameState
 	commandsToProcess []*cmd.GameCommand
-	commandFactory    processor.CommandProcessorFactory
+	commandFactory    *processor.CommandProcessorFactory
 	responses         chan state.StateResponse
 }
 
@@ -34,8 +34,8 @@ type GameManager struct {
 //
 // 	state.NewGameState()
 // creates an empty state
-func NewManager(game_state state.GameState, response_channel chan state.StateResponse) GameManager {
-	return GameManager{gameState: game_state, responses: response_channel}
+func NewManager(game_state state.GameState, response_channel chan state.StateResponse, factory *processor.CommandProcessorFactory) GameManager {
+	return GameManager{gameState: game_state, responses: response_channel, commandFactory: factory}
 }
 
 // starts the gamemanager
@@ -45,7 +45,6 @@ func (g *GameManager) Start() {
 	commandsMutex.Lock()
 
 	g.commandsToProcess = []*cmd.GameCommand{}
-	g.commandFactory = processor.CommandProcessorFactory{}
 	g.isStarted = true
 	g.isPaused = false
 	g.startTime = time.Now()

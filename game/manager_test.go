@@ -2,6 +2,7 @@ package game
 
 import (
 	"github.com/awesomegroupidunno/game-server/cmd"
+	"github.com/awesomegroupidunno/game-server/processor"
 	"github.com/awesomegroupidunno/game-server/state"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
@@ -13,7 +14,10 @@ func TestControl(t *testing.T) {
 	current_state := state.NewGameState()
 	response_channel := make(chan state.StateResponse)
 
-	manager := NewManager(current_state, response_channel)
+	physics := processor.DefaultPhysics()
+	factory := processor.CommandProcessorFactory{Physics: &physics}
+
+	manager := NewManager(current_state, response_channel, &factory)
 	go manager.Start()
 
 	Convey("Pause", t, func() {
@@ -33,7 +37,10 @@ func TestCommandConsumption(t *testing.T) {
 	current_state := state.NewGameState()
 	response_channel := make(chan state.StateResponse)
 
-	manager := NewManager(current_state, response_channel)
+	physics := processor.DefaultPhysics()
+	factory := processor.CommandProcessorFactory{Physics: &physics}
+
+	manager := NewManager(current_state, response_channel, &factory)
 	go manager.Start()
 
 	Convey("Pause", t, func() {

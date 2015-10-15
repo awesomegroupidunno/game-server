@@ -7,6 +7,7 @@ import (
 )
 
 type ConnectCommandProcessor struct {
+	Physics *Physics
 }
 
 func (t *ConnectCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {

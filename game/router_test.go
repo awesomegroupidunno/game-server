@@ -2,6 +2,7 @@ package game
 
 import (
 	"github.com/awesomegroupidunno/game-server/cmd"
+	"github.com/awesomegroupidunno/game-server/processor"
 	"github.com/awesomegroupidunno/game-server/state"
 	. "github.com/smartystreets/goconvey/convey"
 	"net"
@@ -12,7 +13,10 @@ func TestRoutePost(t *testing.T) {
 	ack_channel := make(chan state.Ack, 100)
 	state_channel := make(chan state.StateResponse)
 
-	gameManager := NewManager(state.NewGameState(), state_channel)
+	physics := processor.Physics{}
+	factory := processor.CommandProcessorFactory{Physics: &physics}
+
+	gameManager := NewManager(state.NewGameState(), state_channel, &factory)
 
 	router := CommandRouter{Acks: ack_channel, GameManager: &gameManager}
 	address, err := net.ResolveUDPAddr("udp", "127.0.0.1:8080")
@@ -36,7 +40,10 @@ func TestRoute(t *testing.T) {
 	ack_channel := make(chan state.Ack, 100)
 	state_channel := make(chan state.StateResponse)
 
-	gameManager := NewManager(state.NewGameState(), state_channel)
+	physics := processor.Physics{}
+	factory := processor.CommandProcessorFactory{Physics: &physics}
+
+	gameManager := NewManager(state.NewGameState(), state_channel, &factory)
 
 	router := CommandRouter{Acks: ack_channel, GameManager: &gameManager}
 	address, err := net.ResolveUDPAddr("udp", "127.0.0.1:8080")
