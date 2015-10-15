@@ -15,6 +15,8 @@ func TestControl(t *testing.T) {
 	response_channel := make(chan state.StateResponse)
 
 	physics := processor.DefaultPhysics()
+	physics.TurnCommandModifier = 1.0
+	physics.AccelerationCommandModifier = 1.0
 	factory := processor.CommandProcessorFactory{Physics: &physics}
 
 	manager := NewManager(current_state, response_channel, &factory)
@@ -38,6 +40,8 @@ func TestCommandConsumption(t *testing.T) {
 	response_channel := make(chan state.StateResponse)
 
 	physics := processor.DefaultPhysics()
+	physics.TurnCommandModifier = 1.0
+	physics.AccelerationCommandModifier = 1.0
 	factory := processor.CommandProcessorFactory{Physics: &physics}
 
 	manager := NewManager(current_state, response_channel, &factory)

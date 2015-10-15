@@ -11,6 +11,8 @@ import (
 func TestProcessorFactory(t *testing.T) {
 	Convey("ProcessorFactory", t, func() {
 		physics := processor.DefaultPhysics()
+		physics.TurnCommandModifier = 1.0
+		physics.AccelerationCommandModifier = 1.0
 		factory := processor.CommandProcessorFactory{Physics: &physics}
 
 		t := cmd.NewTurn(1)
@@ -38,6 +40,8 @@ func TestProcessorFactory(t *testing.T) {
 func TestConnectionProcessor(t *testing.T) {
 	Convey("Connection Processor", t, func() {
 		physics := processor.DefaultPhysics()
+		physics.TurnCommandModifier = 1.0
+		physics.AccelerationCommandModifier = 1.0
 		conn_processor := processor.ConnectCommandProcessor{Physics: &physics}
 
 		c := cmd.NewConnect("abc123")
@@ -66,6 +70,8 @@ func TestConnectionProcessor(t *testing.T) {
 func TestAccelerationProcessor(t *testing.T) {
 	Convey("Acceleration Processor", t, func() {
 		physics := processor.DefaultPhysics()
+		physics.TurnCommandModifier = 1.0
+		physics.AccelerationCommandModifier = 1.0
 		conn_processor := processor.AccelerationCommandProcessor{Physics: &physics}
 
 		c := cmd.NewAcceleration(.5)
@@ -99,6 +105,8 @@ func TestAccelerationProcessor(t *testing.T) {
 func TestTurnProcessor(t *testing.T) {
 	Convey("Turn Processor", t, func() {
 		physics := processor.DefaultPhysics()
+		physics.TurnCommandModifier = 1.0
+		physics.AccelerationCommandModifier = 1.0
 		conn_processor := processor.TurnCommandProcessor{Physics: &physics}
 
 		c := cmd.NewTurn(.5)
