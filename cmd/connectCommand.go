@@ -4,7 +4,7 @@ const Connect = "CONNECT"
 
 type ConnectCommand struct {
 	BaseCommand
-	Value string
+	Value string `json:"StrValue"`
 }
 
 func NewConnect(v string) ConnectCommand {

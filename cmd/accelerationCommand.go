@@ -4,7 +4,7 @@ const Acceleration = "ACCELERATION"
 
 type AccelerationCommand struct {
 	BaseCommand
-	Value float64
+	Value float64 `json:"NumValue"`
 }
 
 func NewAcceleration(v float64) AccelerationCommand {

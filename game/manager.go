@@ -87,15 +87,6 @@ func (g *GameManager) AddCommand(c cmd.GameCommand) {
 	commandsMutex.Unlock()
 }
 
-// Gets the current GameState
-// Threadsafe
-func (g *GameManager) TakeState() state.GameState {
-	stateMutex.Lock()
-	a := g.gameState.Copy()
-	stateMutex.Unlock()
-	return a
-}
-
 // Performs next step in the game
 // Empties g.commandsToProcess and processes them
 // Also progresses GameState based upon elapsed time
