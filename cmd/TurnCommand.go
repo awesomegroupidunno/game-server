@@ -4,7 +4,7 @@ const Turn = "TURN"
 
 type TurnCommand struct {
 	BaseCommand
-	Value float64 `json:"NumValue"`
+	Value float64 `json:"Value"`
 }
 
 func NewTurn(v float64) TurnCommand {

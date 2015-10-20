@@ -20,5 +20,8 @@ func (t *AccelerationCommandProcessor) Run(g *state.GameState, c cmd.GameCommand
 
 	temp.Velocity = temp.Velocity + (command.Value * t.Physics.AccelerationCommandModifier)
 
+	if temp.Velocity >= t.Physics.MaxVehicleVelocity {
+		temp.Velocity = t.Physics.MaxVehicleVelocity
+	}
 	vehicle = temp
 }

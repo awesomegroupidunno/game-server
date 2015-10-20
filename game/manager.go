@@ -23,7 +23,7 @@ type GameManager struct {
 	isStarted         bool
 	isPaused          bool
 	gameState         state.GameState
-	physicsManager    processor.Physics
+	physicsManager    *processor.Physics
 	commandsToProcess []*cmd.GameCommand
 	commandFactory    *processor.CommandProcessorFactory
 	responses         chan state.StateResponse
@@ -36,7 +36,7 @@ type GameManager struct {
 // 	state.NewGameState()
 // creates an empty state
 func NewManager(game_state state.GameState, response_channel chan state.StateResponse, factory *processor.CommandProcessorFactory) GameManager {
-	return GameManager{gameState: game_state, responses: response_channel, commandFactory: factory}
+	return GameManager{gameState: game_state, responses: response_channel, commandFactory: factory, physicsManager: factory.Physics}
 }
 
 // starts the gamemanager
@@ -58,7 +58,7 @@ func (g *GameManager) Start() {
 		if g.isStarted && !g.isPaused {
 			g.tick()
 			g.lastTick = time.Now()
-			time.Sleep(5 * time.Millisecond)
+			time.Sleep(15 * time.Millisecond)
 			g.responses <- state.StateResponse{State: g.gameState}
 		}
 	}
@@ -113,6 +113,7 @@ func (g *GameManager) tick() {
 
 	for _, vehicle := range g.gameState.Vehicles {
 		g.physicsManager.MoveVehicle(vehicle, tickDuration)
+		g.physicsManager.VehicleFrictionSlow(vehicle, tickDuration)
 	}
 
 	stateMutex.Unlock()
