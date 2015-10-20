@@ -114,8 +114,8 @@ func TestTurnProcessor(t *testing.T) {
 		c.UserId = "abc123"
 		c2.UserId = "abc123"
 
-		accelerate := cmd.GameCommand(&c)
-		accelerate2 := cmd.GameCommand(&c2)
+		turn := cmd.GameCommand(&c)
+		turn2 := cmd.GameCommand(&c2)
 
 		game_state := state.NewGameState()
 
@@ -124,23 +124,23 @@ func TestTurnProcessor(t *testing.T) {
 		So(len(game_state.Vehicles), ShouldEqual, 1)
 		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, 0, .0001)
 
-		conn_processor.Run(&game_state, accelerate)
+		conn_processor.Run(&game_state, turn)
 		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, .5, .0001)
 
-		conn_processor.Run(&game_state, accelerate2)
+		conn_processor.Run(&game_state, turn2)
 		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, .7, .0001)
 
-		accelerate2.Command().UserId = "blach"
-		conn_processor.Run(&game_state, accelerate2)
+		turn2.Command().UserId = "blach"
+		conn_processor.Run(&game_state, turn2)
 		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, .7, .0001)
 
 		//check rollover
-		conn_processor.Run(&game_state, accelerate)
-		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, .2, .0001)
+		conn_processor.Run(&game_state, turn)
+		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, 1.2, .0001)
 
 		// check negative rollover
-		c.Value = -.4
-		conn_processor.Run(&game_state, accelerate)
+		c.Value = -1.4
+		conn_processor.Run(&game_state, turn)
 		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, -.2, .0001)
 
 	})

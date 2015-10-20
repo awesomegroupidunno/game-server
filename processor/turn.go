@@ -19,6 +19,6 @@ func (t *TurnCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 	}
 	temp := vehicle
 
-	temp.Angle = math.Mod(temp.Angle+(command.Value*t.Physics.TurnCommandModifier), 1)
+	temp.Angle = math.Mod(temp.Angle+(command.Value*t.Physics.TurnCommandModifier), 2*math.Pi)
 	vehicle = temp
 }

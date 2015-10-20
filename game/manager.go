@@ -23,6 +23,7 @@ type GameManager struct {
 	isStarted         bool
 	isPaused          bool
 	gameState         state.GameState
+	physicsManager    processor.Physics
 	commandsToProcess []*cmd.GameCommand
 	commandFactory    *processor.CommandProcessorFactory
 	responses         chan state.StateResponse
@@ -48,14 +49,18 @@ func (g *GameManager) Start() {
 	g.isStarted = true
 	g.isPaused = false
 	g.startTime = time.Now()
+	g.lastTick = time.Now()
 
 	commandsMutex.Unlock()
 	stateMutex.Unlock()
 
-	for g.isStarted && !g.isPaused {
-		g.tick()
-		time.Sleep(5 * time.Millisecond)
-		g.responses <- state.StateResponse{State: g.gameState}
+	for {
+		if g.isStarted && !g.isPaused {
+			g.tick()
+			g.lastTick = time.Now()
+			time.Sleep(5 * time.Millisecond)
+			g.responses <- state.StateResponse{State: g.gameState}
+		}
 	}
 
 }
@@ -96,6 +101,8 @@ func (g *GameManager) tick() {
 	g.commandsToProcess = g.commandsToProcess[:0]
 	commandsMutex.Unlock()
 
+	stateMutex.Lock()
+	tickDuration := time.Since(g.lastTick)
 	if len(commands) > 0 {
 		log.Printf("Ticking with %d commands", len(commands))
 	}
@@ -104,7 +111,10 @@ func (g *GameManager) tick() {
 		proc.Run(&(g.gameState), *command)
 	}
 
-	stateMutex.Lock()
+	for _, vehicle := range g.gameState.Vehicles {
+		g.physicsManager.MoveVehicle(vehicle, tickDuration)
+	}
+
 	stateMutex.Unlock()
 
 }

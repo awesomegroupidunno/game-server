@@ -1,8 +1,8 @@
 package state
 
 type Vehicle struct {
-	X             int
-	Y             int
+	X             float64
+	Y             float64
 	Velocity      float64
 	Angle         float64
 	Endurance     int
