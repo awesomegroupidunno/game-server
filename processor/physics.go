@@ -23,7 +23,7 @@ func DefaultPhysics() Physics {
 		AccelerationCommandModifier: 5.0,
 		TurnCommandModifier:         3.0,
 		MaxVehicleVelocity:          150.0,
-		FrictionSpeedLoss:           0.25}
+		FrictionSpeedLoss:           20.0}
 }
 
 func (p *Physics) MoveVehicle(vehicle *state.Vehicle, duration time.Duration) {
