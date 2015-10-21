@@ -23,5 +23,9 @@ func (t *AccelerationCommandProcessor) Run(g *state.GameState, c cmd.GameCommand
 	if temp.Velocity >= t.Physics.MaxVehicleVelocity {
 		temp.Velocity = t.Physics.MaxVehicleVelocity
 	}
+
+	if (temp.Velocity) <= (-1 * t.Physics.MaxVehicleVelocity) {
+		temp.Velocity = -1 * t.Physics.MaxVehicleVelocity
+	}
 	vehicle = temp
 }

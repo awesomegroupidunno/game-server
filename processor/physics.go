@@ -6,6 +6,11 @@ import (
 	"time"
 )
 
+const (
+	RadToDeg = 180 / math.Pi
+	DegToRad = math.Pi / 180
+)
+
 type Physics struct {
 	AccelerationCommandModifier float64
 	TurnCommandModifier         float64
@@ -15,15 +20,16 @@ type Physics struct {
 
 func DefaultPhysics() Physics {
 	return Physics{
-		AccelerationCommandModifier: 1.0,
-		TurnCommandModifier:         1.0,
-		MaxVehicleVelocity:          4.0,
-		FrictionSpeedLoss:           1.00}
+		AccelerationCommandModifier: 5.0,
+		TurnCommandModifier:         3.0,
+		MaxVehicleVelocity:          150.0,
+		FrictionSpeedLoss:           0.25}
 }
 
 func (p *Physics) MoveVehicle(vehicle *state.Vehicle, duration time.Duration) {
-	x_angle := math.Cos(vehicle.Angle)
-	y_angle := math.Sin(vehicle.Angle)
+	rad := DegToRad * vehicle.Angle
+	x_angle := math.Cos(rad)
+	y_angle := math.Sin(rad)
 	vehicle.X = vehicle.X + (vehicle.Velocity * duration.Seconds() * x_angle)
 	vehicle.Y = vehicle.Y + (vehicle.Velocity * duration.Seconds() * y_angle)
 }

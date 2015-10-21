@@ -121,7 +121,6 @@ func (u *UdpReceiver) receiveUdp() {
 	if readError == nil && encode_error == nil {
 		u.Router.RouteCommand(&a, address)
 	} else {
-		log.Println(string(buffer[:n]))
 		log.Println(readError)
 		log.Println(encode_error)
 		log.Println(address)

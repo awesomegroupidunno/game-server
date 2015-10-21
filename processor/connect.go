@@ -23,8 +23,8 @@ func (t *ConnectCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 	teamNum := rand.Intn(2)
 
 	newVehicle := state.Vehicle{
-		X:             10,
-		Y:             10,
+		X:             300,
+		Y:             300,
 		Velocity:      0.0,
 		Angle:         0.0,
 		Endurance:     100,
