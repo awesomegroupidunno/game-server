@@ -12,6 +12,16 @@ import (
 
 func main() {
 
+	/*
+		f, err := os.OpenFile("testlogfile", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		if err != nil {
+			//f.Fatalf("error opening file: %v", err)
+		}
+		defer f.Close()
+
+		log.SetOutput(f)
+		log.Println("This is a test log entry")
+	*/
 	var waiter sync.WaitGroup
 	waiter.Add(1)
 	log.Println("Server starting up")
@@ -27,7 +37,7 @@ func main() {
 	physics := processor.DefaultPhysics()
 	log.Println("Default Physics created")
 
-	factory := processor.CommandProcessorFactory{Physics: &physics}
+	factory := processor.NewFactory(&physics)
 	log.Println("Command Processor Factory created")
 
 	gameManager := game.NewManager(state.NewGameState(), state_channel, &factory)

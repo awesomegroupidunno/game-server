@@ -10,7 +10,17 @@ type CommandProcessor interface {
 }
 
 type CommandProcessorFactory struct {
-	Physics *Physics
+	Physics  *Physics
+	turnProc *TurnCommandProcessor
+	accProc  *AccelerationCommandProcessor
+	conProc  *ConnectCommandProcessor
+}
+
+func NewFactory(physics *Physics) CommandProcessorFactory {
+	return CommandProcessorFactory{Physics: physics,
+		turnProc: &TurnCommandProcessor{Physics: physics},
+		accProc:  &AccelerationCommandProcessor{Physics: physics},
+		conProc:  &ConnectCommandProcessor{Physics: physics}}
 }
 
 // Returns a command processor for the command passed
@@ -19,11 +29,11 @@ func (f *CommandProcessorFactory) GetCommandProcessor(c *cmd.GameCommand) Comman
 
 	switch (*c).Command().Subtype {
 	case cmd.Turn:
-		return &TurnCommandProcessor{Physics: f.Physics}
+		return f.turnProc
 	case cmd.Acceleration:
-		return &AccelerationCommandProcessor{Physics: f.Physics}
+		return f.accProc
 	case cmd.Connect:
-		return &ConnectCommandProcessor{Physics: f.Physics}
+		return f.conProc
 	}
 
 	return nil
