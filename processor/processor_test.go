@@ -13,7 +13,7 @@ func TestProcessorFactory(t *testing.T) {
 		physics := processor.DefaultPhysics()
 		physics.TurnCommandModifier = 1.0
 		physics.AccelerationCommandModifier = 1.0
-		factory := processor.CommandProcessorFactory{Physics: &physics}
+		factory := processor.NewFactory(&physics)
 
 		t := cmd.NewTurn(1)
 		t_comm := cmd.GameCommand(&t)
@@ -68,37 +68,52 @@ func TestConnectionProcessor(t *testing.T) {
 }
 
 func TestAccelerationProcessor(t *testing.T) {
+	physics := processor.DefaultPhysics()
+	physics.TurnCommandModifier = 1.0
+	physics.AccelerationCommandModifier = 1.0
+	acceleration_processor := processor.AccelerationCommandProcessor{Physics: &physics}
+
+	c := cmd.NewAcceleration(.5)
+	c2 := cmd.NewAcceleration(.2)
+	c.UserId = "abc123"
+	c2.UserId = "abc123"
+
+	accelerate := cmd.GameCommand(&c)
+	accelerate2 := cmd.GameCommand(&c2)
+
+	game_state := state.NewGameState()
+
+	game_state.Vehicles = append(game_state.Vehicles, &(state.Vehicle{Owner: "abc123", Velocity: 0}))
+
 	Convey("Acceleration Processor", t, func() {
-		physics := processor.DefaultPhysics()
-		physics.TurnCommandModifier = 1.0
-		physics.AccelerationCommandModifier = 1.0
-		conn_processor := processor.AccelerationCommandProcessor{Physics: &physics}
-
-		c := cmd.NewAcceleration(.5)
-		c2 := cmd.NewAcceleration(.2)
-		c.UserId = "abc123"
-		c2.UserId = "abc123"
-
-		accelerate := cmd.GameCommand(&c)
-		accelerate2 := cmd.GameCommand(&c2)
-
-		game_state := state.NewGameState()
-
-		game_state.Vehicles = append(game_state.Vehicles, &(state.Vehicle{Owner: "abc123", Velocity: 0}))
 
 		So(len(game_state.Vehicles), ShouldEqual, 1)
 		So(game_state.Vehicles[0].Velocity, ShouldAlmostEqual, 0, .0001)
 
-		conn_processor.Run(&game_state, accelerate)
+		acceleration_processor.Run(&game_state, accelerate)
 		So(game_state.Vehicles[0].Velocity, ShouldAlmostEqual, .5, .0001)
 
-		conn_processor.Run(&game_state, accelerate2)
+		acceleration_processor.Run(&game_state, accelerate2)
 		So(game_state.Vehicles[0].Velocity, ShouldAlmostEqual, .7, .0001)
 
 		accelerate2.Command().UserId = "blach"
-		conn_processor.Run(&game_state, accelerate2)
+		acceleration_processor.Run(&game_state, accelerate2)
 		So(game_state.Vehicles[0].Velocity, ShouldAlmostEqual, .7, .0001)
 
+	})
+
+	Convey("Test Max Speed", t, func() {
+		c.Value = 10000000
+		acceleration_processor.Run(&game_state, accelerate)
+
+		So(game_state.Vehicles[0].Velocity, ShouldBeLessThanOrEqualTo, physics.MaxVehicleVelocity)
+	})
+
+	Convey("Test Max  negative Speed", t, func() {
+		c.Value = -10000000
+		acceleration_processor.Run(&game_state, accelerate)
+
+		So(game_state.Vehicles[0].Velocity, ShouldBeGreaterThanOrEqualTo, -1*physics.MaxVehicleVelocity)
 	})
 }
 
