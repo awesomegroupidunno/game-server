@@ -8,6 +8,6 @@ type Vehicle struct {
 	Endurance     int
 	Team_id       int
 	Max_health    int
-	Current_heath int
+	CurrentHealth int
 	Owner         string
 }

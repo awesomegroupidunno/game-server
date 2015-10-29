@@ -28,10 +28,10 @@ func main() {
 	decoder := encoder.JsonEncoderDecoder{}
 	log.Println("Encoder created")
 
-	ack_channel := make(chan state.Ack, 100)
+	ackChannel := make(chan state.Ack, 100)
 	log.Println("Acking channel created")
 
-	state_channel := make(chan state.StateResponse)
+	stateChannel := make(chan state.StateResponse)
 	log.Println("State channel created")
 
 	physics := processor.DefaultPhysics()
@@ -40,18 +40,18 @@ func main() {
 	factory := processor.NewFactory(&physics)
 	log.Println("Command Processor Factory created")
 
-	gameManager := game.NewManager(state.NewGameState(), state_channel, &factory)
+	gameManager := game.NewManager(state.NewGameState(), stateChannel, &factory)
 	log.Println("Gamemanager created")
 
-	router := game.CommandRouter{Acks: ack_channel, GameManager: &gameManager}
+	router := game.CommandRouter{Acks: ackChannel, GameManager: &gameManager}
 	log.Println("Router created")
 
 	receiver := network.UdpReceiver{PortNumber: ":10001",
 		MaxPacket:      8192,
 		EncoderDecoder: &decoder,
 		Router:         router,
-		Acks:           ack_channel,
-		Responses:      state_channel}
+		Acks:           ackChannel,
+		Responses:      stateChannel}
 
 	log.Println("Udp reciever created")
 	go gameManager.Start()

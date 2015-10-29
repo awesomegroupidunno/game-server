@@ -35,8 +35,8 @@ type GameManager struct {
 //
 // 	state.NewGameState()
 // creates an empty state
-func NewManager(game_state state.GameState, response_channel chan state.StateResponse, factory *processor.CommandProcessorFactory) GameManager {
-	return GameManager{gameState: game_state, responses: response_channel, commandFactory: factory, physicsManager: factory.Physics}
+func NewManager(gameState state.GameState, responseChannel chan state.StateResponse, factory *processor.CommandProcessorFactory) GameManager {
+	return GameManager{gameState: gameState, responses: responseChannel, commandFactory: factory, physicsManager: factory.Physics}
 }
 
 // starts the gamemanager

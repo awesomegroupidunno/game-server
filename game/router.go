@@ -27,5 +27,5 @@ func (r *CommandRouter) RouteCommand(c *cmd.GameCommand, address *net.UDPAddr) {
 // Places an ack in the Ack channel
 func (r *CommandRouter) routePost(c *cmd.GameCommand, address *net.UDPAddr) {
 	r.GameManager.AddCommand((*c))
-	r.Acks <- state.Ack{Uuid: (*c).Command().UniqueId, Address: address}
+	r.Acks <- state.Ack{UUID: (*c).Command().UniqueId, Address: address}
 }

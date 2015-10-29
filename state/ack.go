@@ -3,6 +3,6 @@ package state
 import "net"
 
 type Ack struct {
-	Uuid    string
+	UUID    string
 	Address *net.UDPAddr
 }

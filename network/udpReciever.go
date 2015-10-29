@@ -56,10 +56,10 @@ func (u *UdpReceiver) start() {
 		log.Fatal(err_add)
 	}
 
-	connection, err_con := net.ListenUDP("udp", server_address)
+	connection, errConn := net.ListenUDP("udp", server_address)
 
-	if err_con != nil {
-		log.Fatal(err_con)
+	if errConn != nil {
+		log.Fatal(errConn)
 	}
 	u.connection = connection
 	go u.startReceiver()
@@ -101,7 +101,7 @@ func (u *UdpReceiver) startSender() {
 func (u *UdpReceiver) startAcker() {
 	for {
 		ack := <-u.Acks
-		u.connection.WriteToUDP([]byte(ack.Uuid), ack.Address)
+		u.connection.WriteToUDP([]byte(ack.UUID), ack.Address)
 	}
 }
 

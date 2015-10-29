@@ -52,10 +52,10 @@ func (p *Physics) VehicleFrictionSlow(vehicle *state.Vehicle, duration time.Dura
 // 		returns x,y
 func (p *Physics) move2d(x, y, angle, velocity float64, duration time.Duration) (float64, float64) {
 	rad := DegToRad * angle
-	x_angle := math.Cos(rad)
-	y_angle := math.Sin(rad)
-	x = x + (velocity * duration.Seconds() * x_angle)
-	y = y + (velocity * duration.Seconds() * y_angle)
+	xAngle := math.Cos(rad)
+	yAngle := math.Sin(rad)
+	x = x + (velocity * duration.Seconds() * xAngle)
+	y = y + (velocity * duration.Seconds() * yAngle)
 	return x, y
 
 }
