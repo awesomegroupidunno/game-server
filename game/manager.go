@@ -36,6 +36,10 @@ type GameManager struct {
 // 	state.NewGameState()
 // creates an empty state
 func NewManager(gameState state.GameState, responseChannel chan state.StateResponse, factory *processor.CommandProcessorFactory) GameManager {
+	stateMutex.Lock()
+	commandsMutex.Lock()
+	defer stateMutex.Unlock()
+	defer commandsMutex.Unlock()
 	return GameManager{gameState: gameState, responses: responseChannel, commandFactory: factory, physicsManager: factory.Physics}
 }
 
@@ -57,10 +61,14 @@ func (g *GameManager) Start() {
 	for {
 		if g.isStarted && !g.isPaused {
 			g.tick()
-			g.lastTick = time.Now()
-			time.Sleep(15 * time.Millisecond)
-			g.responses <- state.StateResponse{State: g.gameState}
 		}
+		stateMutex.Lock()
+		g.lastTick = time.Now()
+		stateMutex.Unlock()
+
+		g.responses <- state.StateResponse{State: g.gameState}
+		time.Sleep(15 * time.Millisecond)
+
 	}
 
 }
