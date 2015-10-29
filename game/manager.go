@@ -65,8 +65,8 @@ func (g *GameManager) Start() {
 		stateMutex.Lock()
 		g.lastTick = time.Now()
 		stateMutex.Unlock()
-
 		g.responses <- state.StateResponse{State: g.gameState}
+
 		time.Sleep(15 * time.Millisecond)
 
 	}
@@ -78,16 +78,16 @@ func (g *GameManager) Start() {
 // Threadsafe
 func (g *GameManager) Pause() {
 	stateMutex.Lock()
+	defer stateMutex.Unlock()
 	g.isPaused = true
-	stateMutex.Unlock()
 }
 
 //Resumes execution
 // Treadsafe
 func (g *GameManager) Resume() {
 	stateMutex.Lock()
+	defer stateMutex.Unlock()
 	g.isPaused = false
-	stateMutex.Unlock()
 }
 
 // Adds a command to be processed by the GameManager
@@ -95,8 +95,8 @@ func (g *GameManager) Resume() {
 // Threadsafe
 func (g *GameManager) AddCommand(c cmd.GameCommand) {
 	commandsMutex.Lock()
+	defer commandsMutex.Unlock()
 	g.commandsToProcess = append(g.commandsToProcess, &c)
-	commandsMutex.Unlock()
 }
 
 // Performs next step in the game
