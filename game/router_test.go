@@ -11,7 +11,7 @@ import (
 
 func TestRoutePost(t *testing.T) {
 	ack_channel := make(chan state.Ack, 100)
-	state_channel := make(chan state.StateResponse)
+	state_channel := make(chan state.StateResponse, 100)
 
 	physics := processor.Physics{}
 	factory := processor.CommandProcessorFactory{Physics: &physics}
@@ -38,7 +38,7 @@ func TestRoutePost(t *testing.T) {
 
 func TestRoute(t *testing.T) {
 	ack_channel := make(chan state.Ack, 100)
-	state_channel := make(chan state.StateResponse)
+	state_channel := make(chan state.StateResponse, 100)
 
 	physics := processor.Physics{}
 	factory := processor.CommandProcessorFactory{Physics: &physics}

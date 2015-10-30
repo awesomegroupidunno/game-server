@@ -9,6 +9,8 @@ type Vehicle struct {
 	Y             float64
 	Velocity      float64
 	Angle         float64
+	Width         float64
+	Height        float64
 	Endurance     int
 	Team_id       int
 	Max_health    int
@@ -21,7 +23,7 @@ func (v Vehicle) Position() (x float64, y float64) {
 }
 
 func (v Vehicle) Size() (width float64, height float64) {
-	return 50.0, 75.0
+	return v.Width, v.Height
 }
 
 func (v Vehicle) AngleDegrees() float64 {

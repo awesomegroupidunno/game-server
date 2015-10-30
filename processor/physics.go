@@ -16,6 +16,8 @@ type Physics struct {
 	TurnCommandModifier         float64
 	MaxVehicleVelocity          float64
 	FrictionSpeedLoss           float64
+	VehicleWidth                float64
+	VehicleHeight               float64
 }
 
 func DefaultPhysics() Physics {
@@ -23,7 +25,9 @@ func DefaultPhysics() Physics {
 		AccelerationCommandModifier: 5.0,
 		TurnCommandModifier:         3.0,
 		MaxVehicleVelocity:          150.0,
-		FrictionSpeedLoss:           20.0}
+		FrictionSpeedLoss:           20.0,
+		VehicleWidth:                50,
+		VehicleHeight:               75}
 }
 
 func (p *Physics) MoveVehicle(vehicle *state.Vehicle, duration time.Duration) {

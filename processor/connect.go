@@ -31,6 +31,8 @@ func (t *ConnectCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 		Team_id:       teamNum,
 		Max_health:    100,
 		CurrentHealth: 100,
+		Width:         t.Physics.VehicleWidth,
+		Height:        t.Physics.VehicleHeight,
 		Owner:         command.UserId}
 	g.Vehicles = append(g.Vehicles, &newVehicle)
 

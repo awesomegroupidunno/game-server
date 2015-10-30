@@ -12,12 +12,12 @@ import (
 func TestControl(t *testing.T) {
 
 	current_state := state.NewGameState()
-	response_channel := make(chan state.StateResponse)
+	response_channel := make(chan state.StateResponse, 100)
 
 	physics := processor.DefaultPhysics()
 	physics.TurnCommandModifier = 1.0
 	physics.AccelerationCommandModifier = 1.0
-	factory := processor.CommandProcessorFactory{Physics: &physics}
+	factory := processor.NewFactory(&physics)
 
 	manager := NewManager(current_state, response_channel, &factory)
 	go manager.Start()
@@ -37,15 +37,14 @@ func TestControl(t *testing.T) {
 func TestCommandConsumption(t *testing.T) {
 
 	current_state := state.NewGameState()
-	response_channel := make(chan state.StateResponse)
+	response_channel := make(chan state.StateResponse, 100)
 
 	physics := processor.DefaultPhysics()
 	physics.TurnCommandModifier = 1.0
 	physics.AccelerationCommandModifier = 1.0
-	factory := processor.CommandProcessorFactory{Physics: &physics}
+	factory := processor.NewFactory(&physics)
 
 	manager := NewManager(current_state, response_channel, &factory)
-	go manager.Start()
 
 	Convey("Pause", t, func() {
 		manager.Pause()
