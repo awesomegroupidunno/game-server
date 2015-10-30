@@ -56,7 +56,7 @@ func TestConnection(t *testing.T) {
 		n, err := bufio.NewReader(conn).Read(response)
 		So(err, ShouldEqual, nil)
 
-		resp := state.StateResponse{}
+		resp := state.GameState{}
 
 		unmarshal_error := json.Unmarshal(response[:n], &resp)
 		So(unmarshal_error, ShouldEqual, nil)

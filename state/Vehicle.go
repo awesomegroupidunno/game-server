@@ -12,7 +12,7 @@ type Vehicle struct {
 	Width         float64
 	Height        float64
 	Endurance     int
-	Team_id       int
+	TeamId        int
 	Max_health    int
 	CurrentHealth int
 	Owner         string

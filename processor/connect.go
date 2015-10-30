@@ -28,7 +28,7 @@ func (t *ConnectCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 		Velocity:      0.0,
 		Angle:         0.0,
 		Endurance:     100,
-		Team_id:       teamNum,
+		TeamId:        teamNum,
 		Max_health:    100,
 		CurrentHealth: 100,
 		Width:         t.Physics.VehicleWidth,
