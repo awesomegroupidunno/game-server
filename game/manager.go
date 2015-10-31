@@ -59,7 +59,7 @@ func (g *GameManager) Start() {
 	stateMutex.Unlock()
 
 	for {
-		if g.isStarted && !g.isPaused {
+		if g.shouldTick() {
 			g.tick()
 		}
 		stateMutex.Lock()
@@ -88,6 +88,14 @@ func (g *GameManager) Resume() {
 	stateMutex.Lock()
 	defer stateMutex.Unlock()
 	g.isPaused = false
+}
+
+//Returns if tick should be called
+// Treadsafe
+func (g *GameManager) shouldTick() bool {
+	stateMutex.Lock()
+	defer stateMutex.Unlock()
+	return g.isStarted && !g.isPaused
 }
 
 // Adds a command to be processed by the GameManager
