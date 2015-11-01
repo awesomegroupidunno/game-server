@@ -16,6 +16,7 @@ type Vehicle struct {
 	Max_health    int
 	CurrentHealth int
 	Owner         string
+	Mass          float64
 }
 
 func (v Vehicle) Position() (x float64, y float64) {

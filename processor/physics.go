@@ -52,12 +52,42 @@ func (p *Physics) VehicleFrictionSlow(vehicle *state.Vehicle, duration time.Dura
 	}
 }
 
-// calculates new x and y position for 2d motion
-// 		returns x,y
-func (p *Physics) move2d(x, y, angle, velocity float64, duration time.Duration) (float64, float64) {
+func (p *Physics) VehicleCollisionPhysics(v1, v2 *state.Vehicle) {
+	cos1, sin1 := splitComponent(v1.Angle)
+	cos2, sin2 := splitComponent(v2.Angle)
+
+	px1 := (cos1 * v1.Velocity) * v1.Mass
+	py1 := (sin1 * v1.Velocity) * v1.Mass
+
+	px2 := (cos2 * v2.Velocity) * v2.Mass
+	py2 := (sin2 * v2.Velocity) * v2.Mass
+
+	totalpx := px1 + px2
+	totalpy := py1 + py2
+
+	v1.Velocity = combineComponents(totalpx/2, totalpy/2)
+	v2.Velocity = combineComponents(totalpx/2, totalpy/2)
+
+	v1.Angle = math.Atan2(totalpy, totalpx) * RadToDeg
+	v2.Angle = math.Atan2(totalpy, totalpx) * RadToDeg
+
+}
+
+func splitComponent(angle float64) (x, y float64) {
 	rad := DegToRad * angle
 	xAngle := math.Cos(rad)
 	yAngle := math.Sin(rad)
+	return xAngle, yAngle
+}
+
+func combineComponents(x, y float64) (resultant float64) {
+	return math.Sqrt(x*x + y*y)
+}
+
+// calculates new x and y position for 2d motion
+// 		returns x,y
+func (p *Physics) move2d(x, y, angle, velocity float64, duration time.Duration) (float64, float64) {
+	xAngle, yAngle := splitComponent(angle)
 	x = x + (velocity * duration.Seconds() * xAngle)
 	y = y + (velocity * duration.Seconds() * yAngle)
 	return x, y
