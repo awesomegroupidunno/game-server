@@ -34,3 +34,22 @@ func TestStateCopy(t *testing.T) {
 		So(theCopy.GameOver, ShouldEqual, a.GameOver)
 	})
 }
+
+func TestBox2d(t *testing.T) {
+	vehicle := state.Vehicle{X: 10,
+		Y:      20,
+		Width:  15,
+		Height: 40,
+		Angle:  3}
+	Convey("Proper Box", t, func() {
+		So(vehicle.AngleDegrees(), ShouldAlmostEqual, vehicle.Angle, .001)
+		x, y := vehicle.Position()
+		w, h := vehicle.Size()
+
+		So(x, ShouldAlmostEqual, vehicle.X, .001)
+		So(y, ShouldAlmostEqual, vehicle.Y, .001)
+		So(w, ShouldAlmostEqual, vehicle.Width, .001)
+		So(h, ShouldAlmostEqual, vehicle.Height, .001)
+
+	})
+}

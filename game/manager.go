@@ -2,6 +2,7 @@ package game
 
 import (
 	"github.com/awesomegroupidunno/game-server/cmd"
+	"github.com/awesomegroupidunno/game-server/collision"
 	"github.com/awesomegroupidunno/game-server/processor"
 	"github.com/awesomegroupidunno/game-server/state"
 	"log"
@@ -127,9 +128,16 @@ func (g *GameManager) tick() {
 		proc.Run(&(g.gameState), *command)
 	}
 
-	for _, vehicle := range g.gameState.Vehicles {
+	for z, vehicle := range g.gameState.Vehicles {
 		g.physicsManager.MoveVehicle(vehicle, tickDuration)
 		g.physicsManager.VehicleFrictionSlow(vehicle, tickDuration)
+
+		for i := z + 1; i < len(g.gameState.Vehicles); i++ {
+			if collision.Collides(vehicle, g.gameState.Vehicles[i]) {
+				log.Println("collision")
+			}
+		}
+
 	}
 
 	stateMutex.Unlock()
