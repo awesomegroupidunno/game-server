@@ -3,7 +3,6 @@ package processor
 import (
 	"github.com/awesomegroupidunno/game-server/cmd"
 	"github.com/awesomegroupidunno/game-server/state"
-	"math/rand"
 )
 
 type ConnectCommandProcessor struct {
@@ -20,7 +19,7 @@ func (t *ConnectCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 	}
 
 	// For now, randomly join team 0 or 1
-	teamNum := rand.Intn(2)
+	teamNum := len(g.Vehicles) % 2
 
 	newVehicle := state.Vehicle{
 		X:             300,

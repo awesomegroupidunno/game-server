@@ -14,7 +14,7 @@ type CommandRouter struct {
 // Routes the command to the proper place
 // Currently just puts commands in the GameManager's commands list
 func (r *CommandRouter) RouteCommand(c *cmd.GameCommand, address *net.UDPAddr) {
-	(*c).Command().UserId = address.String()
+	(*c).Command().UserId = address.IP.String()
 	commandType := (*c).Command().Type
 	if commandType == cmd.Get {
 	} else if commandType == cmd.Post {
