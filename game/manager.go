@@ -134,7 +134,8 @@ func (g *GameManager) tick() {
 
 		for i := z + 1; i < len(g.gameState.Vehicles); i++ {
 			if collision.Collides(vehicle, g.gameState.Vehicles[i]) {
-				g.physicsManager.VehicleCollisionPhysics(vehicle, g.gameState.Vehicles[i])
+				log.Println("collision")
+				//g.physicsManager.VehicleCollisionPhysics(vehicle, g.gameState.Vehicles[i])
 			}
 		}
 

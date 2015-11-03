@@ -24,7 +24,7 @@ func (v Vehicle) Position() (x float64, y float64) {
 }
 
 func (v Vehicle) Size() (width float64, height float64) {
-	return v.Width, v.Height
+	return v.Height, v.Width
 }
 
 func (v Vehicle) AngleDegrees() float64 {

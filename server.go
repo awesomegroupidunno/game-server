@@ -40,7 +40,24 @@ func main() {
 	factory := processor.NewFactory(&physics)
 	log.Println("Command Processor Factory created")
 
-	gameManager := game.NewManager(state.NewGameState(), stateChannel, &factory)
+	current_state := state.NewGameState()
+
+	newVehicle := state.Vehicle{
+		X:             100,
+		Y:             100,
+		Velocity:      0.0,
+		Angle:         0,
+		Endurance:     100,
+		TeamId:        0,
+		Max_health:    100,
+		CurrentHealth: 100,
+		Width:         50,
+		Height:        75,
+		Owner:         "defaultUser",
+		Mass:          10}
+	current_state.Vehicles = append(current_state.Vehicles, &newVehicle)
+
+	gameManager := game.NewManager(current_state, stateChannel, &factory)
 	log.Println("Gamemanager created")
 
 	router := game.CommandRouter{Acks: ackChannel, GameManager: &gameManager}

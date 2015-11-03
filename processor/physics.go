@@ -62,11 +62,18 @@ func (p *Physics) VehicleCollisionPhysics(v1, v2 *state.Vehicle) {
 	px2 := (cos2 * v2.Velocity) * v2.Mass
 	py2 := (sin2 * v2.Velocity) * v2.Mass
 
-	totalpx := px1 + px2
-	totalpy := py1 + py2
+	totalpx := (px1 + px2) / 4
+	totalpy := (py1 + py2) / 4
 
-	v1.Velocity = combineComponents(totalpx/2, totalpy/2)
-	v2.Velocity = combineComponents(totalpx/2, totalpy/2)
+	v1.Velocity = combineComponents(totalpx/3, totalpy/3*2)
+	v2.Velocity = combineComponents(totalpx/3*2, totalpy/3)
+
+	if math.Abs(v1.Velocity) >= p.MaxVehicleVelocity*2 {
+		v1.Velocity = math.Abs(v1.Velocity) / v1.Velocity * p.MaxVehicleVelocity * 2
+	}
+	if math.Abs(v2.Velocity) >= p.MaxVehicleVelocity*2 {
+		v2.Velocity = math.Abs(v2.Velocity) / v2.Velocity * p.MaxVehicleVelocity * 2
+	}
 
 	v1.Angle = math.Atan2(totalpy, totalpx) * RadToDeg
 	v2.Angle = math.Atan2(totalpy, totalpx) * RadToDeg
