@@ -42,6 +42,13 @@ func (p *Physics) MoveVehicle(vehicle *state.Vehicle, duration time.Duration) {
 	vehicle.Y = y
 }
 
+func (p *Physics) MoveBullet(bullet *state.Bullet, duration time.Duration) {
+	x, y := p.move2d(bullet.X, bullet.Y, bullet.Angle, bullet.Velocity, duration)
+
+	bullet.X = x
+	bullet.Y = y
+}
+
 func (p *Physics) VehicleFrictionSlow(vehicle *state.Vehicle, duration time.Duration) {
 	speedLoss := p.FrictionSpeedLoss * duration.Seconds()
 	if vehicle.Velocity > 0 {

@@ -128,12 +128,9 @@ func (g *GameManager) tick() {
 		proc.Run(&(g.gameState), *command)
 	}
 
-	/*
-		for bullet := range g.gameState.Bullets{
-			g.physicsManager.MoveBullet(bullet, tickDuration)
-
-		}
-	*/
+	for _, bullet := range g.gameState.Bullets {
+		g.physicsManager.MoveBullet(bullet, tickDuration)
+	}
 
 	for z, vehicle := range g.gameState.Vehicles {
 		g.physicsManager.MoveVehicle(vehicle, tickDuration)
@@ -141,8 +138,12 @@ func (g *GameManager) tick() {
 
 		for i := z + 1; i < len(g.gameState.Vehicles); i++ {
 			if collision.Collides(vehicle, g.gameState.Vehicles[i]) {
-				log.Println("collision")
-				//g.physicsManager.VehicleCollisionPhysics(vehicle, g.gameState.Vehicles[i])
+				log.Println("Vehicle collision")
+			}
+		}
+		for _, bullet := range g.gameState.Bullets {
+			if collision.Collides(vehicle, bullet) {
+				log.Println("bullet collision")
 			}
 		}
 
