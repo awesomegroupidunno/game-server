@@ -23,7 +23,7 @@ func (t *FireCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 		Width:    t.Physics.BulletWidth,
 		Height:   t.Physics.BulletWidth,
 		Velocity: t.Physics.BulletVelocity,
-		Angle:    vehicle.Velocity}
+		Angle:    vehicle.Angle}
 
 	g.Bullets = append(g.Bullets, &b)
 
