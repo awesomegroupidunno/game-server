@@ -16,6 +16,7 @@ func (g *GameState) Copy() GameState {
 	copy(stateCopy.Vehicles, g.Vehicles)
 	copy(stateCopy.Bases, g.Bases)
 	copy(stateCopy.ShieldGenerators, g.ShieldGenerators)
+	copy(stateCopy.Bullets, g.Bullets)
 
 	return stateCopy
 }

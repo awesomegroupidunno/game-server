@@ -18,6 +18,8 @@ type Physics struct {
 	FrictionSpeedLoss           float64
 	VehicleWidth                float64
 	VehicleHeight               float64
+	BulletVelocity              float64
+	BulletWidth                 float64
 }
 
 func DefaultPhysics() Physics {
@@ -27,7 +29,10 @@ func DefaultPhysics() Physics {
 		MaxVehicleVelocity:          150.0,
 		FrictionSpeedLoss:           20.0,
 		VehicleWidth:                50,
-		VehicleHeight:               75}
+		VehicleHeight:               75,
+		BulletVelocity:              200.0,
+		BulletWidth:                 10,
+	}
 }
 
 func (p *Physics) MoveVehicle(vehicle *state.Vehicle, duration time.Duration) {

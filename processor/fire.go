@@ -3,7 +3,6 @@ package processor
 import (
 	"github.com/awesomegroupidunno/game-server/cmd"
 	"github.com/awesomegroupidunno/game-server/state"
-	"log"
 )
 
 type FireCommandProcessor struct {
@@ -18,6 +17,14 @@ func (t *FireCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 		return
 	}
 
-	log.Println("Fire from:" + command.UserId)
+	b := state.Bullet{
+		X:        vehicle.X,
+		Y:        vehicle.Y,
+		Width:    t.Physics.BulletWidth,
+		Height:   t.Physics.BulletWidth,
+		Velocity: t.Physics.BulletVelocity,
+		Angle:    vehicle.Velocity}
+
+	g.Bullets = append(g.Bullets, &b)
 
 }

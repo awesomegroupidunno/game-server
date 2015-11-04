@@ -128,6 +128,13 @@ func (g *GameManager) tick() {
 		proc.Run(&(g.gameState), *command)
 	}
 
+	/*
+		for bullet := range g.gameState.Bullets{
+			g.physicsManager.MoveBullet(bullet, tickDuration)
+
+		}
+	*/
+
 	for z, vehicle := range g.gameState.Vehicles {
 		g.physicsManager.MoveVehicle(vehicle, tickDuration)
 		g.physicsManager.VehicleFrictionSlow(vehicle, tickDuration)
