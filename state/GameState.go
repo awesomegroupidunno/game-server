@@ -27,7 +27,8 @@ func NewGameState() GameState {
 		Vehicles:         []*Vehicle{},
 		Bases:            []*Base{},
 		ShieldGenerators: []*ShieldGenerator{},
-		GameOver:         false}
+		GameOver:         false,
+		Bullets:          []*Bullet{}}
 	return state
 }
 
