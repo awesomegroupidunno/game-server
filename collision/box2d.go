@@ -1,6 +1,7 @@
 package collision
 
 import (
+	"log"
 	"math"
 )
 
@@ -59,7 +60,7 @@ func isPolygonIntersect(a, b polygon) bool {
 			p1 := polygon.Points()[i1]
 			p2 := polygon.Points()[i2]
 
-			normal := point{X: p2.Y - p1.Y, Y: p1.X - p2.X}
+			normal := point{Y: p2.Y - p1.Y, X: p1.X - p2.X}
 
 			var minA, maxA float64
 			minAnil := true
@@ -96,7 +97,8 @@ func isPolygonIntersect(a, b polygon) bool {
 			}
 		}
 	}
-
+	log.Println(a)
+	log.Println(b)
 	return true
 }
 
