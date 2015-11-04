@@ -40,6 +40,10 @@ func (j *JsonEncoderDecoder) Decode(b []byte) (cmd.GameCommand, error) {
 			s := cmd.ConnectCommand{}
 			e := json.Unmarshal(b, &s)
 			return &s, e
+		case cmd.Fire:
+			s := cmd.FireCommand{}
+			e := json.Unmarshal(b, &s)
+			return &s, e
 		}
 
 	}

@@ -14,13 +14,15 @@ type CommandProcessorFactory struct {
 	turnProc *TurnCommandProcessor
 	accProc  *AccelerationCommandProcessor
 	conProc  *ConnectCommandProcessor
+	fireProc *FireCommandProcessor
 }
 
 func NewFactory(physics *Physics) CommandProcessorFactory {
 	return CommandProcessorFactory{Physics: physics,
 		turnProc: &TurnCommandProcessor{Physics: physics},
 		accProc:  &AccelerationCommandProcessor{Physics: physics},
-		conProc:  &ConnectCommandProcessor{Physics: physics}}
+		conProc:  &ConnectCommandProcessor{Physics: physics},
+		fireProc: &FireCommandProcessor{Physics: physics}}
 }
 
 // Returns a command processor for the command passed
@@ -34,6 +36,8 @@ func (f *CommandProcessorFactory) GetCommandProcessor(c *cmd.GameCommand) Comman
 		return f.accProc
 	case cmd.Connect:
 		return f.conProc
+	case cmd.Fire:
+		return f.fireProc
 	}
 
 	return nil
