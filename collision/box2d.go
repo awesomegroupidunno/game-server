@@ -1,5 +1,9 @@
 package collision
 
+import (
+	"math"
+)
+
 type Box2d interface {
 	Position() (float64, float64)
 	Size() (float64, float64)
@@ -22,21 +26,23 @@ type polygon interface {
 func boxToPoly(b Box2d) boxPoly {
 	cen_x, cen_y := b.Position()
 	width, height := b.Size()
+	angle := b.AngleDegrees()
 
 	points := [4]point{}
 
-	points[0] = point{X: cen_x - width/2,
-		Y: cen_y - height/2}
+	points[0] = point{X: getX(-width/2, -height/2, angle) + cen_x,
+		Y: getY(-width/2, -height/2, angle) + cen_y}
 
-	points[1] = point{X: cen_x + width/2,
-		Y: cen_y - height/2}
+	points[1] = point{X: getX(width/2, -height/2, angle) + cen_x,
+		Y: getY(width/2, -height/2, angle) + cen_y}
 
-	points[2] = point{X: cen_x - width/2,
-		Y: cen_y + height/2}
+	points[2] = point{X: getX(-width/2, +height/2, angle) + cen_x,
+		Y: getY(-width/2, height/2, angle) + cen_y}
 
-	points[3] = point{X: cen_x + width/2,
-		Y: cen_y + height/2}
+	points[3] = point{X: getX(width/2, height/2, angle) + cen_x,
+		Y: getY(width/2, height/2, angle) + cen_y}
 	z := boxPoly{points: points[:4]}
+
 	return z
 }
 
@@ -56,18 +62,17 @@ func isPolygonIntersect(a, b polygon) bool {
 			normal := point{X: p2.Y - p1.Y, Y: p1.X - p2.X}
 
 			var minA, maxA float64
-			var minAnill, maxAnill bool
-			minAnill = true
-			maxAnill = true
+			minAnil := true
+			maxAnil := true
 			for _, p := range a.Points() {
 				projected := normal.X*p.X + normal.Y*p.Y
-				if minAnill == true || projected < minA {
+				if minAnil == true || projected < minA {
 					minA = projected
-					minAnill = false
+					minAnil = false
 				}
-				if maxAnill == true || projected > maxA {
+				if maxAnil == true || projected > maxA {
 					maxA = projected
-					maxAnill = false
+					maxAnil = false
 				}
 			}
 
@@ -97,4 +102,13 @@ func isPolygonIntersect(a, b polygon) bool {
 
 func Collides(b, t Box2d) bool {
 	return isPolygonIntersect(boxToPoly(b), boxToPoly(t))
+}
+
+func getY(x, y, theta float64) float64 {
+	theta = theta * math.Pi / 180
+	return x*math.Sin(theta) + y*math.Cos(theta)
+}
+func getX(x, y, theta float64) float64 {
+	theta = theta * math.Pi / 180
+	return x*math.Cos(theta) - y*math.Sin(theta)
 }
