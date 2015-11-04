@@ -132,6 +132,8 @@ func (g *GameManager) tick() {
 		g.physicsManager.MoveBullet(bullet, tickDuration)
 	}
 
+	g.gameState.Bullets = g.physicsManager.CleanUpBullets(g.gameState.Bullets)
+
 	for z, vehicle := range g.gameState.Vehicles {
 		g.physicsManager.MoveVehicle(vehicle, tickDuration)
 		g.physicsManager.VehicleFrictionSlow(vehicle, tickDuration)
@@ -142,8 +144,10 @@ func (g *GameManager) tick() {
 			}
 		}
 		for _, bullet := range g.gameState.Bullets {
-			if collision.Collides(vehicle, bullet) {
-				log.Println("bullet collision")
+			if bullet.OwnerId != vehicle.Owner {
+				if collision.Collides(vehicle, bullet) {
+					log.Println("bullet collision")
+				}
 			}
 		}
 

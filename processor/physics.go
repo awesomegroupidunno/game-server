@@ -12,6 +12,8 @@ const (
 )
 
 type Physics struct {
+	WorldWidth                  float64
+	WorldHeight                 float64
 	AccelerationCommandModifier float64
 	TurnCommandModifier         float64
 	MaxVehicleVelocity          float64
@@ -24,6 +26,8 @@ type Physics struct {
 
 func DefaultPhysics() Physics {
 	return Physics{
+		WorldWidth:                  640.0,
+		WorldHeight:                 480.0,
 		AccelerationCommandModifier: 5.0,
 		TurnCommandModifier:         3.0,
 		MaxVehicleVelocity:          150.0,
@@ -90,6 +94,21 @@ func (p *Physics) VehicleCollisionPhysics(v1, v2 *state.Vehicle) {
 	v1.Angle = math.Atan2(totalpy, totalpx) * RadToDeg
 	v2.Angle = math.Atan2(totalpy, totalpx) * RadToDeg
 
+}
+
+func (p *Physics) CleanUpBullets(bullets []*state.Bullet) []*state.Bullet {
+	for i := 0; i < len(bullets); i++ {
+		bullet := bullets[i]
+		shouldRemove := bullet.X < 0 || bullet.Y < 0
+		shouldRemove = shouldRemove || bullet.X > p.WorldWidth
+		shouldRemove = shouldRemove || bullet.Y > p.WorldHeight
+
+		if shouldRemove {
+			bullets = append(bullets[:i], bullets[(1+i):]...)
+		}
+	}
+
+	return bullets
 }
 
 func splitComponent(angle float64) (x, y float64) {
