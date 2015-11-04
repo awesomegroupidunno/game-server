@@ -1,10 +1,10 @@
 package collision
 
 import (
-	"log"
 	"math"
 )
 
+// A simple interface for rotatable 2d rectangles
 type Box2d interface {
 	Position() (float64, float64)
 	Size() (float64, float64)
@@ -24,7 +24,8 @@ type polygon interface {
 	Points() []point
 }
 
-func boxToPoly(b Box2d) boxPoly {
+// converts a Box2d to a polygon
+func boxToPoly(b Box2d) polygon {
 	cen_x, cen_y := b.Position()
 	width, height := b.Size()
 	angle := b.AngleDegrees()
@@ -37,7 +38,7 @@ func boxToPoly(b Box2d) boxPoly {
 	points[1] = point{X: getX(width/2, -height/2, angle) + cen_x,
 		Y: getY(width/2, -height/2, angle) + cen_y}
 
-	points[2] = point{X: getX(-width/2, +height/2, angle) + cen_x,
+	points[2] = point{X: getX(-width/2, height/2, angle) + cen_x,
 		Y: getY(-width/2, height/2, angle) + cen_y}
 
 	points[3] = point{X: getX(width/2, height/2, angle) + cen_x,
@@ -47,10 +48,13 @@ func boxToPoly(b Box2d) boxPoly {
 	return z
 }
 
+//
 func (b boxPoly) Points() []point {
 	return b.points
 }
 
+// Determines if 2 polygons intersect
+// original algorithm can be found here: http://stackoverflow.com/questions/10962379/how-to-check-intersection-between-2-rotated-rectangles
 func isPolygonIntersect(a, b polygon) bool {
 	shapes := [2]polygon{a, b}
 	for _, polygon := range shapes {
@@ -62,33 +66,27 @@ func isPolygonIntersect(a, b polygon) bool {
 
 			normal := point{Y: p2.Y - p1.Y, X: p1.X - p2.X}
 
-			var minA, maxA float64
-			minAnil := true
-			maxAnil := true
+			minA := math.MaxFloat64
+			maxA := (math.MaxFloat64 * -1)
 			for _, p := range a.Points() {
 				projected := normal.X*p.X + normal.Y*p.Y
-				if minAnil == true || projected < minA {
+				if projected < minA {
 					minA = projected
-					minAnil = false
 				}
-				if maxAnil == true || projected > maxA {
+				if projected > maxA {
 					maxA = projected
-					maxAnil = false
 				}
 			}
 
-			var minB, maxB float64
-			minBnil := true
-			maxBnil := true
+			minB := math.MaxFloat64
+			maxB := (math.MaxFloat64 * -1)
 			for _, p := range b.Points() {
 				projected := normal.X*p.X + normal.Y*p.Y
-				if minBnil == true || projected < minB {
+				if projected < minB {
 					minB = projected
-					minBnil = false
 				}
-				if maxBnil == true || projected > maxB {
+				if projected > maxB {
 					maxB = projected
-					maxBnil = false
 				}
 			}
 
@@ -97,19 +95,22 @@ func isPolygonIntersect(a, b polygon) bool {
 			}
 		}
 	}
-	log.Println(a)
-	log.Println(b)
 	return true
 }
 
+// Checks 2 Box2d Objects for collisions
+// returns true if they collide
 func Collides(b, t Box2d) bool {
 	return isPolygonIntersect(boxToPoly(b), boxToPoly(t))
 }
 
+// Returns the Y value of the endpoint
 func getY(x, y, theta float64) float64 {
 	theta = theta * math.Pi / 180
 	return x*math.Sin(theta) + y*math.Cos(theta)
 }
+
+// Returns the Y value of the endpoint
 func getX(x, y, theta float64) float64 {
 	theta = theta * math.Pi / 180
 	return x*math.Cos(theta) - y*math.Sin(theta)
