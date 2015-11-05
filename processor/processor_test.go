@@ -5,6 +5,7 @@ import (
 	"github.com/awesomegroupidunno/game-server/processor"
 	"github.com/awesomegroupidunno/game-server/state"
 	. "github.com/smartystreets/goconvey/convey"
+	"log"
 	"testing"
 )
 
@@ -176,6 +177,7 @@ func TestFireProcessor(t *testing.T) {
 
 		fireCommand := cmd.NewFire()
 		fireCommand.UserId = "abc"
+
 		connectCommand := cmd.NewConnect("abc")
 		connectCommand.UserId = "abc"
 
