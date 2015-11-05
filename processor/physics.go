@@ -96,6 +96,32 @@ func (p *Physics) VehicleCollisionPhysics(v1, v2 *state.Vehicle) {
 
 }
 
+func (p *Physics) VehicleBounding(v *state.Vehicle) {
+	shouldStop := v.X < 0
+
+	if shouldStop {
+		v.X = 2
+	}
+
+	if v.Y < 0 {
+		shouldStop = true
+		v.Y = 2
+	}
+
+	if v.Y > p.WorldHeight {
+		shouldStop = true
+		v.Y = p.WorldHeight - 2
+	}
+	if v.X > p.WorldWidth {
+		shouldStop = true
+		v.X = p.WorldWidth - 2
+	}
+	if shouldStop {
+		v.Velocity = 0
+	}
+
+}
+
 func (p *Physics) CleanUpBullets(bullets []*state.Bullet) []*state.Bullet {
 	for i := 0; i < len(bullets); i++ {
 		bullet := bullets[i]

@@ -120,9 +120,11 @@ func (g *GameManager) tick() {
 
 	stateMutex.Lock()
 	tickDuration := time.Since(g.lastTick)
-	if len(commands) > 0 {
-		log.Printf("Ticking with %d commands", len(commands))
+
+	if tickDuration > (50 * time.Millisecond) {
+		log.Println("Lag spike detected")
 	}
+
 	for _, command := range commands {
 		proc := g.commandFactory.GetCommandProcessor(command)
 		proc.Run(&(g.gameState), *command)
@@ -135,6 +137,7 @@ func (g *GameManager) tick() {
 	g.gameState.Bullets = g.physicsManager.CleanUpBullets(g.gameState.Bullets)
 
 	for z, vehicle := range g.gameState.Vehicles {
+		g.physicsManager.VehicleBounding(vehicle)
 		g.physicsManager.MoveVehicle(vehicle, tickDuration)
 		g.physicsManager.VehicleFrictionSlow(vehicle, tickDuration)
 
