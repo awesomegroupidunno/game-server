@@ -165,3 +165,39 @@ func TestTurnProcessor(t *testing.T) {
 
 	})
 }
+
+func TestFireProcessor(t *testing.T) {
+	Convey("Fire Processor", t, func() {
+		physics := processor.DefaultPhysics()
+		physics.TurnCommandModifier = 1.0
+		physics.AccelerationCommandModifier = 1.0
+		fireProcessor := processor.FireCommandProcessor{Physics: &physics}
+		connectProcessor := processor.ConnectCommandProcessor{Physics: &physics}
+
+		fireCommand := cmd.NewFire()
+		fireCommand.UserId = "abc"
+		connectCommand := cmd.NewConnect("abc")
+		connectCommand.UserId = "abc"
+
+		fire := cmd.GameCommand(&fireCommand)
+		connect := cmd.GameCommand(&connectCommand)
+
+		game_state := state.NewGameState()
+		So(len(game_state.Bullets), ShouldEqual, 0)
+		So(len(game_state.Vehicles), ShouldEqual, 0)
+
+		connectProcessor.Run(&game_state, connect)
+		So(len(game_state.Vehicles), ShouldEqual, 1)
+
+		fireProcessor.Run(&game_state, fire)
+		So(len(game_state.Bullets), ShouldEqual, 1)
+
+		badFireCommand := cmd.NewFire()
+		badFireCommand.UserId = "nobody"
+		badFire := cmd.GameCommand(&badFireCommand)
+
+		fireProcessor.Run(&game_state, badFire)
+		So(len(game_state.Bullets), ShouldEqual, 1)
+
+	})
+}
