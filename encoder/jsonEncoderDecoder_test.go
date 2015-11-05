@@ -110,3 +110,22 @@ func TestDecodeConnect(t *testing.T) {
 		So(turn.Command().UniqueId, ShouldEqual, "ABC123")
 	})
 }
+func TestDecodeFire(t *testing.T) {
+	Convey("Fire Decode", t, func() {
+		formatter := encoder.JsonEncoderDecoder{Tag: "DecodeTest"}
+
+		data := cmd.NewFire()
+		data.UniqueId = "ABC123"
+		buffer, error := json.Marshal(data)
+
+		command, err := formatter.Decode(buffer)
+
+		turn := command.(*cmd.FireCommand)
+
+		So(error, ShouldEqual, nil)
+		So(turn.Command().Type, ShouldEqual, cmd.Post)
+		So(turn.Command().Subtype, ShouldEqual, cmd.Fire)
+		So(err, ShouldEqual, nil)
+		So(turn.Command().UniqueId, ShouldEqual, "ABC123")
+	})
+}

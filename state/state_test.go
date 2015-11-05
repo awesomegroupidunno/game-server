@@ -35,13 +35,13 @@ func TestStateCopy(t *testing.T) {
 	})
 }
 
-func TestBox2d(t *testing.T) {
+func TestBox2dVehicle(t *testing.T) {
 	vehicle := state.Vehicle{X: 10,
 		Y:      20,
 		Width:  15,
 		Height: 40,
 		Angle:  3}
-	Convey("Proper Box", t, func() {
+	Convey("Proper Box Vehicle", t, func() {
 		So(vehicle.AngleDegrees(), ShouldAlmostEqual, vehicle.Angle, .001)
 		x, y := vehicle.Position()
 		w, h := vehicle.Size()
@@ -50,6 +50,25 @@ func TestBox2d(t *testing.T) {
 		So(y, ShouldAlmostEqual, vehicle.Y, .001)
 		So(w, ShouldAlmostEqual, vehicle.Height, .001)
 		So(h, ShouldAlmostEqual, vehicle.Width, .001)
+
+	})
+}
+
+func TestBox2dBullet(t *testing.T) {
+	bullet := state.Bullet{X: 10,
+		Y:      20,
+		Width:  15,
+		Height: 40,
+		Angle:  3}
+	Convey("Proper Box Bullet", t, func() {
+		So(bullet.AngleDegrees(), ShouldAlmostEqual, bullet.Angle, .001)
+		x, y := bullet.Position()
+		w, h := bullet.Size()
+
+		So(x, ShouldAlmostEqual, bullet.X, .001)
+		So(y, ShouldAlmostEqual, bullet.Y, .001)
+		So(w, ShouldAlmostEqual, bullet.Height, .001)
+		So(h, ShouldAlmostEqual, bullet.Width, .001)
 
 	})
 }

@@ -56,3 +56,15 @@ func TestConnect(t *testing.T) {
 		So(connect.UniqueId, ShouldEqual, connect.Command().UniqueId)
 	})
 }
+
+func TestFire(t *testing.T) {
+	Convey("Fire Command", t, func() {
+		fire := cmd.NewFire()
+		So(fire.UniqueId, ShouldEqual, "")
+		So(fire.Subtype, ShouldEqual, cmd.Fire)
+		So(fire.Type, ShouldEqual, cmd.Post)
+		So(fire.Type, ShouldEqual, fire.Command().Type)
+		So(fire.Subtype, ShouldEqual, fire.Command().Subtype)
+		So(fire.UniqueId, ShouldEqual, fire.Command().UniqueId)
+	})
+}

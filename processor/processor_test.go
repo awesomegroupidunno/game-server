@@ -30,6 +30,11 @@ func TestProcessorFactory(t *testing.T) {
 		connect_cp := factory.GetCommandProcessor(&c_comm)
 		So(connect_cp, ShouldHaveSameTypeAs, &processor.ConnectCommandProcessor{Physics: &physics})
 
+		f := cmd.NewFire()
+		f_comm := cmd.GameCommand(&f)
+		fire_cp := factory.GetCommandProcessor(&f_comm)
+		So(fire_cp, ShouldHaveSameTypeAs, &processor.FireCommandProcessor{Physics: &physics})
+
 		b := cmd.BaseCommand{}
 		b_comm := cmd.GameCommand(&b)
 		base_cp := factory.GetCommandProcessor(&b_comm)
