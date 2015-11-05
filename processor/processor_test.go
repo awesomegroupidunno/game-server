@@ -140,18 +140,18 @@ func TestTurnProcessor(t *testing.T) {
 		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, 0, .0001)
 
 		conn_processor.Run(&game_state, turn)
-		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, -.5, .0001)
+		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, 359.5, .0001)
 
 		conn_processor.Run(&game_state, turn2)
-		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, -.7, .0001)
+		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, 359.3, .0001)
 
 		turn2.Command().UserId = "blach"
 		conn_processor.Run(&game_state, turn2)
-		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, -.7, .0001)
+		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, 359.3, .0001)
 
 		//check rollover
 		conn_processor.Run(&game_state, turn)
-		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, -1.2, .0001)
+		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, 358.8, .0001)
 
 		// check rollover
 		c.Value = -1.4

@@ -48,8 +48,8 @@ func TestBox2d(t *testing.T) {
 
 		So(x, ShouldAlmostEqual, vehicle.X, .001)
 		So(y, ShouldAlmostEqual, vehicle.Y, .001)
-		So(w, ShouldAlmostEqual, vehicle.Width, .001)
-		So(h, ShouldAlmostEqual, vehicle.Height, .001)
+		So(w, ShouldAlmostEqual, vehicle.Height, .001)
+		So(h, ShouldAlmostEqual, vehicle.Width, .001)
 
 	})
 }
