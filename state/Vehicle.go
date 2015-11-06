@@ -11,12 +11,11 @@ type Vehicle struct {
 	Angle         float64
 	Width         float64
 	Height        float64
-	Endurance     int
 	TeamId        int
-	Max_health    int
+	MaxHealth     int
 	CurrentHealth int
 	Owner         string
-	Mass          float64
+	Mass          float64 `json:"-"`
 }
 
 func (v Vehicle) Position() (x float64, y float64) {

@@ -25,7 +25,7 @@ func (t *FireCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 
 	last := t.lastFired[vehicle.Owner]
 	diff := time.Now().Sub(last)
-	if diff < t.Physics.BulletDelayMilli {
+	if diff < t.Physics.BulletDelay {
 		return
 	}
 

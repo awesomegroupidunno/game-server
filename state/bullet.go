@@ -10,7 +10,7 @@ type Bullet struct {
 	Width    float64
 	Height   float64
 	Angle    float64
-	Velocity float64
+	Velocity float64 `json:"-"`
 	OwnerId  string
 }
 
