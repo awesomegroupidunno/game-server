@@ -22,6 +22,7 @@ type Physics struct {
 	VehicleHeight               float64
 	BulletVelocity              float64
 	BulletWidth                 float64
+	BulletDelayMilli            time.Duration
 }
 
 func DefaultPhysics() Physics {
@@ -36,6 +37,7 @@ func DefaultPhysics() Physics {
 		VehicleHeight:               75,
 		BulletVelocity:              200.0,
 		BulletWidth:                 10,
+		BulletDelayMilli:            300.0 * time.Millisecond,
 	}
 }
 
