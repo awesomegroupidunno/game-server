@@ -5,7 +5,6 @@ import (
 	"github.com/awesomegroupidunno/game-server/processor"
 	"github.com/awesomegroupidunno/game-server/state"
 	. "github.com/smartystreets/goconvey/convey"
-	"log"
 	"testing"
 )
 

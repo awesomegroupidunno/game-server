@@ -69,31 +69,7 @@ func (p *Physics) VehicleFrictionSlow(vehicle *state.Vehicle, duration time.Dura
 }
 
 func (p *Physics) VehicleCollisionPhysics(v1, v2 *state.Vehicle) {
-	cos1, sin1 := splitComponent(v1.Angle)
-	cos2, sin2 := splitComponent(v2.Angle)
-
-	px1 := (cos1 * v1.Velocity) * v1.Mass
-	py1 := (sin1 * v1.Velocity) * v1.Mass
-
-	px2 := (cos2 * v2.Velocity) * v2.Mass
-	py2 := (sin2 * v2.Velocity) * v2.Mass
-
-	totalpx := (px1 + px2) / 4
-	totalpy := (py1 + py2) / 4
-
-	v1.Velocity = combineComponents(totalpx/3, totalpy/3*2)
-	v2.Velocity = combineComponents(totalpx/3*2, totalpy/3)
-
-	if math.Abs(v1.Velocity) >= p.MaxVehicleVelocity*2 {
-		v1.Velocity = math.Abs(v1.Velocity) / v1.Velocity * p.MaxVehicleVelocity * 2
-	}
-	if math.Abs(v2.Velocity) >= p.MaxVehicleVelocity*2 {
-		v2.Velocity = math.Abs(v2.Velocity) / v2.Velocity * p.MaxVehicleVelocity * 2
-	}
-
-	v1.Angle = math.Atan2(totalpy, totalpx) * RadToDeg
-	v2.Angle = math.Atan2(totalpy, totalpx) * RadToDeg
-
+	//TODO:
 }
 
 func (p *Physics) VehicleBounding(v *state.Vehicle) {
@@ -125,7 +101,8 @@ func (p *Physics) VehicleBounding(v *state.Vehicle) {
 func (p *Physics) CleanUpBullets(bullets []*state.Bullet) []*state.Bullet {
 	for i := 0; i < len(bullets); i++ {
 		bullet := bullets[i]
-		shouldRemove := bullet.X < 0 || bullet.Y < 0
+		shouldRemove := bullet.X < 0
+		shouldRemove = shouldRemove || bullet.Y < 0
 		shouldRemove = shouldRemove || bullet.X > p.WorldWidth
 		shouldRemove = shouldRemove || bullet.Y > p.WorldHeight
 
