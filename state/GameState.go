@@ -18,6 +18,10 @@ func (g *GameState) Copy() GameState {
 	copy(stateCopy.ShieldGenerators, g.ShieldGenerators)
 	copy(stateCopy.Bullets, g.Bullets)
 
+	for i := 0; i < len(stateCopy.Vehicles); i++ {
+		stateCopy.Vehicles[i].IsMe = false
+	}
+
 	return stateCopy
 }
 

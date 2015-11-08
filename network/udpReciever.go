@@ -80,11 +80,19 @@ func (u *UdpReceiver) startReceiver() {
 func (u *UdpReceiver) startSender() {
 	for {
 		state := <-u.Responses
-		buffer, error := u.EncoderDecoder.Encode(state.State)
 
 		clientMutex.Lock()
 		for c := range u.clients {
 			client := u.clients[c]
+
+			for i := 0; i < len(state.State.Vehicles); i++ {
+				if state.State.Vehicles[i].Owner == client.IP.String() {
+					state.State.Vehicles[i].IsMe = true
+				}
+			}
+
+			buffer, error := u.EncoderDecoder.Encode(state.State)
+
 			if error == nil {
 				u.connection.WriteToUDP(buffer, client)
 			} else {

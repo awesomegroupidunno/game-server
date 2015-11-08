@@ -16,6 +16,7 @@ type Vehicle struct {
 	CurrentHealth int
 	Owner         string
 	Mass          float64 `json:"-"`
+	IsMe          bool
 }
 
 func (v Vehicle) Position() (x float64, y float64) {
