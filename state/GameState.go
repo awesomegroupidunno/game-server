@@ -26,11 +26,22 @@ func (g *GameState) Copy() GameState {
 }
 
 func NewGameState() GameState {
+
+	bases := []*Base{}
+	b1 := Base{X: 30, Y: 30, CurrentHealth: 1000, MaxHealth: 1000, Width: 20, TeamId: 0}
+	b2 := Base{X: 300, Y: 400, CurrentHealth: 1000, MaxHealth: 1000, Width: 20, TeamId: 1}
+	bases = append(bases, &b1, &b2)
+
+	generators := []*ShieldGenerator{}
+	g1 := ShieldGenerator{X: 300, Y: 30, CurrentHealth: 1000, MaxHealth: 1000, Width: 25, TeamId: 0}
+	g2 := ShieldGenerator{X: 300, Y: 40, CurrentHealth: 1000, MaxHealth: 1000, Width: 25, TeamId: 1}
+	generators = append(generators, &g1, &g2)
+
 	state := GameState{
 		Val:              "",
 		Vehicles:         []*Vehicle{},
-		Bases:            []*Base{},
-		ShieldGenerators: []*ShieldGenerator{},
+		Bases:            bases,
+		ShieldGenerators: generators,
 		GameOver:         false,
 		Bullets:          []*Bullet{}}
 	return state

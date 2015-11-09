@@ -5,4 +5,7 @@ type Base struct {
 	CurrentHealth int
 	ShieldEnabled bool
 	TeamId        int
+	X             int
+	Y             int
+	Width         int
 }

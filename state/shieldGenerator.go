@@ -7,4 +7,7 @@ type ShieldGenerator struct {
 	MaxHealth     int
 	CurrentHealth int
 	RespawnTime   time.Time
+	X             int
+	Y             int
+	Width         int
 }
