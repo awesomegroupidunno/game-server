@@ -11,7 +11,7 @@ type Bullet struct {
 	Height   float64
 	Angle    float64
 	Velocity float64 `json:"-"`
-	OwnerId  string
+	OwnerId  string  `json:"-"`
 }
 
 func (b Bullet) Position() (x float64, y float64) {

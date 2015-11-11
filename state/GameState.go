@@ -1,5 +1,9 @@
 package state
 
+import (
+	"math"
+)
+
 type GameState struct {
 	Val              string
 	Vehicles         []*Vehicle
@@ -13,38 +17,38 @@ func (g *GameState) Copy() GameState {
 	stateCopy := GameState{}
 	stateCopy.Val = g.Val
 	stateCopy.GameOver = g.GameOver
-	copy(stateCopy.Vehicles, g.Vehicles)
-	copy(stateCopy.Bases, g.Bases)
-	copy(stateCopy.ShieldGenerators, g.ShieldGenerators)
-	copy(stateCopy.Bullets, g.Bullets)
+	stateCopy.Bullets = []*Bullet{}
+	stateCopy.Vehicles = []*Vehicle{}
+	stateCopy.Bases = []*Base{}
+	stateCopy.ShieldGenerators = []*ShieldGenerator{}
+	stateCopy.GameOver = g.GameOver
 
-	for i := 0; i < len(stateCopy.Vehicles); i++ {
-		stateCopy.Vehicles[i].IsMe = false
+	for i := 0; i < len(g.Vehicles); i++ {
+		var v Vehicle = *g.Vehicles[i]
+		v.X = math.Floor(v.X)
+		v.Y = math.Floor(v.Y)
+		v.Angle = math.Floor(v.Angle)
+		v.IsMe = false
+		stateCopy.Vehicles = append(stateCopy.Vehicles, &v)
+	}
+	for i := 0; i < len(g.Bullets); i++ {
+		var b Bullet = *g.Bullets[i]
+		b.X = math.Floor(b.X)
+		b.Y = math.Floor(b.Y)
+		b.Angle = math.Floor(b.Angle)
+		stateCopy.Bullets = append(stateCopy.Bullets, &b)
+	}
+	for i := 0; i < len(g.Bases); i++ {
+		var b Base = *g.Bases[i]
+		stateCopy.Bases = append(stateCopy.Bases, &b)
+	}
+
+	for i := 0; i < len(g.ShieldGenerators); i++ {
+		var b ShieldGenerator = *g.ShieldGenerators[i]
+		stateCopy.ShieldGenerators = append(stateCopy.ShieldGenerators, &b)
 	}
 
 	return stateCopy
-}
-
-func NewGameState() GameState {
-
-	bases := []*Base{}
-	b1 := Base{X: 30, Y: 30, CurrentHealth: 1000, MaxHealth: 1000, Width: 20, TeamId: 0}
-	b2 := Base{X: 300, Y: 400, CurrentHealth: 1000, MaxHealth: 1000, Width: 20, TeamId: 1}
-	bases = append(bases, &b1, &b2)
-
-	generators := []*ShieldGenerator{}
-	g1 := ShieldGenerator{X: 300, Y: 30, CurrentHealth: 1000, MaxHealth: 1000, Width: 25, TeamId: 0}
-	g2 := ShieldGenerator{X: 300, Y: 40, CurrentHealth: 1000, MaxHealth: 1000, Width: 25, TeamId: 1}
-	generators = append(generators, &g1, &g2)
-
-	state := GameState{
-		Val:              "",
-		Vehicles:         []*Vehicle{},
-		Bases:            bases,
-		ShieldGenerators: generators,
-		GameOver:         false,
-		Bullets:          []*Bullet{}}
-	return state
 }
 
 // returns a pointer to the vehicle with the owner's string id

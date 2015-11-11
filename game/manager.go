@@ -66,7 +66,7 @@ func (g *GameManager) Start() {
 		stateMutex.Lock()
 		g.lastTick = time.Now()
 		stateMutex.Unlock()
-		g.responses <- state.StateResponse{State: g.gameState}
+		g.responses <- state.StateResponse{State: g.gameState.Copy()}
 
 		time.Sleep(15 * time.Millisecond)
 

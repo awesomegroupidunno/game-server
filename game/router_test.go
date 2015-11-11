@@ -13,10 +13,12 @@ func TestRoutePost(t *testing.T) {
 	ack_channel := make(chan state.Ack, 100)
 	state_channel := make(chan state.StateResponse, 100)
 
-	physics := processor.Physics{}
+	physics := processor.DefaultPhysics()
 	factory := processor.CommandProcessorFactory{Physics: &physics}
 
-	gameManager := NewManager(state.NewGameState(), state_channel, &factory)
+	gameState := physics.NewGameState()
+
+	gameManager := NewManager(gameState, state_channel, &factory)
 
 	router := CommandRouter{Acks: ack_channel, GameManager: &gameManager}
 	address, err := net.ResolveUDPAddr("udp", "127.0.0.1:8080")
@@ -40,10 +42,10 @@ func TestRoute(t *testing.T) {
 	ack_channel := make(chan state.Ack, 100)
 	state_channel := make(chan state.StateResponse, 100)
 
-	physics := processor.Physics{}
+	physics := processor.DefaultPhysics()
 	factory := processor.CommandProcessorFactory{Physics: &physics}
 
-	gameManager := NewManager(state.NewGameState(), state_channel, &factory)
+	gameManager := NewManager(physics.NewGameState(), state_channel, &factory)
 
 	router := CommandRouter{Acks: ack_channel, GameManager: &gameManager}
 	address, err := net.ResolveUDPAddr("udp", "127.0.0.1:8080")

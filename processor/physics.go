@@ -23,6 +23,12 @@ type Physics struct {
 	BulletVelocity              float64
 	BulletWidth                 float64
 	BulletDelay                 time.Duration
+	BaseOffset                  int
+	BaseWidth                   int
+	BaseHealth                  int
+	ShieldHealth                int
+	ShieldWidth                 int
+	ShieldOffset                int
 }
 
 func DefaultPhysics() Physics {
@@ -33,12 +39,66 @@ func DefaultPhysics() Physics {
 		TurnCommandModifier:         3.0,
 		MaxVehicleVelocity:          150.0,
 		FrictionSpeedLoss:           20.0,
-		VehicleWidth:                50,
-		VehicleHeight:               75,
-		BulletVelocity:              200.0,
-		BulletWidth:                 10,
+		VehicleWidth:                25,
+		VehicleHeight:               37,
+		BulletVelocity:              250.0,
+		BulletWidth:                 7,
 		BulletDelay:                 300.0 * time.Millisecond,
+		BaseOffset:                  45,
+		BaseHealth:                  1000,
+		BaseWidth:                   40,
+		ShieldWidth:                 20,
+		ShieldOffset:                30,
+		ShieldHealth:                1000,
 	}
+}
+
+func (p *Physics) NewGameState() state.GameState {
+
+	bases := []*state.Base{}
+
+	b1 := state.Base{X: int(p.BaseOffset),
+		Y:             int(p.WorldHeight) - p.BaseOffset,
+		CurrentHealth: p.BaseHealth,
+		MaxHealth:     p.BaseHealth,
+		Width:         p.BaseWidth,
+		TeamId:        0}
+
+	b2 := state.Base{X: int(p.WorldWidth) - p.BaseOffset,
+		Y:             int(p.BaseOffset),
+		CurrentHealth: p.BaseHealth,
+		MaxHealth:     p.BaseHealth,
+		Width:         p.BaseWidth,
+		TeamId:        1}
+
+	bases = append(bases, &b1, &b2)
+
+	generators := []*state.ShieldGenerator{}
+	g1 := state.ShieldGenerator{X: int(p.WorldHeight) - p.ShieldOffset,
+		Y:             int(p.WorldWidth) - p.BaseOffset,
+		CurrentHealth: p.ShieldHealth,
+		MaxHealth:     p.ShieldHealth,
+		Width:         p.ShieldWidth,
+		TeamId:        0,
+		RespawnTime:   time.Now()}
+
+	g2 := state.ShieldGenerator{X: p.ShieldOffset,
+		Y:             p.ShieldOffset,
+		CurrentHealth: p.ShieldHealth,
+		MaxHealth:     p.ShieldHealth,
+		Width:         p.ShieldWidth,
+		TeamId:        1,
+		RespawnTime:   time.Now()}
+	generators = append(generators, &g1, &g2)
+
+	state := state.GameState{
+		Val:              "",
+		Vehicles:         []*state.Vehicle{},
+		Bases:            bases,
+		ShieldGenerators: generators,
+		GameOver:         false,
+		Bullets:          []*state.Bullet{}}
+	return state
 }
 
 func (p *Physics) MoveVehicle(vehicle *state.Vehicle, duration time.Duration) {

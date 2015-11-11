@@ -40,7 +40,7 @@ func main() {
 	factory := processor.NewFactory(&physics)
 	log.Println("Command Processor Factory created")
 
-	current_state := state.NewGameState()
+	current_state := physics.NewGameState()
 
 	gameManager := game.NewManager(current_state, stateChannel, &factory)
 	log.Println("Gamemanager created")

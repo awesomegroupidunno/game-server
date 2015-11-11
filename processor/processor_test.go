@@ -57,7 +57,7 @@ func TestConnectionProcessor(t *testing.T) {
 		connect := cmd.GameCommand(&c)
 		connect2 := cmd.GameCommand(&c2)
 
-		game_state := state.NewGameState()
+		game_state := physics.NewGameState()
 
 		So(len(game_state.Vehicles), ShouldEqual, 0)
 
@@ -86,7 +86,7 @@ func TestAccelerationProcessor(t *testing.T) {
 	accelerate := cmd.GameCommand(&c)
 	accelerate2 := cmd.GameCommand(&c2)
 
-	game_state := state.NewGameState()
+	game_state := physics.NewGameState()
 
 	game_state.Vehicles = append(game_state.Vehicles, &(state.Vehicle{Owner: "abc123", Velocity: 0}))
 
@@ -137,7 +137,7 @@ func TestTurnProcessor(t *testing.T) {
 		turn := cmd.GameCommand(&c)
 		turn2 := cmd.GameCommand(&c2)
 
-		game_state := state.NewGameState()
+		game_state := physics.NewGameState()
 
 		game_state.Vehicles = append(game_state.Vehicles, &(state.Vehicle{Owner: "abc123", Velocity: 0}))
 
@@ -183,7 +183,7 @@ func TestFireProcessor(t *testing.T) {
 		fire := cmd.GameCommand(&fireCommand)
 		connect := cmd.GameCommand(&connectCommand)
 
-		game_state := state.NewGameState()
+		game_state := physics.NewGameState()
 		So(len(game_state.Bullets), ShouldEqual, 0)
 		So(len(game_state.Vehicles), ShouldEqual, 0)
 

@@ -1,14 +1,17 @@
 package state_test
 
 import (
+	"github.com/awesomegroupidunno/game-server/processor"
 	"github.com/awesomegroupidunno/game-server/state"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 )
 
 func TestFindVehicle(t *testing.T) {
+
+	physics := processor.DefaultPhysics()
 	Convey("Find Vehicle", t, func() {
-		a := state.NewGameState()
+		a := physics.NewGameState()
 		So(a.Vehicles, ShouldBeEmpty)
 		a.Vehicles = make([]*state.Vehicle, 4)
 		a.Vehicles[0] = &(state.Vehicle{X: 1, Owner: "me"})
@@ -25,8 +28,9 @@ func TestFindVehicle(t *testing.T) {
 }
 
 func TestStateCopy(t *testing.T) {
+	physics := processor.DefaultPhysics()
 	Convey("Copy State", t, func() {
-		a := state.NewGameState()
+		a := physics.NewGameState()
 		theCopy := a.Copy()
 		So(len(theCopy.Vehicles), ShouldEqual, len(a.Vehicles))
 		So(len(theCopy.Bases), ShouldEqual, len(a.Bases))

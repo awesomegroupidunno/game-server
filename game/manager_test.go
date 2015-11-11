@@ -10,11 +10,10 @@ import (
 )
 
 func TestControl(t *testing.T) {
-
-	current_state := state.NewGameState()
+	physics := processor.DefaultPhysics()
+	current_state := physics.NewGameState()
 	response_channel := make(chan state.StateResponse, 100)
 
-	physics := processor.DefaultPhysics()
 	physics.TurnCommandModifier = 1.0
 	physics.AccelerationCommandModifier = 1.0
 	factory := processor.NewFactory(&physics)
@@ -24,22 +23,23 @@ func TestControl(t *testing.T) {
 
 	Convey("Pause", t, func() {
 		manager.Pause()
+		time.Sleep(5 * time.Millisecond)
 		So(manager.isPaused, ShouldEqual, true)
 	})
 
 	Convey("Resume", t, func() {
 		manager.Resume()
+		time.Sleep(5 * time.Millisecond)
 		So(manager.isPaused, ShouldEqual, false)
 	})
 
 }
 
 func TestCommandConsumption(t *testing.T) {
-
-	current_state := state.NewGameState()
+	physics := processor.DefaultPhysics()
+	current_state := physics.NewGameState()
 	response_channel := make(chan state.StateResponse, 100)
 
-	physics := processor.DefaultPhysics()
 	physics.TurnCommandModifier = 1.0
 	physics.AccelerationCommandModifier = 1.0
 	factory := processor.NewFactory(&physics)

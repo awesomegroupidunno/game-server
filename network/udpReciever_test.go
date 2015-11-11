@@ -17,10 +17,10 @@ import (
 func TestConnection(t *testing.T) {
 
 	ack_channel := make(chan state.Ack, 100)
-	state_channel := make(chan state.StateResponse)
+	state_channel := make(chan state.StateResponse, 5)
 	physics := processor.DefaultPhysics()
 	factory := processor.NewFactory(&physics)
-	manager := game.NewManager(state.NewGameState(), state_channel, &factory)
+	manager := game.NewManager(physics.NewGameState(), state_channel, &factory)
 	router := game.CommandRouter{GameManager: &manager}
 
 	reciever := network.UdpReceiver{
@@ -49,7 +49,8 @@ func TestConnection(t *testing.T) {
 	})
 
 	Convey("Test State Responder", t, func() {
-		reciever.Responses <- state.StateResponse{State: state.NewGameState()}
+		reciever.Responses <- state.StateResponse{State: physics.NewGameState()}
+		time.Sleep(15 * time.Millisecond)
 		response := make([]byte, 2048)
 
 		// read response
