@@ -10,6 +10,7 @@ type GameState struct {
 	Bases            []*Base
 	ShieldGenerators []*ShieldGenerator
 	Bullets          []*Bullet
+	Shields          []*Shield
 	GameOver         bool
 }
 
@@ -21,6 +22,7 @@ func (g *GameState) Copy() GameState {
 	stateCopy.Vehicles = []*Vehicle{}
 	stateCopy.Bases = []*Base{}
 	stateCopy.ShieldGenerators = []*ShieldGenerator{}
+	stateCopy.Shields = []*Shield{}
 	stateCopy.GameOver = g.GameOver
 
 	for i := 0; i < len(g.Vehicles); i++ {
@@ -46,6 +48,10 @@ func (g *GameState) Copy() GameState {
 	for i := 0; i < len(g.ShieldGenerators); i++ {
 		var b ShieldGenerator = *g.ShieldGenerators[i]
 		stateCopy.ShieldGenerators = append(stateCopy.ShieldGenerators, &b)
+	}
+	for i := 0; i < len(g.Shields); i++ {
+		var b Shield = *g.Shields[i]
+		stateCopy.Shields = append(stateCopy.Shields, &b)
 	}
 
 	return stateCopy

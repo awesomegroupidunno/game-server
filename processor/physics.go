@@ -73,9 +73,25 @@ func (p *Physics) NewGameState() state.GameState {
 
 	bases = append(bases, &b1, &b2)
 
+	shields := []*state.Shield{}
+
+	s1 := state.Shield{X: int(p.WorldWidth) - p.BaseOffset,
+		IsEnabled: true,
+		Y:         int(p.BaseOffset),
+		Width:     int(float64(p.BaseWidth) * 1.5),
+		TeamId:    1}
+
+	s2 := state.Shield{X: int(p.BaseOffset),
+		IsEnabled: true,
+		Y:         int(p.WorldHeight) - p.BaseOffset,
+		Width:     p.BaseWidth,
+		TeamId:    0}
+
+	shields = append(shields, &s1, &s2)
+
 	generators := []*state.ShieldGenerator{}
-	g1 := state.ShieldGenerator{X: int(p.WorldHeight) - p.ShieldOffset,
-		Y:             int(p.WorldWidth) - p.BaseOffset,
+	g1 := state.ShieldGenerator{X: int(p.WorldWidth) - p.ShieldOffset,
+		Y:             int(p.WorldHeight) - p.BaseOffset,
 		CurrentHealth: p.ShieldHealth,
 		MaxHealth:     p.ShieldHealth,
 		Width:         p.ShieldWidth,
@@ -97,7 +113,8 @@ func (p *Physics) NewGameState() state.GameState {
 		Bases:            bases,
 		ShieldGenerators: generators,
 		GameOver:         false,
-		Bullets:          []*state.Bullet{}}
+		Bullets:          []*state.Bullet{},
+		Shields:          shields}
 	return state
 }
 
