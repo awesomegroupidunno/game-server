@@ -52,8 +52,8 @@ func TestConnection(t *testing.T) {
 		reciever.Responses <- state.StateResponse{State: physics.NewGameState()}
 		time.Sleep(15 * time.Millisecond)
 		response := make([]byte, 2048)
-
 		// read response
+		conn.SetDeadline(time.Now().Add(2 * time.Second))
 		n, err := bufio.NewReader(conn).Read(response)
 		So(err, ShouldEqual, nil)
 

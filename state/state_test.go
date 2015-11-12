@@ -31,6 +31,19 @@ func TestStateCopy(t *testing.T) {
 	physics := processor.DefaultPhysics()
 	Convey("Copy State", t, func() {
 		a := physics.NewGameState()
+
+		a.Vehicles = make([]*state.Vehicle, 4)
+		a.Vehicles[0] = &(state.Vehicle{X: 1, Owner: "me"})
+		a.Vehicles[1] = &(state.Vehicle{X: 2, Owner: "you"})
+		a.Vehicles[2] = &(state.Vehicle{X: 3, Owner: "austin"})
+		a.Vehicles[3] = &(state.Vehicle{X: 4, Owner: "abc"})
+
+		a.Bullets = make([]*state.Bullet, 4)
+		a.Bullets[0] = &(state.Bullet{X: 1, OwnerId: "me"})
+		a.Bullets[1] = &(state.Bullet{X: 2, OwnerId: "you"})
+		a.Bullets[2] = &(state.Bullet{X: 3, OwnerId: "austin"})
+		a.Bullets[3] = &(state.Bullet{X: 4, OwnerId: "abc"})
+
 		theCopy := a.Copy()
 		So(len(theCopy.Vehicles), ShouldEqual, len(a.Vehicles))
 		So(len(theCopy.Bases), ShouldEqual, len(a.Bases))

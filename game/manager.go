@@ -83,6 +83,15 @@ func (g *GameManager) Pause() {
 	g.isPaused = true
 }
 
+// Pauses execution of the game_manager
+// while paused, it will no longer produce StateResponses
+// Threadsafe
+func (g *GameManager) IsPaused() bool {
+	stateMutex.Lock()
+	defer stateMutex.Unlock()
+	return g.isPaused
+}
+
 //Resumes execution
 // Treadsafe
 func (g *GameManager) Resume() {

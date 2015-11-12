@@ -6,7 +6,6 @@ import (
 	"github.com/awesomegroupidunno/game-server/state"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
-	"time"
 )
 
 func TestControl(t *testing.T) {
@@ -23,14 +22,12 @@ func TestControl(t *testing.T) {
 
 	Convey("Pause", t, func() {
 		manager.Pause()
-		time.Sleep(5 * time.Millisecond)
-		So(manager.isPaused, ShouldEqual, true)
+		So(manager.IsPaused(), ShouldEqual, true)
 	})
 
 	Convey("Resume", t, func() {
 		manager.Resume()
-		time.Sleep(5 * time.Millisecond)
-		So(manager.isPaused, ShouldEqual, false)
+		So(manager.IsPaused(), ShouldEqual, false)
 	})
 
 }
@@ -48,8 +45,7 @@ func TestCommandConsumption(t *testing.T) {
 
 	Convey("Pause", t, func() {
 		manager.Pause()
-		So(manager.isPaused, ShouldEqual, true)
-		time.Sleep(5 * time.Millisecond)
+		So(manager.IsPaused(), ShouldEqual, true)
 	})
 
 	Convey("AddCommand", t, func() {

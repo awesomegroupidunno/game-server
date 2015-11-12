@@ -80,7 +80,6 @@ func (u *UdpReceiver) startReceiver() {
 func (u *UdpReceiver) startSender() {
 	for {
 		state := <-u.Responses
-
 		clientMutex.Lock()
 		for c := range u.clients {
 			client := u.clients[c]
