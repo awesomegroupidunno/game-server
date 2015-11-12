@@ -152,14 +152,56 @@ func (g *GameManager) tick() {
 
 		for i := z + 1; i < len(g.gameState.Vehicles); i++ {
 			if collision.Collides(vehicle, g.gameState.Vehicles[i]) {
-				log.Println("Vehicle collision")
+				log.Println("Vehicle on Vehicle collision")
 			}
 		}
 		for _, bullet := range g.gameState.Bullets {
 			if bullet.OwnerId != vehicle.Owner {
 				if collision.Collides(vehicle, bullet) {
-					log.Println("bullet collision")
+					log.Println("bullet on Vehicle collision")
 				}
+			}
+		}
+
+		for _, shield := range g.gameState.Shields {
+			if shield.TeamId != vehicle.TeamId {
+				if collision.Collides(shield, vehicle) {
+					log.Println("Opponent Shield collision")
+				}
+			}
+		}
+
+		for _, shieldGenerator := range g.gameState.ShieldGenerators {
+			if collision.Collides(shieldGenerator, vehicle) {
+				log.Println("Vehicle Shield Generator collision")
+			}
+		}
+
+		for _, base := range g.gameState.Bases {
+			if collision.Collides(base, vehicle) {
+				log.Println("Vehicle Base collision")
+			}
+		}
+
+	}
+
+	for _, bullet := range g.gameState.Bullets {
+
+		for _, shield := range g.gameState.Shields {
+			if collision.Collides(bullet, shield) {
+				log.Println("Bullet Shield collision")
+			}
+		}
+
+		for _, shieldGenerator := range g.gameState.ShieldGenerators {
+			if collision.Collides(shieldGenerator, bullet) {
+				log.Println("Bullet Shield Generator collision")
+			}
+		}
+
+		for _, base := range g.gameState.Bases {
+			if collision.Collides(bullet, base) {
+				log.Println("Bullet Base collision")
 			}
 		}
 
