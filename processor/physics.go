@@ -84,7 +84,7 @@ func (p *Physics) NewGameState() state.GameState {
 	s2 := state.Shield{X: int(p.BaseOffset),
 		IsEnabled: true,
 		Y:         int(p.WorldHeight) - p.BaseOffset,
-		Width:     p.BaseWidth,
+		Width:     int(float64(p.BaseWidth) * 1.5),
 		TeamId:    0}
 
 	shields = append(shields, &s1, &s2)
@@ -178,6 +178,7 @@ func (p *Physics) VehicleBounding(v *state.Vehicle) {
 }
 
 func (p *Physics) CleanUpBullets(bullets []*state.Bullet) []*state.Bullet {
+	toRemove := []bool{}
 	for i := 0; i < len(bullets); i++ {
 		bullet := bullets[i]
 		shouldRemove := bullet.X < 0
@@ -185,11 +186,9 @@ func (p *Physics) CleanUpBullets(bullets []*state.Bullet) []*state.Bullet {
 		shouldRemove = shouldRemove || bullet.X > p.WorldWidth
 		shouldRemove = shouldRemove || bullet.Y > p.WorldHeight
 
-		if shouldRemove {
-			bullets = append(bullets[:i], bullets[(1+i):]...)
-		}
+		toRemove = append(toRemove, shouldRemove)
 	}
-
+	bullets = cleanupBullets(bullets, toRemove)
 	return bullets
 }
 
@@ -212,4 +211,17 @@ func (p *Physics) move2d(x, y, angle, velocity float64, duration time.Duration) 
 	y = y + (velocity * duration.Seconds() * yAngle)
 	return x, y
 
+}
+
+func cleanupBullets(data []*state.Bullet, ids []bool) []*state.Bullet {
+	if len(ids) == 0 {
+		return data
+	}
+	retData := []*state.Bullet{}
+	for i := 0; i < len(data); i++ {
+		if !ids[i] {
+			retData = append(retData, data[i])
+		}
+	}
+	return retData
 }
