@@ -141,9 +141,30 @@ func (g *GameManager) tick() {
 
 	for _, bullet := range g.gameState.Bullets {
 		g.physicsManager.MoveBullet(bullet, tickDuration)
+		g.physicsManager.BoundBullet(bullet)
 	}
 
-	g.gameState.Bullets = g.physicsManager.CleanUpBullets(g.gameState.Bullets)
+	for _, bullet := range g.gameState.Bullets {
+
+		for _, shield := range g.gameState.Shields {
+			if collision.Collides(bullet, shield) {
+				bullet.ShouldRemove = true
+			}
+		}
+
+		for _, shieldGenerator := range g.gameState.ShieldGenerators {
+			if collision.Collides(shieldGenerator, bullet) {
+				g.physicsManager.DamageShieldGenerator(bullet, shieldGenerator)
+			}
+		}
+
+		for _, base := range g.gameState.Bases {
+			if collision.Collides(bullet, base) {
+				g.physicsManager.DamageBase(bullet, base)
+			}
+		}
+
+	}
 
 	for z, vehicle := range g.gameState.Vehicles {
 		g.physicsManager.VehicleBounding(vehicle)
@@ -152,60 +173,38 @@ func (g *GameManager) tick() {
 
 		for i := z + 1; i < len(g.gameState.Vehicles); i++ {
 			if collision.Collides(vehicle, g.gameState.Vehicles[i]) {
-				log.Println("Vehicle on Vehicle collision")
+				g.physicsManager.VehicleCollisionPhysics(vehicle, g.gameState.Vehicles[i])
 			}
 		}
 		for _, bullet := range g.gameState.Bullets {
 			if bullet.OwnerId != vehicle.Owner {
 				if collision.Collides(vehicle, bullet) {
-					log.Println("bullet on Vehicle collision")
+					g.physicsManager.DamageVehicle(vehicle, bullet)
 				}
 			}
 		}
 
 		for _, shield := range g.gameState.Shields {
-			if shield.TeamId != vehicle.TeamId {
-				if collision.Collides(shield, vehicle) {
-					log.Println("Opponent Shield collision")
-				}
+			if collision.Collides(shield, vehicle) {
+				g.physicsManager.VehicleCollisionPhysics(vehicle, &state.Vehicle{})
 			}
 		}
 
 		for _, shieldGenerator := range g.gameState.ShieldGenerators {
 			if collision.Collides(shieldGenerator, vehicle) {
-				log.Println("Vehicle Shield Generator collision")
+				g.physicsManager.VehicleCollisionPhysics(vehicle, &state.Vehicle{})
 			}
 		}
 
 		for _, base := range g.gameState.Bases {
 			if collision.Collides(base, vehicle) {
-				log.Println("Vehicle Base collision")
+				g.physicsManager.VehicleCollisionPhysics(vehicle, &state.Vehicle{})
 			}
 		}
 
 	}
 
-	for _, bullet := range g.gameState.Bullets {
-
-		for _, shield := range g.gameState.Shields {
-			if collision.Collides(bullet, shield) {
-				log.Println("Bullet Shield collision")
-			}
-		}
-
-		for _, shieldGenerator := range g.gameState.ShieldGenerators {
-			if collision.Collides(shieldGenerator, bullet) {
-				log.Println("Bullet Shield Generator collision")
-			}
-		}
-
-		for _, base := range g.gameState.Bases {
-			if collision.Collides(bullet, base) {
-				log.Println("Bullet Base collision")
-			}
-		}
-
-	}
+	g.gameState.Bullets = processor.CleanupBullets(g.gameState.Bullets)
 
 	stateMutex.Unlock()
 

@@ -205,7 +205,10 @@ func TestCleanupBullet(t *testing.T) {
 
 	Convey("Test Cleanup offscreen bullets", t, func() {
 		So(len(bullets), ShouldEqual, 5)
-		newList := physics.CleanUpBullets(bullets)
+		for _, b := range bullets {
+			physics.BoundBullet(b)
+		}
+		newList := CleanupBullets(bullets)
 
 		So(len(newList), ShouldEqual, 3)
 	})
