@@ -1,6 +1,9 @@
 package state
 
-import "github.com/awesomegroupidunno/game-server/collision"
+import (
+	"github.com/awesomegroupidunno/game-server/collision"
+	"time"
+)
 
 var _ collision.Box2d = Vehicle{}
 
@@ -17,6 +20,8 @@ type Vehicle struct {
 	Owner         string
 	Mass          float64 `json:"-"`
 	IsMe          bool
+	IsAlive       bool
+	TimeDestroyed time.Time `json:"-"`
 }
 
 func (v Vehicle) Position() (x float64, y float64) {

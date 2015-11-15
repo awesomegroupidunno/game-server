@@ -88,7 +88,7 @@ func TestAccelerationProcessor(t *testing.T) {
 
 	game_state := physics.NewGameState()
 
-	game_state.Vehicles = append(game_state.Vehicles, &(state.Vehicle{Owner: "abc123", Velocity: 0}))
+	game_state.Vehicles = append(game_state.Vehicles, &(state.Vehicle{Owner: "abc123", Velocity: 0, IsAlive: true}))
 
 	Convey("Acceleration Processor", t, func() {
 
@@ -139,7 +139,7 @@ func TestTurnProcessor(t *testing.T) {
 
 		game_state := physics.NewGameState()
 
-		game_state.Vehicles = append(game_state.Vehicles, &(state.Vehicle{Owner: "abc123", Velocity: 0}))
+		game_state.Vehicles = append(game_state.Vehicles, &(state.Vehicle{Owner: "abc123", Velocity: 0, IsAlive: true}))
 
 		So(len(game_state.Vehicles), ShouldEqual, 1)
 		So(game_state.Vehicles[0].Angle, ShouldAlmostEqual, 0, .0001)

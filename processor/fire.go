@@ -19,7 +19,7 @@ func (t *FireCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 	command := c.(*cmd.FireCommand)
 
 	vehicle := g.GetVehicle(command.UserId)
-	if vehicle == nil {
+	if vehicle == nil || !vehicle.IsAlive {
 		return
 	}
 

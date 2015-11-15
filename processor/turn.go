@@ -14,7 +14,7 @@ func (t *TurnCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 	command := c.(*cmd.TurnCommand)
 
 	vehicle := g.GetVehicle(command.UserId)
-	if vehicle == nil {
+	if vehicle == nil || !vehicle.IsAlive {
 		return
 	}
 	temp := vehicle

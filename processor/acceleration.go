@@ -13,7 +13,7 @@ func (t *AccelerationCommandProcessor) Run(g *state.GameState, c cmd.GameCommand
 	command := c.(*cmd.AccelerationCommand)
 
 	vehicle := g.GetVehicle(command.UserId)
-	if vehicle == nil {
+	if vehicle == nil || !vehicle.IsAlive {
 		return
 	}
 	temp := vehicle

@@ -162,13 +162,16 @@ func (g *GameManager) tick() {
 
 		for _, base := range g.gameState.Bases {
 			if collision.Collides(bullet, base) {
-				g.physicsManager.DamageBase(bullet, base)
+				if g.physicsManager.DamageBase(bullet, base) {
+					g.gameState.GameOver = true
+				}
 			}
 		}
 
 	}
 
 	for z, vehicle := range g.gameState.Vehicles {
+		g.physicsManager.RespawnVehicle(vehicle)
 		g.physicsManager.VehicleBounding(vehicle)
 		g.physicsManager.MoveVehicle(vehicle, tickDuration)
 		g.physicsManager.VehicleFrictionSlow(vehicle, tickDuration)
@@ -192,7 +195,6 @@ func (g *GameManager) tick() {
 					g.physicsManager.VehicleCollisionPhysics(vehicle, &state.Vehicle{})
 				}
 			}
-
 		}
 
 		for _, shieldGenerator := range g.gameState.ShieldGenerators {

@@ -31,7 +31,9 @@ func (g *GameState) Copy() GameState {
 		v.Y = math.Floor(v.Y)
 		v.Angle = math.Floor(v.Angle)
 		v.IsMe = false
-		stateCopy.Vehicles = append(stateCopy.Vehicles, &v)
+		if v.IsAlive {
+			stateCopy.Vehicles = append(stateCopy.Vehicles, &v)
+		}
 	}
 	for i := 0; i < len(g.Bullets); i++ {
 		var b Bullet = *g.Bullets[i]

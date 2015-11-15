@@ -33,10 +33,10 @@ func TestStateCopy(t *testing.T) {
 		a := physics.NewGameState()
 
 		a.Vehicles = make([]*state.Vehicle, 4)
-		a.Vehicles[0] = &(state.Vehicle{X: 1, Owner: "me"})
-		a.Vehicles[1] = &(state.Vehicle{X: 2, Owner: "you"})
-		a.Vehicles[2] = &(state.Vehicle{X: 3, Owner: "austin"})
-		a.Vehicles[3] = &(state.Vehicle{X: 4, Owner: "abc"})
+		a.Vehicles[0] = &(state.Vehicle{X: 1, Owner: "me", IsAlive: true})
+		a.Vehicles[1] = &(state.Vehicle{X: 2, Owner: "you", IsAlive: true})
+		a.Vehicles[2] = &(state.Vehicle{X: 3, Owner: "austin", IsAlive: true})
+		a.Vehicles[3] = &(state.Vehicle{X: 4, Owner: "abc", IsAlive: true})
 
 		a.Bullets = make([]*state.Bullet, 4)
 		a.Bullets[0] = &(state.Bullet{X: 1, OwnerId: "me"})

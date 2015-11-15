@@ -31,6 +31,7 @@ type Physics struct {
 	ShieldOffset                int
 	BulletDamage                int
 	VehicleHealth               int
+	VehicleRespawn              time.Duration
 }
 
 func DefaultPhysics() Physics {
@@ -45,7 +46,7 @@ func DefaultPhysics() Physics {
 		VehicleHeight:               37,
 		BulletVelocity:              250.0,
 		BulletWidth:                 7,
-		BulletDelay:                 300.0 * time.Millisecond,
+		BulletDelay:                 30.0 * time.Millisecond,
 		BaseOffset:                  45,
 		BaseHealth:                  1000,
 		BaseWidth:                   40,
@@ -54,6 +55,7 @@ func DefaultPhysics() Physics {
 		ShieldGeneratorHealth:       400,
 		BulletDamage:                8,
 		VehicleHealth:               300,
+		VehicleRespawn:              5 * time.Second,
 	}
 }
 
@@ -126,6 +128,18 @@ func (p *Physics) NewGameState() state.GameState {
 	return state
 }
 
+func (p *Physics) RespawnVehicle(v *state.Vehicle) bool {
+	if !v.IsAlive {
+		if time.Now().After(v.TimeDestroyed.Add(p.VehicleRespawn)) {
+			v.IsAlive = true
+			v.Y = p.WorldHeight / 2
+			v.X = p.WorldWidth / 2
+			v.CurrentHealth = v.MaxHealth
+		}
+	}
+	return false
+}
+
 func (p *Physics) MoveVehicle(vehicle *state.Vehicle, duration time.Duration) {
 	x, y := p.move2d(vehicle.X, vehicle.Y, vehicle.Angle, vehicle.Velocity, duration)
 
@@ -156,30 +170,48 @@ func (p *Physics) VehicleFrictionSlow(vehicle *state.Vehicle, duration time.Dura
 }
 
 func (p *Physics) VehicleCollisionPhysics(v1, v2 *state.Vehicle) {
-	v1.Velocity *= -1
-	p.MoveVehicle(v1, time.Millisecond*1)
-	v1.Velocity = 0
-	v2.Velocity = 0
+	if v1.IsAlive && v2.IsAlive {
+		v1.Velocity *= -1
+		p.MoveVehicle(v1, time.Millisecond*1)
+		v1.Velocity = 0
+		v2.Velocity = 0
+	}
 }
 
-func (p *Physics) DamageVehicle(v *state.Vehicle, b *state.Bullet) {
-	v.CurrentHealth -= p.BulletDamage
-	b.ShouldRemove = true
+func (p *Physics) DamageVehicle(v *state.Vehicle, b *state.Bullet) bool {
+	if v.IsAlive {
+		v.CurrentHealth -= p.BulletDamage
+		b.ShouldRemove = true
+		if v.CurrentHealth <= 0 {
+			v.CurrentHealth = 0
+			v.IsAlive = false
+			v.TimeDestroyed = time.Now()
+			return true
+		}
+	}
+	return false
 }
 
-func (p *Physics) DamageShieldGenerator(b *state.Bullet, s *state.ShieldGenerator) {
+func (p *Physics) DamageShieldGenerator(b *state.Bullet, s *state.ShieldGenerator) bool {
 	s.CurrentHealth -= p.BulletDamage
 	b.ShouldRemove = true
 	if s.CurrentHealth <= 0 {
 		s.Shield.IsEnabled = false
 		s.CurrentHealth = 0
+		return true
 	}
+	return false
 
 }
 
-func (p *Physics) DamageBase(b *state.Bullet, base *state.Base) {
+func (p *Physics) DamageBase(b *state.Bullet, base *state.Base) bool {
 	base.CurrentHealth -= p.BulletDamage
 	b.ShouldRemove = true
+	if base.CurrentHealth <= 0 {
+		base.CurrentHealth = 0
+		return true
+	}
+	return false
 }
 
 func (p *Physics) VehicleBounding(v *state.Vehicle) {
