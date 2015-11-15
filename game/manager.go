@@ -192,20 +192,20 @@ func (g *GameManager) tick() {
 		for _, shield := range g.gameState.Shields {
 			if shield.IsEnabled {
 				if collision.Collides(shield, vehicle) {
-					g.physicsManager.VehicleCollisionPhysics(vehicle, &state.Vehicle{})
+					g.physicsManager.VehicleCollisionPhysics(vehicle, &state.Vehicle{IsAlive: true})
 				}
 			}
 		}
 
 		for _, shieldGenerator := range g.gameState.ShieldGenerators {
 			if collision.Collides(shieldGenerator, vehicle) {
-				g.physicsManager.VehicleCollisionPhysics(vehicle, &state.Vehicle{})
+				g.physicsManager.VehicleCollisionPhysics(vehicle, &state.Vehicle{IsAlive: true})
 			}
 		}
 
 		for _, base := range g.gameState.Bases {
 			if collision.Collides(base, vehicle) {
-				g.physicsManager.VehicleCollisionPhysics(vehicle, &state.Vehicle{})
+				g.physicsManager.VehicleCollisionPhysics(vehicle, &state.Vehicle{IsAlive: true})
 			}
 		}
 
