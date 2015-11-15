@@ -52,7 +52,7 @@ func DefaultPhysics() Physics {
 		ShieldWidth:                 20,
 		ShieldOffset:                30,
 		ShieldGeneratorHealth:       400,
-		BulletDamage:                4,
+		BulletDamage:                8,
 		VehicleHealth:               300,
 	}
 }
@@ -102,6 +102,8 @@ func (p *Physics) NewGameState() state.GameState {
 		TeamId:        0,
 		RespawnTime:   time.Now()}
 
+	g1.Shield = &s2
+
 	g2 := state.ShieldGenerator{X: p.ShieldOffset,
 		Y:             p.ShieldOffset,
 		CurrentHealth: p.ShieldGeneratorHealth,
@@ -109,6 +111,8 @@ func (p *Physics) NewGameState() state.GameState {
 		Width:         p.ShieldWidth,
 		TeamId:        1,
 		RespawnTime:   time.Now()}
+
+	g2.Shield = &s1
 	generators = append(generators, &g1, &g2)
 
 	state := state.GameState{
@@ -166,6 +170,11 @@ func (p *Physics) DamageVehicle(v *state.Vehicle, b *state.Bullet) {
 func (p *Physics) DamageShieldGenerator(b *state.Bullet, s *state.ShieldGenerator) {
 	s.CurrentHealth -= p.BulletDamage
 	b.ShouldRemove = true
+	if s.CurrentHealth <= 0 {
+		s.Shield.IsEnabled = false
+		s.CurrentHealth = 0
+	}
+
 }
 
 func (p *Physics) DamageBase(b *state.Bullet, base *state.Base) {

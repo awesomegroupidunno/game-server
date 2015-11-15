@@ -10,6 +10,7 @@ type ShieldGenerator struct {
 	X             int
 	Y             int
 	Width         int
+	Shield        *Shield `json:"-"`
 }
 
 func (v ShieldGenerator) Position() (x float64, y float64) {

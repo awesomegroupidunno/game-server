@@ -147,8 +147,10 @@ func (g *GameManager) tick() {
 	for _, bullet := range g.gameState.Bullets {
 
 		for _, shield := range g.gameState.Shields {
-			if collision.Collides(bullet, shield) {
-				bullet.ShouldRemove = true
+			if shield.IsEnabled {
+				if collision.Collides(bullet, shield) {
+					bullet.ShouldRemove = true
+				}
 			}
 		}
 
@@ -185,9 +187,12 @@ func (g *GameManager) tick() {
 		}
 
 		for _, shield := range g.gameState.Shields {
-			if collision.Collides(shield, vehicle) {
-				g.physicsManager.VehicleCollisionPhysics(vehicle, &state.Vehicle{})
+			if shield.IsEnabled {
+				if collision.Collides(shield, vehicle) {
+					g.physicsManager.VehicleCollisionPhysics(vehicle, &state.Vehicle{})
+				}
 			}
+
 		}
 
 		for _, shieldGenerator := range g.gameState.ShieldGenerators {
