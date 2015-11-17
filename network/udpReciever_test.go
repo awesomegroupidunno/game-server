@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"github.com/awesomegroupidunno/game-server/cmd"
+	"github.com/awesomegroupidunno/game-server/encoder"
 	"github.com/awesomegroupidunno/game-server/game"
 	"github.com/awesomegroupidunno/game-server/network"
 	"github.com/awesomegroupidunno/game-server/processor"
@@ -22,14 +23,16 @@ func TestConnection(t *testing.T) {
 	factory := processor.NewFactory(&physics)
 	manager := game.NewManager(physics.NewGameState(), state_channel, &factory)
 	router := game.CommandRouter{GameManager: &manager, Acks: ack_channel}
+	go manager.Start()
 
 	reciever := network.UdpReceiver{
-		Router:    router,
-		Acks:      ack_channel,
-		Responses: state_channel}
+		Router:     router,
+		Acks:       ack_channel,
+		Responses:  state_channel,
+		PortNumber: "10002"}
 
 	reciever.Run()
-	conn, err := net.DialTimeout("udp", "127.0.0.1:10001", 1*time.Second)
+	conn, err := net.DialTimeout("udp", "127.0.0.1:10002", 1*time.Second)
 	Convey("Test connect", t, func() {
 		So(err, ShouldEqual, nil)
 		So(conn, ShouldNotEqual, nil)
@@ -56,6 +59,16 @@ func TestConnection(t *testing.T) {
 		n, err := bufio.NewReader(conn).Read(response)
 		So(err, ShouldEqual, nil)
 		So(string(response[:n]), ShouldEqual, "abc123")
+
+		conn.SetDeadline(time.Now().Add(2 * time.Second))
+		n, err = bufio.NewReader(conn).Read(response)
+		So(err, ShouldEqual, nil)
+
+		encoder := encoder.JsonEncoderDecoder{}
+
+		_, encode_error := encoder.Decode(response[:n])
+		So(encode_error, ShouldEqual, nil)
+
 	})
 
 }
