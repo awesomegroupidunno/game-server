@@ -21,7 +21,7 @@ func TestConnection(t *testing.T) {
 	physics := processor.DefaultPhysics()
 	factory := processor.NewFactory(&physics)
 	manager := game.NewManager(physics.NewGameState(), state_channel, &factory)
-	router := game.CommandRouter{GameManager: &manager}
+	router := game.CommandRouter{GameManager: &manager, Acks: ack_channel}
 
 	reciever := network.UdpReceiver{
 		Router:    router,
@@ -50,18 +50,12 @@ func TestConnection(t *testing.T) {
 
 	Convey("Test State Responder", t, func() {
 		reciever.Responses <- state.StateResponse{State: physics.NewGameState()}
-		time.Sleep(15 * time.Millisecond)
 		response := make([]byte, 2048)
 		// read response
 		conn.SetDeadline(time.Now().Add(2 * time.Second))
 		n, err := bufio.NewReader(conn).Read(response)
 		So(err, ShouldEqual, nil)
-
-		resp := state.GameState{}
-
-		unmarshal_error := json.Unmarshal(response[:n], &resp)
-		So(unmarshal_error, ShouldEqual, nil)
-
+		So(string(response[:n]), ShouldEqual, "abc123")
 	})
 
 }

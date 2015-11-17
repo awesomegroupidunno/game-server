@@ -105,7 +105,7 @@ func (g *GameManager) Resume() {
 func (g *GameManager) shouldTick() bool {
 	stateMutex.Lock()
 	defer stateMutex.Unlock()
-	return g.isStarted && !g.isPaused
+	return g.isStarted && !g.isPaused && !g.gameState.GameOver
 }
 
 // Adds a command to be processed by the GameManager
