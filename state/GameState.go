@@ -11,6 +11,7 @@ type GameState struct {
 	ShieldGenerators []*ShieldGenerator
 	Bullets          []*Bullet
 	Shields          []*Shield
+	Rockets          []*Rocket
 	GameOver         bool
 }
 
@@ -23,6 +24,7 @@ func (g *GameState) Copy() GameState {
 	stateCopy.Bases = []*Base{}
 	stateCopy.ShieldGenerators = []*ShieldGenerator{}
 	stateCopy.Shields = []*Shield{}
+	stateCopy.Rockets = []*Rocket{}
 	stateCopy.GameOver = g.GameOver
 
 	for i := 0; i < len(g.Vehicles); i++ {
@@ -30,6 +32,7 @@ func (g *GameState) Copy() GameState {
 		v.X = math.Floor(v.X)
 		v.Y = math.Floor(v.Y)
 		v.Angle = math.Floor(v.Angle)
+		v.ActivePowerup = g.Vehicles[i].ActivePowerup
 		v.IsMe = false
 		if v.IsAlive {
 			stateCopy.Vehicles = append(stateCopy.Vehicles, &v)
@@ -54,6 +57,10 @@ func (g *GameState) Copy() GameState {
 	for i := 0; i < len(g.Shields); i++ {
 		var b Shield = *g.Shields[i]
 		stateCopy.Shields = append(stateCopy.Shields, &b)
+	}
+	for i := 0; i < len(g.Rockets); i++ {
+		var b Rocket = *g.Rockets[i]
+		stateCopy.Rockets = append(stateCopy.Rockets, &b)
 	}
 
 	return stateCopy

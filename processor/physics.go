@@ -30,6 +30,7 @@ type Physics struct {
 	ShieldWidth                 int
 	ShieldOffset                int
 	BulletDamage                int
+	RocketDamage                int
 	VehicleHealth               int
 	VehicleRespawn              time.Duration
 }
@@ -54,6 +55,7 @@ func DefaultPhysics() Physics {
 		ShieldOffset:                30,
 		ShieldGeneratorHealth:       400,
 		BulletDamage:                8,
+		RocketDamage:                20,
 		VehicleHealth:               300,
 		VehicleRespawn:              5 * time.Second,
 	}
@@ -124,7 +126,8 @@ func (p *Physics) NewGameState() state.GameState {
 		ShieldGenerators: generators,
 		GameOver:         false,
 		Bullets:          []*state.Bullet{},
-		Shields:          shields}
+		Shields:          shields,
+		Rockets:          []*state.Rocket{}}
 	return state
 }
 

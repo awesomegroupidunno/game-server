@@ -8,20 +8,23 @@ import (
 var _ collision.Box2d = Vehicle{}
 
 type Vehicle struct {
-	X             float64
-	Y             float64
-	Velocity      float64
-	Angle         float64
-	Width         float64
-	Height        float64
-	TeamId        int
-	MaxHealth     int
-	CurrentHealth int
-	Owner         string
-	Mass          float64 `json:"-"`
-	IsMe          bool
-	IsAlive       bool
-	TimeDestroyed time.Time `json:"-"`
+	X                 float64
+	Y                 float64
+	Velocity          float64
+	Angle             float64
+	Width             float64
+	Height            float64
+	TeamId            int
+	MaxHealth         int
+	CurrentHealth     int
+	Owner             string
+	Mass              float64 `json:"-"`
+	IsMe              bool
+	IsAlive           bool
+	TimeDestroyed     time.Time `json:"-"`
+	OverRideSpeedTill time.Time `json:"-"`
+	ActivePowerup     int
+	StoredPowerup     int
 }
 
 func (v Vehicle) Position() (x float64, y float64) {

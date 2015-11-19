@@ -3,6 +3,7 @@ package processor
 import (
 	"github.com/awesomegroupidunno/game-server/cmd"
 	"github.com/awesomegroupidunno/game-server/state"
+	"time"
 )
 
 type ConnectCommandProcessor struct {
@@ -22,18 +23,21 @@ func (t *ConnectCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 	teamNum := len(g.Vehicles) % 2
 
 	newVehicle := state.Vehicle{
-		X:             300,
-		Y:             300,
-		Velocity:      0.0,
-		Angle:         0,
-		TeamId:        teamNum,
-		MaxHealth:     t.Physics.VehicleHealth,
-		CurrentHealth: t.Physics.VehicleHealth,
-		Width:         t.Physics.VehicleWidth,
-		Height:        t.Physics.VehicleHeight,
-		Owner:         command.UserId,
-		Mass:          10,
-		IsAlive:       true}
+		X:                 300,
+		Y:                 300,
+		Velocity:          0.0,
+		Angle:             0,
+		TeamId:            teamNum,
+		MaxHealth:         t.Physics.VehicleHealth,
+		CurrentHealth:     t.Physics.VehicleHealth,
+		Width:             t.Physics.VehicleWidth,
+		Height:            t.Physics.VehicleHeight,
+		Owner:             command.UserId,
+		Mass:              10,
+		IsAlive:           true,
+		ActivePowerup:     NO_POWERUP,
+		StoredPowerup:     NO_POWERUP,
+		OverRideSpeedTill: time.Now().Add(-5 * time.Second)}
 	g.Vehicles = append(g.Vehicles, &newVehicle)
 
 }

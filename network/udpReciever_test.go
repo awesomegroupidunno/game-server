@@ -29,7 +29,7 @@ func TestConnection(t *testing.T) {
 		Router:     router,
 		Acks:       ack_channel,
 		Responses:  state_channel,
-		PortNumber: "10002"}
+		PortNumber: ":10002"}
 
 	reciever.Run()
 	conn, err := net.DialTimeout("udp", "127.0.0.1:10002", 1*time.Second)

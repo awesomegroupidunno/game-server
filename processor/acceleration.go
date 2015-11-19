@@ -3,6 +3,7 @@ package processor
 import (
 	"github.com/awesomegroupidunno/game-server/cmd"
 	"github.com/awesomegroupidunno/game-server/state"
+	"time"
 )
 
 type AccelerationCommandProcessor struct {
@@ -16,16 +17,30 @@ func (t *AccelerationCommandProcessor) Run(g *state.GameState, c cmd.GameCommand
 	if vehicle == nil || !vehicle.IsAlive {
 		return
 	}
-	temp := vehicle
 
-	temp.Velocity = temp.Velocity + (command.Value * t.Physics.AccelerationCommandModifier)
+	powerupOn := vehicle.ActivePowerup == SPEEDUP && vehicle.OverRideSpeedTill.After(time.Now())
 
-	if temp.Velocity >= t.Physics.MaxVehicleVelocity {
-		temp.Velocity = t.Physics.MaxVehicleVelocity
+	if powerupOn {
+		t.Physics.AccelerationCommandModifier *= 2
+		t.Physics.MaxVehicleVelocity *= 2
 	}
 
-	if (temp.Velocity) <= (-1 * t.Physics.MaxVehicleVelocity) {
-		temp.Velocity = -1 * t.Physics.MaxVehicleVelocity
+	t.accelerateVehicle(vehicle, command)
+
+	if powerupOn {
+		t.Physics.AccelerationCommandModifier /= 2
+		t.Physics.MaxVehicleVelocity /= 2
 	}
-	vehicle = temp
+}
+
+func (t *AccelerationCommandProcessor) accelerateVehicle(v *state.Vehicle, c *cmd.AccelerationCommand) {
+	v.Velocity = v.Velocity + (c.Value * t.Physics.AccelerationCommandModifier)
+
+	if v.Velocity >= t.Physics.MaxVehicleVelocity {
+		v.Velocity = t.Physics.MaxVehicleVelocity
+	}
+
+	if (v.Velocity) <= (-1 * t.Physics.MaxVehicleVelocity) {
+		v.Velocity = -1 * t.Physics.MaxVehicleVelocity
+	}
 }
