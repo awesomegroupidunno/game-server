@@ -46,7 +46,7 @@ func DefaultPhysics() Physics {
 		VehicleHeight:               37,
 		BulletVelocity:              250.0,
 		BulletWidth:                 7,
-		BulletDelay:                 30.0 * time.Millisecond,
+		BulletDelay:                 100.0 * time.Millisecond,
 		BaseOffset:                  45,
 		BaseHealth:                  1000,
 		BaseWidth:                   40,
@@ -171,10 +171,37 @@ func (p *Physics) VehicleFrictionSlow(vehicle *state.Vehicle, duration time.Dura
 
 func (p *Physics) VehicleCollisionPhysics(v1, v2 *state.Vehicle) {
 	if v1.IsAlive && v2.IsAlive {
-		v1.Velocity *= -1
-		p.MoveVehicle(v1, time.Millisecond*1)
-		v1.Velocity = 0
-		v2.Velocity = 0
+		bounciness := 1.5
+		p.VehicleKnockback(v1, v1.Angle + 180, v1.Velocity * bounciness)
+		p.VehicleKnockback(v2, v1.Angle, v1.Velocity)
+	}
+}
+
+// Creates knockback for a vehicle
+func (p *Physics) VehicleKnockback(vehicle *state.Vehicle, kbAngle, kbVelocity float64) {
+	// Get vehicle velocity vectors
+	vehAngleX, vehAngleY := splitComponent(vehicle.Angle)
+	vehVectorX := vehAngleX * vehicle.Velocity
+	vehVectorY := vehAngleY * vehicle.Velocity
+
+	// Get knockback velocity vectors
+	kbAngleX, kbAngleY := splitComponent(kbAngle)
+	kbVectorX := kbAngleX * kbVelocity
+	kbVectorY := kbAngleY * kbVelocity
+
+	// Combine vectors
+	vectorX := vehVectorX + kbVectorX
+	vectorY := vehVectorY + kbVectorY
+	vehVelocity := combineComponents(vectorX, vectorY)
+
+	// Calculate angle perpendicularity as a percent
+	angleFactor := math.Mod( math.Abs(vehicle.Angle - kbAngle + 90), 180) / 90.0
+
+	// Set vehicle velocity
+	if math.Signbit(vehicle.Velocity) == math.Signbit(vehVelocity) {
+		vehicle.Velocity = -vehVelocity * angleFactor
+	} else {
+		vehicle.Velocity = vehVelocity * angleFactor
 	}
 }
 
