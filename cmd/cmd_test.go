@@ -68,3 +68,15 @@ func TestFire(t *testing.T) {
 		So(fire.UniqueId, ShouldEqual, fire.Command().UniqueId)
 	})
 }
+
+func TestPowerup(t *testing.T) {
+	Convey("powerup Command", t, func() {
+		fire := cmd.NewPowerup()
+		So(fire.UniqueId, ShouldEqual, "")
+		So(fire.Subtype, ShouldEqual, cmd.POWERUP)
+		So(fire.Type, ShouldEqual, cmd.Post)
+		So(fire.Type, ShouldEqual, fire.Command().Type)
+		So(fire.Subtype, ShouldEqual, fire.Command().Subtype)
+		So(fire.UniqueId, ShouldEqual, fire.Command().UniqueId)
+	})
+}

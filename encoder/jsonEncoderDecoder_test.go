@@ -129,3 +129,23 @@ func TestDecodeFire(t *testing.T) {
 		So(turn.Command().UniqueId, ShouldEqual, "ABC123")
 	})
 }
+
+func TestDecodePowerup(t *testing.T) {
+	Convey("Fire powerup", t, func() {
+		formatter := encoder.JsonEncoderDecoder{Tag: "DecodeTest"}
+
+		data := cmd.NewPowerup()
+		data.UniqueId = "ABC123"
+		buffer, error := json.Marshal(data)
+
+		command, err := formatter.Decode(buffer)
+
+		turn := command.(*cmd.PowerupCommand)
+
+		So(error, ShouldEqual, nil)
+		So(turn.Command().Type, ShouldEqual, cmd.Post)
+		So(turn.Command().Subtype, ShouldEqual, cmd.POWERUP)
+		So(err, ShouldEqual, nil)
+		So(turn.Command().UniqueId, ShouldEqual, "ABC123")
+	})
+}

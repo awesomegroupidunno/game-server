@@ -41,6 +41,7 @@ func (t *PowerupCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 
 func (t *PowerupCommandProcessor) healVehicle(v *state.Vehicle) {
 	v.CurrentHealth = v.MaxHealth
+	v.StoredPowerup = NO_POWERUP
 }
 
 func (t *PowerupCommandProcessor) applySpeedPowerUp(v *state.Vehicle) {

@@ -12,6 +12,8 @@ func TestFindVehicle(t *testing.T) {
 	physics := processor.DefaultPhysics()
 	Convey("Find Vehicle", t, func() {
 		a := physics.NewGameState()
+
+		a.Rockets
 		So(a.Vehicles, ShouldBeEmpty)
 		a.Vehicles = make([]*state.Vehicle, 4)
 		a.Vehicles[0] = &(state.Vehicle{
