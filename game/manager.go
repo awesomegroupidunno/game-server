@@ -178,7 +178,7 @@ func (g *GameManager) tick() {
 
 		for i := z + 1; i < len(g.gameState.Vehicles); i++ {
 			if collision.Collides(vehicle, g.gameState.Vehicles[i]) {
-				g.physicsManager.VehicleCollisionPhysics(vehicle, g.gameState.Vehicles[i])
+				g.physicsManager.VehicleCollision(vehicle, g.gameState.Vehicles[i])
 			}
 		}
 		for _, bullet := range g.gameState.Bullets {
@@ -192,26 +192,33 @@ func (g *GameManager) tick() {
 		for _, shield := range g.gameState.Shields {
 			if shield.IsEnabled {
 				if collision.Collides(shield, vehicle) {
-					g.physicsManager.VehicleCollisionPhysics(vehicle, &state.Vehicle{Angle: vehicle.Angle, IsAlive: true})
+					g.physicsManager.VehicleCollision(vehicle, &state.Vehicle{Angle: vehicle.Angle, IsAlive: true})
 				}
 			}
 		}
 
 		for _, shieldGenerator := range g.gameState.ShieldGenerators {
 			if collision.Collides(shieldGenerator, vehicle) {
-				g.physicsManager.VehicleCollisionPhysics(vehicle, &state.Vehicle{Angle: vehicle.Angle, IsAlive: true})
+				g.physicsManager.VehicleCollision(vehicle, &state.Vehicle{Angle: vehicle.Angle, IsAlive: true})
 			}
 		}
 
 		for _, base := range g.gameState.Bases {
 			if collision.Collides(base, vehicle) {
-				g.physicsManager.VehicleCollisionPhysics(vehicle, &state.Vehicle{Angle: vehicle.Angle, IsAlive: true})
+				g.physicsManager.VehicleCollision(vehicle, &state.Vehicle{Angle: vehicle.Angle, IsAlive: true})
+			}
+		}
+
+		for _, powerup := range g.gameState.PowerUps {
+			if collision.Collides(powerup, vehicle) {
+				g.physicsManager.PickupPowerUp(vehicle, powerup)
 			}
 		}
 
 	}
 
 	g.gameState.Bullets = processor.CleanupBullets(g.gameState.Bullets)
+	g.gameState.PowerUps = processor.CleanupPowerups(g.gameState.PowerUps)
 
 	stateMutex.Unlock()
 

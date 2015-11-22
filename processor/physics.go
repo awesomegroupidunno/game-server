@@ -119,6 +119,15 @@ func (p *Physics) NewGameState() state.GameState {
 	g2.Shield = &s1
 	generators = append(generators, &g1, &g2)
 
+	powerups := []*state.Powerup{}
+
+	p1 := state.Powerup{
+		Point:       state.NewPoint(500, 500),
+		Sized:       state.NewSized(150, 150),
+		PowerupType: HEAL,
+	}
+	powerups = append(powerups, &p1)
+
 	state := state.GameState{
 		Val:              "",
 		Vehicles:         []*state.Vehicle{},
@@ -127,7 +136,8 @@ func (p *Physics) NewGameState() state.GameState {
 		GameOver:         false,
 		Bullets:          []*state.Bullet{},
 		Shields:          shields,
-		Rockets:          []*state.Rocket{}}
+		Rockets:          []*state.Rocket{},
+		PowerUps:         powerups}
 	return state
 }
 
@@ -172,11 +182,18 @@ func (p *Physics) VehicleFrictionSlow(vehicle *state.Vehicle, duration time.Dura
 	}
 }
 
-func (p *Physics) VehicleCollisionPhysics(v1, v2 *state.Vehicle) {
+func (p *Physics) VehicleCollision(v1, v2 *state.Vehicle) {
 	if v1.IsAlive && v2.IsAlive {
 		bounciness := 1.5
 		p.VehicleKnockback(v1, v1.Angle+180, v1.Velocity*bounciness)
 		p.VehicleKnockback(v2, v1.Angle, v1.Velocity)
+	}
+}
+
+func (p *Physics) PickupPowerUp(v1 *state.Vehicle, power *state.Powerup) {
+	if v1.IsAlive && !power.ShouldRemove {
+		power.ShouldRemove = true
+		v1.StoredPowerup = power.PowerupType
 	}
 }
 
@@ -307,6 +324,16 @@ func (p *Physics) move2d(x, y, angle, velocity float64, duration time.Duration) 
 
 func CleanupBullets(data []*state.Bullet) []*state.Bullet {
 	retData := []*state.Bullet{}
+	for i := 0; i < len(data); i++ {
+		if !data[i].ShouldRemove {
+			retData = append(retData, data[i])
+		}
+	}
+	return retData
+}
+
+func CleanupPowerups(data []*state.Powerup) []*state.Powerup {
+	retData := []*state.Powerup{}
 	for i := 0; i < len(data); i++ {
 		if !data[i].ShouldRemove {
 			retData = append(retData, data[i])

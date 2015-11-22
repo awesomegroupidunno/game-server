@@ -7,7 +7,6 @@ var _ collision.Box2d = Powerup{}
 type Powerup struct {
 	Point
 	Sized
-	Angle        float64
 	ShouldRemove bool `json:"-"`
 	PowerupType  int
 }
@@ -21,5 +20,5 @@ func (p Powerup) Size() (width float64, height float64) {
 }
 
 func (p Powerup) AngleDegrees() float64 {
-	return p.Angle
+	return 0
 }

@@ -44,6 +44,7 @@ func (g *GameState) Copy() GameState {
 	stateCopy.ShieldGenerators = []*ShieldGenerator{}
 	stateCopy.Shields = []*Shield{}
 	stateCopy.Rockets = []*Rocket{}
+	stateCopy.PowerUps = []*Powerup{}
 	stateCopy.GameOver = g.GameOver
 
 	for i := 0; i < len(g.Vehicles); i++ {
@@ -66,20 +67,35 @@ func (g *GameState) Copy() GameState {
 	}
 	for i := 0; i < len(g.Bases); i++ {
 		var b Base = *g.Bases[i]
+		b.X = math.Floor(b.X)
+		b.Y = math.Floor(b.Y)
 		stateCopy.Bases = append(stateCopy.Bases, &b)
 	}
 
 	for i := 0; i < len(g.ShieldGenerators); i++ {
 		var b ShieldGenerator = *g.ShieldGenerators[i]
+		b.X = math.Floor(b.X)
+		b.Y = math.Floor(b.Y)
 		stateCopy.ShieldGenerators = append(stateCopy.ShieldGenerators, &b)
 	}
 	for i := 0; i < len(g.Shields); i++ {
 		var b Shield = *g.Shields[i]
+		b.X = math.Floor(b.X)
+		b.Y = math.Floor(b.Y)
 		stateCopy.Shields = append(stateCopy.Shields, &b)
 	}
 	for i := 0; i < len(g.Rockets); i++ {
 		var b Rocket = *g.Rockets[i]
+		b.X = math.Floor(b.X)
+		b.Y = math.Floor(b.Y)
+		b.Angle = math.Floor(b.Angle)
 		stateCopy.Rockets = append(stateCopy.Rockets, &b)
+	}
+	for i := 0; i < len(g.PowerUps); i++ {
+		var b Powerup = *g.PowerUps[i]
+		b.X = math.Floor(b.X)
+		b.Y = math.Floor(b.Y)
+		stateCopy.PowerUps = append(stateCopy.PowerUps, &b)
 	}
 
 	return stateCopy
