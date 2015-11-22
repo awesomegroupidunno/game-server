@@ -23,12 +23,12 @@ type Physics struct {
 	BulletVelocity              float64
 	BulletWidth                 float64
 	BulletDelay                 time.Duration
-	BaseOffset                  int
-	BaseWidth                   int
+	BaseOffset                  float64
+	BaseWidth                   float64
 	BaseHealth                  int
 	ShieldGeneratorHealth       int
-	ShieldWidth                 int
-	ShieldOffset                int
+	ShieldWidth                 float64
+	ShieldOffset                float64
 	BulletDamage                int
 	RocketDamage                int
 	VehicleHealth               int
@@ -65,54 +65,54 @@ func (p *Physics) NewGameState() state.GameState {
 
 	bases := []*state.Base{}
 
-	b1 := state.Base{X: int(p.BaseOffset),
-		Y:             int(p.WorldHeight) - p.BaseOffset,
+	b1 := state.Base{
+		Point:         state.NewPoint(p.BaseOffset, p.WorldHeight-p.BaseOffset),
+		Sized:         state.NewSized(p.BaseWidth, p.BaseWidth),
 		CurrentHealth: p.BaseHealth,
 		MaxHealth:     p.BaseHealth,
-		Width:         p.BaseWidth,
 		TeamId:        0}
 
-	b2 := state.Base{X: int(p.WorldWidth) - p.BaseOffset,
-		Y:             int(p.BaseOffset),
+	b2 := state.Base{
+		Point:         state.NewPoint(p.WorldWidth-p.BaseOffset, p.BaseOffset),
+		Sized:         state.NewSized(p.BaseWidth, p.BaseWidth),
 		CurrentHealth: p.BaseHealth,
 		MaxHealth:     p.BaseHealth,
-		Width:         p.BaseWidth,
 		TeamId:        1}
 
 	bases = append(bases, &b1, &b2)
 
 	shields := []*state.Shield{}
 
-	s1 := state.Shield{X: int(p.WorldWidth) - p.BaseOffset,
+	s1 := state.Shield{
+		Point:     state.NewPoint(p.WorldWidth-p.BaseOffset, p.BaseOffset),
+		Sized:     state.NewSized(p.BaseWidth*1.5, p.BaseWidth*1.5),
 		IsEnabled: true,
-		Y:         int(p.BaseOffset),
-		Width:     int(float64(p.BaseWidth) * 1.5),
 		TeamId:    1}
 
-	s2 := state.Shield{X: int(p.BaseOffset),
+	s2 := state.Shield{
+		Point:     state.NewPoint(p.BaseOffset, p.WorldHeight-p.BaseOffset),
+		Sized:     state.NewSized(p.BaseWidth*1.5, p.BaseWidth*1.5),
 		IsEnabled: true,
-		Y:         int(p.WorldHeight) - p.BaseOffset,
-		Width:     int(float64(p.BaseWidth) * 1.5),
 		TeamId:    0}
 
 	shields = append(shields, &s1, &s2)
 
 	generators := []*state.ShieldGenerator{}
-	g1 := state.ShieldGenerator{X: int(p.WorldWidth) - p.ShieldOffset,
-		Y:             int(p.WorldHeight) - p.BaseOffset,
+	g1 := state.ShieldGenerator{
+		Point:         state.NewPoint(p.WorldWidth-p.ShieldOffset, p.WorldHeight-p.BaseOffset),
+		Sized:         state.NewSized(p.ShieldWidth, p.ShieldWidth),
 		CurrentHealth: p.ShieldGeneratorHealth,
 		MaxHealth:     p.ShieldGeneratorHealth,
-		Width:         p.ShieldWidth,
 		TeamId:        0,
 		RespawnTime:   time.Now()}
 
 	g1.Shield = &s2
 
-	g2 := state.ShieldGenerator{X: p.ShieldOffset,
-		Y:             p.ShieldOffset,
+	g2 := state.ShieldGenerator{
+		Point:         state.NewPoint(p.ShieldOffset, p.ShieldOffset),
+		Sized:         state.NewSized(p.ShieldWidth, p.ShieldWidth),
 		CurrentHealth: p.ShieldGeneratorHealth,
 		MaxHealth:     p.ShieldGeneratorHealth,
-		Width:         p.ShieldWidth,
 		TeamId:        1,
 		RespawnTime:   time.Now()}
 
@@ -175,7 +175,7 @@ func (p *Physics) VehicleFrictionSlow(vehicle *state.Vehicle, duration time.Dura
 func (p *Physics) VehicleCollisionPhysics(v1, v2 *state.Vehicle) {
 	if v1.IsAlive && v2.IsAlive {
 		bounciness := 1.5
-		p.VehicleKnockback(v1, v1.Angle + 180, v1.Velocity * bounciness)
+		p.VehicleKnockback(v1, v1.Angle+180, v1.Velocity*bounciness)
 		p.VehicleKnockback(v2, v1.Angle, v1.Velocity)
 	}
 }
@@ -198,7 +198,7 @@ func (p *Physics) VehicleKnockback(vehicle *state.Vehicle, kbAngle, kbVelocity f
 	vehVelocity := combineComponents(vectorX, vectorY)
 
 	// Calculate angle perpendicularity as a percent
-	angleFactor := math.Mod( math.Abs(vehicle.Angle - kbAngle + 90), 180) / 90.0
+	angleFactor := math.Mod(math.Abs(vehicle.Angle-kbAngle+90), 180) / 90.0
 
 	// Set vehicle velocity
 	if math.Signbit(vehicle.Velocity) == math.Signbit(vehVelocity) {

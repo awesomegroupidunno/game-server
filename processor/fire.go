@@ -32,14 +32,13 @@ func (t *FireCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 
 	t.lastFired[vehicle.Owner] = time.Now()
 
-	b := state.Bullet{
-		X:        vehicle.X,
-		Y:        vehicle.Y,
-		Width:    t.Physics.BulletWidth,
-		Height:   t.Physics.BulletWidth,
-		Velocity: t.Physics.BulletVelocity,
-		Angle:    vehicle.Angle,
-		OwnerId:  vehicle.Owner}
+	b := state.NewBullet(vehicle.X,
+		vehicle.Y,
+		t.Physics.BulletWidth,
+		t.Physics.BulletWidth,
+		t.Physics.BulletVelocity,
+		vehicle.Angle,
+		vehicle.Owner)
 
 	g.Bullets = append(g.Bullets, &b)
 

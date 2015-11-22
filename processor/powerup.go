@@ -3,7 +3,6 @@ package processor
 import (
 	"github.com/awesomegroupidunno/game-server/cmd"
 	"github.com/awesomegroupidunno/game-server/state"
-	"log"
 	"time"
 )
 
@@ -25,9 +24,6 @@ func (t *PowerupCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 	if vehicle == nil || !vehicle.IsAlive {
 		return
 	}
-
-	log.Println("powerup used!")
-
 	switch vehicle.StoredPowerup {
 
 	case HEAL:
@@ -57,10 +53,8 @@ func (t *PowerupCommandProcessor) fireRocket(v *state.Vehicle, g *state.GameStat
 	v.StoredPowerup = NO_POWERUP
 	targetedVehicle := g.Vehicles[1]
 	r := state.Rocket{
-		X:        v.X,
-		Y:        v.Y,
-		Width:    t.Physics.BulletWidth * 1.25,
-		Height:   t.Physics.BulletWidth * 1.25,
+		Point:    state.NewPoint(v.X, v.Y),
+		Sized:    state.NewSized(t.Physics.BulletWidth*1.25, t.Physics.BulletWidth*1.25),
 		Target:   targetedVehicle,
 		Velocity: t.Physics.BulletVelocity * .75,
 	}

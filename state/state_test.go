@@ -14,10 +14,18 @@ func TestFindVehicle(t *testing.T) {
 		a := physics.NewGameState()
 		So(a.Vehicles, ShouldBeEmpty)
 		a.Vehicles = make([]*state.Vehicle, 4)
-		a.Vehicles[0] = &(state.Vehicle{X: 1, Owner: "me"})
-		a.Vehicles[1] = &(state.Vehicle{X: 2, Owner: "you"})
-		a.Vehicles[2] = &(state.Vehicle{X: 3, Owner: "austin"})
-		a.Vehicles[3] = &(state.Vehicle{X: 4, Owner: "abc"})
+		a.Vehicles[0] = &(state.Vehicle{
+			Point: state.NewPoint(1, 0),
+			Owner: "me"})
+		a.Vehicles[1] = &(state.Vehicle{
+			Point: state.NewPoint(2, 0),
+			Owner: "you"})
+		a.Vehicles[2] = &(state.Vehicle{
+			Point: state.NewPoint(3, 0),
+			Owner: "austin"})
+		a.Vehicles[3] = &(state.Vehicle{
+			Point: state.NewPoint(4, 0),
+			Owner: "abc"})
 		So(a.GetVehicle("me").X, ShouldEqual, 1)
 		So(a.GetVehicle("you").X, ShouldEqual, 2)
 		So(a.GetVehicle("austin").X, ShouldEqual, 3)
@@ -33,16 +41,30 @@ func TestStateCopy(t *testing.T) {
 		a := physics.NewGameState()
 
 		a.Vehicles = make([]*state.Vehicle, 4)
-		a.Vehicles[0] = &(state.Vehicle{X: 1, Owner: "me", IsAlive: true})
-		a.Vehicles[1] = &(state.Vehicle{X: 2, Owner: "you", IsAlive: true})
-		a.Vehicles[2] = &(state.Vehicle{X: 3, Owner: "austin", IsAlive: true})
-		a.Vehicles[3] = &(state.Vehicle{X: 4, Owner: "abc", IsAlive: true})
+		a.Vehicles[0] = &(state.Vehicle{
+			Point:   state.NewPoint(1, 0),
+			Owner:   "me",
+			IsAlive: true})
+
+		a.Vehicles[1] = &(state.Vehicle{
+			Point:   state.NewPoint(1, 0),
+			Owner:   "you",
+			IsAlive: true})
+
+		a.Vehicles[2] = &(state.Vehicle{
+			Point:   state.NewPoint(1, 0),
+			Owner:   "austin",
+			IsAlive: true})
+		a.Vehicles[3] = &(state.Vehicle{
+			Point:   state.NewPoint(1, 0),
+			Owner:   "abc",
+			IsAlive: true})
 
 		a.Bullets = make([]*state.Bullet, 4)
-		a.Bullets[0] = &(state.Bullet{X: 1, OwnerId: "me"})
-		a.Bullets[1] = &(state.Bullet{X: 2, OwnerId: "you"})
-		a.Bullets[2] = &(state.Bullet{X: 3, OwnerId: "austin"})
-		a.Bullets[3] = &(state.Bullet{X: 4, OwnerId: "abc"})
+		a.Bullets[0] = &(state.Bullet{})
+		a.Bullets[1] = &(state.Bullet{})
+		a.Bullets[2] = &(state.Bullet{})
+		a.Bullets[3] = &(state.Bullet{})
 
 		theCopy := a.Copy()
 		So(len(theCopy.Vehicles), ShouldEqual, len(a.Vehicles))
@@ -53,11 +75,10 @@ func TestStateCopy(t *testing.T) {
 }
 
 func TestBox2dVehicle(t *testing.T) {
-	vehicle := state.Vehicle{X: 10,
-		Y:      20,
-		Width:  15,
-		Height: 40,
-		Angle:  3}
+	vehicle := state.Vehicle{
+		Point: state.NewPoint(10, 20),
+		Sized: state.NewSized(15, 40),
+		Angle: 3}
 	Convey("Proper Box Vehicle", t, func() {
 		So(vehicle.AngleDegrees(), ShouldAlmostEqual, vehicle.Angle, .001)
 		x, y := vehicle.Position()
@@ -72,11 +93,12 @@ func TestBox2dVehicle(t *testing.T) {
 }
 
 func TestBox2dBullet(t *testing.T) {
-	bullet := state.Bullet{X: 10,
-		Y:      20,
-		Width:  15,
-		Height: 40,
-		Angle:  3}
+	bullet := state.Bullet{
+		Point: state.Point{X: 10,
+			Y: 20},
+		Sized: state.Sized{Width: 15,
+			Height: 40},
+		Angle: 3}
 	Convey("Proper Box Bullet", t, func() {
 		So(bullet.AngleDegrees(), ShouldAlmostEqual, bullet.Angle, .001)
 		x, y := bullet.Position()

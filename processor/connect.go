@@ -23,15 +23,18 @@ func (t *ConnectCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 	teamNum := len(g.Vehicles) % 2
 
 	newVehicle := state.Vehicle{
-		X:                 300,
-		Y:                 300,
+		Point: state.Point{
+			X: 300,
+			Y: 300},
+		Sized: state.Sized{
+			Width:  t.Physics.VehicleWidth,
+			Height: t.Physics.VehicleHeight,
+		},
 		Velocity:          0.0,
 		Angle:             0,
 		TeamId:            teamNum,
 		MaxHealth:         t.Physics.VehicleHealth,
 		CurrentHealth:     t.Physics.VehicleHealth,
-		Width:             t.Physics.VehicleWidth,
-		Height:            t.Physics.VehicleHeight,
 		Owner:             command.UserId,
 		Mass:              10,
 		IsAlive:           true,

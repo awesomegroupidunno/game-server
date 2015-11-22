@@ -1,13 +1,12 @@
 package state
 
 type Base struct {
+	Point
+	Sized
 	MaxHealth     int
 	CurrentHealth int
 	ShieldEnabled bool
 	TeamId        int
-	X             int
-	Y             int
-	Width         int
 }
 
 func (v Base) Position() (x float64, y float64) {

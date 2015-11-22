@@ -8,12 +8,10 @@ import (
 var _ collision.Box2d = Vehicle{}
 
 type Vehicle struct {
-	X                 float64
-	Y                 float64
+	Point
+	Sized
 	Velocity          float64
 	Angle             float64
-	Width             float64
-	Height            float64
 	TeamId            int
 	MaxHealth         int
 	CurrentHealth     int

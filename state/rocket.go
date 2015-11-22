@@ -5,12 +5,10 @@ import "github.com/awesomegroupidunno/game-server/collision"
 var _ collision.Box2d = Bullet{}
 
 type Rocket struct {
-	Width    float64
-	Height   float64
+	Point
+	Sized
 	Velocity float64
 	Angle    float64
-	X        float64
-	Y        float64
 	Target   *Vehicle
 }
 

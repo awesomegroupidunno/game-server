@@ -5,14 +5,21 @@ import "github.com/awesomegroupidunno/game-server/collision"
 var _ collision.Box2d = Bullet{}
 
 type Bullet struct {
-	X            float64
-	Y            float64
-	Width        float64
-	Height       float64
+	Point
+	Sized
 	Angle        float64
 	Velocity     float64 `json:"-"`
 	OwnerId      string  `json:"-"`
 	ShouldRemove bool    `json:"-"`
+}
+
+func NewBullet(x, y, w, h, v, angle float64, owner string) Bullet {
+	return Bullet{
+		Point:    Point{X: x, Y: y},
+		Sized:    Sized{Width: w, Height: h},
+		OwnerId:  owner,
+		Velocity: v,
+		Angle:    angle}
 }
 
 func (b Bullet) Position() (x float64, y float64) {

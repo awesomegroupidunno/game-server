@@ -71,8 +71,8 @@ func TestMoveVehicle(t *testing.T) {
 		before_angle := 270.0
 		before_speed := 1.0
 
-		vehicle := state.Vehicle{X: before_x,
-			Y:        before_y,
+		vehicle := state.Vehicle{
+			Point:    state.NewPoint(before_x, before_y),
 			Angle:    before_angle,
 			Velocity: before_speed}
 
@@ -93,8 +93,8 @@ func TestSlowVehicle(t *testing.T) {
 		before_angle := 270.0
 		before_speed := 1.0
 
-		vehicle := state.Vehicle{X: before_x,
-			Y:        before_y,
+		vehicle := state.Vehicle{
+			Point:    state.NewPoint(before_x, before_y),
 			Angle:    before_angle,
 			Velocity: before_speed}
 
@@ -110,8 +110,8 @@ func TestSlowVehicle(t *testing.T) {
 		before_angle := 270.0
 		before_speed := -1.0
 
-		vehicle := state.Vehicle{X: before_x,
-			Y:        before_y,
+		vehicle := state.Vehicle{
+			Point:    state.NewPoint(before_x, before_y),
 			Angle:    before_angle,
 			Velocity: before_speed}
 
@@ -145,7 +145,9 @@ func TestVehicleBounding(t *testing.T) {
 
 	Convey("Should Be in Bounds", t, func() {
 
-		v := state.Vehicle{X: 20, Y: 30}
+		v := state.Vehicle{
+			Point: state.NewPoint(20, 30),
+		}
 		physics.VehicleBounding(&v)
 
 		So(v.X, ShouldAlmostEqual, 20, .001)
@@ -154,7 +156,9 @@ func TestVehicleBounding(t *testing.T) {
 
 	Convey("Should Be reBound from negative", t, func() {
 
-		v := state.Vehicle{X: -20, Y: -30}
+		v := state.Vehicle{
+			Point: state.NewPoint(-20, -30),
+		}
 		physics.VehicleBounding(&v)
 
 		So(v.X, ShouldBeGreaterThan, 0)
@@ -163,7 +167,9 @@ func TestVehicleBounding(t *testing.T) {
 
 	Convey("Should Be reBound from max", t, func() {
 
-		v := state.Vehicle{X: math.MaxFloat64, Y: math.MaxFloat64}
+		v := state.Vehicle{
+			Point: state.NewPoint(math.MaxFloat64, math.MaxFloat64),
+		}
 		physics.VehicleBounding(&v)
 
 		So(v.X, ShouldBeLessThan, physics.WorldWidth)
@@ -181,8 +187,8 @@ func TestMoveBullet(t *testing.T) {
 		before_angle := 270.0
 		before_speed := 1.0
 
-		bullet := state.Bullet{X: before_x,
-			Y:        before_y,
+		bullet := state.Bullet{Point: state.Point{X: before_x,
+			Y: before_y},
 			Angle:    before_angle,
 			Velocity: before_speed}
 
@@ -197,11 +203,11 @@ func TestCleanupBullet(t *testing.T) {
 	physics := DefaultPhysics()
 	bullets := []*state.Bullet{}
 
-	bullets = append(bullets, &state.Bullet{X: -10, Y: -30})
-	bullets = append(bullets, &state.Bullet{X: 10, Y: 30})
-	bullets = append(bullets, &state.Bullet{X: 50, Y: 80})
-	bullets = append(bullets, &state.Bullet{X: 70, Y: -30})
-	bullets = append(bullets, &state.Bullet{X: 50, Y: 90})
+	bullets = append(bullets, &state.Bullet{Point: state.Point{X: -10, Y: -30}})
+	bullets = append(bullets, &state.Bullet{Point: state.Point{X: 10, Y: 30}})
+	bullets = append(bullets, &state.Bullet{Point: state.Point{X: 50, Y: 80}})
+	bullets = append(bullets, &state.Bullet{Point: state.Point{X: 70, Y: -30}})
+	bullets = append(bullets, &state.Bullet{Point: state.Point{X: 50, Y: 90}})
 
 	Convey("Test Cleanup offscreen bullets", t, func() {
 		So(len(bullets), ShouldEqual, 5)

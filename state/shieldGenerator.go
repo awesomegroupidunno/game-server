@@ -3,14 +3,13 @@ package state
 import "time"
 
 type ShieldGenerator struct {
+	Point
+	Sized
 	TeamId        int
 	MaxHealth     int
 	CurrentHealth int
 	RespawnTime   time.Time `json:"-"`
-	X             int
-	Y             int
-	Width         int
-	Shield        *Shield `json:"-"`
+	Shield        *Shield   `json:"-"`
 }
 
 func (v ShieldGenerator) Position() (x float64, y float64) {

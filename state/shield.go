@@ -1,10 +1,9 @@
 package state
 
 type Shield struct {
+	Point
+	Sized
 	TeamId    int
-	X         int
-	Y         int
-	Width     int
 	IsEnabled bool
 }
 

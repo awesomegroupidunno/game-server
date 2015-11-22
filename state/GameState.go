@@ -4,6 +4,24 @@ import (
 	"math"
 )
 
+type Point struct {
+	X float64
+	Y float64
+}
+
+func NewPoint(x, y float64) Point {
+	return Point{X: x, Y: y}
+}
+
+type Sized struct {
+	Width  float64
+	Height float64
+}
+
+func NewSized(w, h float64) Sized {
+	return Sized{Height: h, Width: w}
+}
+
 type GameState struct {
 	Val              string
 	Vehicles         []*Vehicle
@@ -12,6 +30,7 @@ type GameState struct {
 	Bullets          []*Bullet
 	Shields          []*Shield
 	Rockets          []*Rocket
+	PowerUps         []*Powerup
 	GameOver         bool
 }
 
