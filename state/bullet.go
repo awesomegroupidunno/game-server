@@ -13,15 +13,6 @@ type Bullet struct {
 	ShouldRemove bool    `json:"-"`
 }
 
-func NewBullet(x, y, w, h, v, angle float64, owner string) Bullet {
-	return Bullet{
-		Point:    Point{X: x, Y: y},
-		Sized:    Sized{Width: w, Height: h},
-		OwnerId:  owner,
-		Velocity: v,
-		Angle:    angle}
-}
-
 func (b Bullet) Position() (x float64, y float64) {
 	return b.X, b.Y
 }

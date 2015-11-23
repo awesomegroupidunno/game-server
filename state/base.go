@@ -10,11 +10,11 @@ type Base struct {
 }
 
 func (v Base) Position() (x float64, y float64) {
-	return float64(v.X), float64(v.Y)
+	return v.X, v.Y
 }
 
 func (v Base) Size() (width float64, height float64) {
-	return float64(v.Width), float64(v.Width)
+	return v.Width, v.Height
 }
 
 func (v Base) AngleDegrees() float64 {
