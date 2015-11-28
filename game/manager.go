@@ -6,7 +6,6 @@ import (
 	"github.com/awesomegroupidunno/game-server/processor"
 	"github.com/awesomegroupidunno/game-server/state"
 	"log"
-	"math/rand"
 	"sync"
 	"time"
 )
@@ -143,7 +142,7 @@ func (g *GameManager) tick() {
 	}
 
 	if time.Since(g.lastPowerupDespawn) >= g.physicsManager.PowerupRespawn && len(g.gameState.PowerUps) < g.physicsManager.MaxPowerups {
-		g.physicsManager.SpawnPowerup(g.gameState)
+		g.physicsManager.SpawnPowerup(&g.gameState)
 	}
 
 	for _, bullet := range g.gameState.Bullets {

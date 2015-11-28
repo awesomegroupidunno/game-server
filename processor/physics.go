@@ -307,7 +307,7 @@ func (p *Physics) VehicleBounding(v *state.Vehicle) {
 func (p *Physics) SpawnPowerup(g *state.GameState) {
 	x := p.WorldWidth / 2
 	y := p.WorldHeight / 4
-	powerupType := rand.Intn(2) + 1
+	powerupType := rand.Intn(NUM_POWERUPS) + 1
 
 	newPowerup := state.Powerup{
 		Point:        state.Point{x, y},

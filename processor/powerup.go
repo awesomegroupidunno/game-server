@@ -10,7 +10,10 @@ const (
 	NO_POWERUP = -1
 	HEAL       = iota
 	SPEEDUP    = iota
-	ROCKET     = iota
+
+	NUM_POWERUPS = iota - 1
+
+	ROCKET = iota
 )
 
 type PowerupCommandProcessor struct {
