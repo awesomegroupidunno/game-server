@@ -10,9 +10,10 @@ const (
 	NO_POWERUP = -1
 	HEAL       = iota
 	SPEEDUP    = iota
-	ROCKET     = iota
 
 	NUM_POWERUPS = iota - 1
+
+	ROCKET = iota
 )
 
 type PowerupCommandProcessor struct {
@@ -54,7 +55,7 @@ func (t *PowerupCommandProcessor) applySpeedPowerUp(v *state.Vehicle) {
 
 func (t *PowerupCommandProcessor) fireRocket(v *state.Vehicle, g *state.GameState) {
 	v.StoredPowerup = NO_POWERUP
-	targetedVehicle := g.Vehicles[1]
+	targetedVehicle := g.Vehicles[0]
 	r := state.Rocket{
 		Point:    state.NewPoint(v.X, v.Y),
 		Sized:    state.NewSized(t.Physics.BulletWidth*1.25, t.Physics.BulletWidth*1.25),

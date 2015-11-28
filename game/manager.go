@@ -8,7 +8,6 @@ import (
 	"log"
 	"sync"
 	"time"
-	"math/rand"
 )
 
 // used for synchronizing on state variables
@@ -30,7 +29,6 @@ type GameManager struct {
 	commandsToProcess  []*cmd.GameCommand
 	commandFactory     *processor.CommandProcessorFactory
 	responses          chan state.StateResponse
-	rnd                *rand.Rand
 }
 
 // returns a new manager for a game
@@ -62,8 +60,6 @@ func (g *GameManager) Start() {
 
 	commandsMutex.Unlock()
 	stateMutex.Unlock()
-
-	g.rnd = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	for {
 		if g.shouldTick() {
@@ -145,19 +141,8 @@ func (g *GameManager) tick() {
 		proc.Run(&(g.gameState), *command)
 	}
 
-	if time.Since(g.lastPowerupDespawn) >= g.physicsManager.PowerupRespawn && len(g.gameState.PowerUps) < 1 {
-		x := g.physicsManager.WorldWidth / 2
-		y := g.physicsManager.WorldHeight / 4
-		powerupType := g.rnd.Intn(processor.NUM_POWERUPS) + 1
-
-		newPowerup := state.Powerup{
-			Point:		  state.Point{x, y},
-			Sized:	      state.Sized{30, 30},
-			ShouldRemove: false,
-			PowerupType:  powerupType,
-		}
-
-		g.gameState.PowerUps = append(g.gameState.PowerUps, &newPowerup)
+	if time.Since(g.lastPowerupDespawn) >= g.physicsManager.PowerupRespawn && len(g.gameState.PowerUps) < g.physicsManager.MaxPowerups {
+		g.physicsManager.SpawnPowerup(&g.gameState)
 	}
 
 	for _, bullet := range g.gameState.Bullets {
@@ -206,6 +191,9 @@ func (g *GameManager) tick() {
 			if bullet.OwnerId != vehicle.Owner {
 				if collision.Collides(vehicle, bullet) {
 					g.physicsManager.DamageVehicle(vehicle, bullet)
+				}
+				if g.physicsManager.GravityBullets {
+					g.physicsManager.ApplyBulletGravity(bullet, vehicle, tickDuration)
 				}
 			}
 		}
