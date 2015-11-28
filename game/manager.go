@@ -143,6 +143,7 @@ func (g *GameManager) tick() {
 
 	if time.Since(g.lastPowerupDespawn) >= g.physicsManager.PowerupRespawn && len(g.gameState.PowerUps) < g.physicsManager.MaxPowerups {
 		g.physicsManager.SpawnPowerup(&g.gameState)
+		g.lastPowerupDespawn = time.Now()
 	}
 
 	for _, bullet := range g.gameState.Bullets {
@@ -177,7 +178,7 @@ func (g *GameManager) tick() {
 	}
 
 	for z, vehicle := range g.gameState.Vehicles {
-		g.physicsManager.RespawnVehicle(vehicle)
+		g.physicsManager.RespawnVehicle(vehicle, g.gameState)
 		g.physicsManager.VehicleBounding(vehicle)
 		g.physicsManager.MoveVehicle(vehicle, tickDuration)
 		g.physicsManager.VehicleFrictionSlow(vehicle, tickDuration)

@@ -1,6 +1,7 @@
 package processor
 
 import (
+	"github.com/awesomegroupidunno/game-server/collision"
 	"github.com/awesomegroupidunno/game-server/state"
 	"math"
 	"math/rand"
@@ -148,12 +149,14 @@ func (p *Physics) NewGameState() state.GameState {
 	return state
 }
 
-func (p *Physics) RespawnVehicle(v *state.Vehicle) bool {
+func (p *Physics) RespawnVehicle(v *state.Vehicle, g state.GameState) bool {
 	if !v.IsAlive {
 		if time.Now().After(v.TimeDestroyed.Add(p.VehicleRespawn)) {
 			v.IsAlive = true
-			v.Y = p.WorldHeight / 2
-			v.X = p.WorldWidth / 2
+			loc := p.findSpace(v.Sized, g)
+			v.Y = loc.Y
+			v.X = loc.X
+			v.Angle = 0
 			v.CurrentHealth = v.MaxHealth
 		}
 	}
@@ -305,13 +308,13 @@ func (p *Physics) VehicleBounding(v *state.Vehicle) {
 }
 
 func (p *Physics) SpawnPowerup(g *state.GameState) {
-	x := p.WorldWidth / 2
-	y := p.WorldHeight / 4
 	powerupType := rand.Intn(NUM_POWERUPS) + 1
 
+	size := state.Sized{30, 30}
+
 	newPowerup := state.Powerup{
-		Point:        state.Point{x, y},
-		Sized:        state.Sized{30, 30},
+		Point:        p.findSpace(size, *g),
+		Sized:        size,
 		ShouldRemove: false,
 		PowerupType:  powerupType,
 	}
@@ -376,4 +379,52 @@ func CleanupPowerups(data []*state.Powerup) []*state.Powerup {
 		}
 	}
 	return retData
+}
+
+func (p *Physics) findSpace(size state.Sized, gamestate state.GameState) state.Point {
+	pt := state.Point{
+		X: float64(rand.Intn(int(p.WorldWidth * 4 / 5))),
+		Y: float64(rand.Intn(int(p.WorldHeight * 4 / 5))),
+	}
+	if p.isValidPlace(pt, size, gamestate) {
+		return pt
+	}
+
+	return p.findSpace(size, gamestate)
+}
+
+func (p *Physics) isValidPlace(pt state.Point, size state.Sized, gamestate state.GameState) bool {
+	hasCollision := false
+
+	powerup := state.Powerup{
+		Sized: size,
+		Point: pt,
+	}
+	for _, b := range gamestate.Bases {
+		if collision.Collides(powerup, b) {
+			hasCollision = true
+		}
+	}
+	for _, v := range gamestate.Vehicles {
+		if collision.Collides(powerup, v) {
+			hasCollision = true
+		}
+	}
+	for _, b := range gamestate.Shields {
+		if collision.Collides(powerup, b) {
+			hasCollision = true
+		}
+	}
+	for _, s := range gamestate.ShieldGenerators {
+		if collision.Collides(powerup, s) {
+			hasCollision = true
+		}
+	}
+	for _, p := range gamestate.PowerUps {
+		if collision.Collides(powerup, p) {
+			hasCollision = true
+		}
+	}
+
+	return !hasCollision
 }

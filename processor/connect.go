@@ -22,14 +22,12 @@ func (t *ConnectCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 	// For now, randomly join team 0 or 1
 	teamNum := len(g.Vehicles) % 2
 
+	size := state.NewSized(t.Physics.VehicleWidth, t.Physics.VehicleHeight)
+	pt := t.Physics.findSpace(size, *g)
+
 	newVehicle := state.Vehicle{
-		Point: state.Point{
-			X: 300,
-			Y: 300},
-		Sized: state.Sized{
-			Width:  t.Physics.VehicleWidth,
-			Height: t.Physics.VehicleHeight,
-		},
+		Point:             pt,
+		Sized:             size,
 		Velocity:          0.0,
 		Angle:             0,
 		TeamId:            teamNum,
