@@ -87,6 +87,8 @@ func (u *UdpReceiver) startSender() {
 			for i := 0; i < len(state.State.Vehicles); i++ {
 				if state.State.Vehicles[i].Owner == client.IP.String() {
 					state.State.Vehicles[i].IsMe = true
+				} else {
+					state.State.Vehicles[i].IsMe = false
 				}
 			}
 
