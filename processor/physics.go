@@ -3,6 +3,7 @@ package processor
 import (
 	"github.com/awesomegroupidunno/game-server/state"
 	"math"
+	"math/rand"
 	"time"
 )
 
@@ -33,7 +34,9 @@ type Physics struct {
 	RocketDamage                int
 	VehicleHealth               int
 	VehicleRespawn              time.Duration
+	MaxPowerups                 int
 	GravityBullets              bool
+	PowerupRespawn              time.Duration
 }
 
 func DefaultPhysics() Physics {
@@ -60,6 +63,8 @@ func DefaultPhysics() Physics {
 		VehicleHealth:               300,
 		VehicleRespawn:              5 * time.Second,
 		GravityBullets:              false,
+		PowerupRespawn:              8 * time.Second,
+		MaxPowerups:                 3,
 	}
 }
 
@@ -139,7 +144,7 @@ func (p *Physics) NewGameState() state.GameState {
 		Bullets:          []*state.Bullet{},
 		Shields:          shields,
 		Rockets:          []*state.Rocket{},
-		PowerUps:         powerups}
+		PowerUps:         []*state.Powerup{}}
 	return state
 }
 
@@ -173,7 +178,7 @@ func (p *Physics) ApplyBulletGravity(b *state.Bullet, v *state.Vehicle, t time.D
 	if b.OwnerId != v.Owner {
 		dist := distance(v.Point, b.Point)
 
-		b.X += dist.X  / 10
+		b.X += dist.X / 10
 		b.Y += dist.Y / 10
 	}
 
@@ -297,6 +302,21 @@ func (p *Physics) VehicleBounding(v *state.Vehicle) {
 		v.Velocity = 0
 	}
 
+}
+
+func (p *Physics) SpawnPowerup(g *state.GameState) {
+	x := p.WorldWidth / 2
+	y := p.WorldHeight / 4
+	powerupType := rand.Intn(2) + 1
+
+	newPowerup := state.Powerup{
+		Point:        state.Point{x, y},
+		Sized:        state.Sized{30, 30},
+		ShouldRemove: false,
+		PowerupType:  powerupType,
+	}
+
+	g.PowerUps = append(g.PowerUps, &newPowerup)
 }
 
 func (p *Physics) BoundBullet(b *state.Bullet) {

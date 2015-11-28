@@ -6,6 +6,7 @@ import (
 	"github.com/awesomegroupidunno/game-server/processor"
 	"github.com/awesomegroupidunno/game-server/state"
 	"log"
+	"math/rand"
 	"sync"
 	"time"
 )
@@ -19,15 +20,16 @@ var stateMutex sync.Mutex
 var commandsMutex sync.Mutex
 
 type GameManager struct {
-	startTime         time.Time
-	lastTick          time.Time
-	isStarted         bool
-	isPaused          bool
-	gameState         state.GameState
-	physicsManager    *processor.Physics
-	commandsToProcess []*cmd.GameCommand
-	commandFactory    *processor.CommandProcessorFactory
-	responses         chan state.StateResponse
+	startTime          time.Time
+	lastTick           time.Time
+	lastPowerupDespawn time.Time
+	isStarted          bool
+	isPaused           bool
+	gameState          state.GameState
+	physicsManager     *processor.Physics
+	commandsToProcess  []*cmd.GameCommand
+	commandFactory     *processor.CommandProcessorFactory
+	responses          chan state.StateResponse
 }
 
 // returns a new manager for a game
@@ -55,6 +57,7 @@ func (g *GameManager) Start() {
 	g.isPaused = false
 	g.startTime = time.Now()
 	g.lastTick = time.Now()
+	g.lastPowerupDespawn = time.Now()
 
 	commandsMutex.Unlock()
 	stateMutex.Unlock()
@@ -139,6 +142,10 @@ func (g *GameManager) tick() {
 		proc.Run(&(g.gameState), *command)
 	}
 
+	if time.Since(g.lastPowerupDespawn) >= g.physicsManager.PowerupRespawn && len(g.gameState.PowerUps) < g.physicsManager.MaxPowerups {
+		g.physicsManager.SpawnPowerup(g.gameState)
+	}
+
 	for _, bullet := range g.gameState.Bullets {
 		g.physicsManager.MoveBullet(bullet, tickDuration)
 		g.physicsManager.BoundBullet(bullet)
@@ -215,6 +222,7 @@ func (g *GameManager) tick() {
 		for _, powerup := range g.gameState.PowerUps {
 			if collision.Collides(powerup, vehicle) {
 				g.physicsManager.PickupPowerUp(vehicle, powerup)
+				g.lastPowerupDespawn = time.Now()
 			}
 		}
 
