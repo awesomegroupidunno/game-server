@@ -148,7 +148,7 @@ func (g *GameManager) tick() {
 	if time.Since(g.lastPowerupDespawn) >= g.physicsManager.PowerupRespawn && len(g.gameState.PowerUps) < 1 {
 		x := g.physicsManager.WorldWidth / 2
 		y := g.physicsManager.WorldHeight / 4
-		powerupType := g.rnd.Intn(3) + 1
+		powerupType := g.rnd.Intn(processor.NUM_POWERUPS) + 1
 
 		newPowerup := state.Powerup{
 			Point:		  state.Point{x, y},
