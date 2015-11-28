@@ -186,6 +186,9 @@ func (g *GameManager) tick() {
 				if collision.Collides(vehicle, bullet) {
 					g.physicsManager.DamageVehicle(vehicle, bullet)
 				}
+				if g.physicsManager.GravityBullets {
+					g.physicsManager.ApplyBulletGravity(bullet, vehicle, tickDuration)
+				}
 			}
 		}
 

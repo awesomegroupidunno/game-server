@@ -33,6 +33,7 @@ type Physics struct {
 	RocketDamage                int
 	VehicleHealth               int
 	VehicleRespawn              time.Duration
+	GravityBullets              bool
 }
 
 func DefaultPhysics() Physics {
@@ -58,6 +59,7 @@ func DefaultPhysics() Physics {
 		RocketDamage:                20,
 		VehicleHealth:               300,
 		VehicleRespawn:              5 * time.Second,
+		GravityBullets:              false,
 	}
 }
 
@@ -122,9 +124,9 @@ func (p *Physics) NewGameState() state.GameState {
 	powerups := []*state.Powerup{}
 
 	p1 := state.Powerup{
-		Point:       state.NewPoint(500, 500),
-		Sized:       state.NewSized(150, 150),
-		PowerupType: HEAL,
+		Point:       state.NewPoint(250, 250),
+		Sized:       state.NewSized(20, 20),
+		PowerupType: SPEEDUP,
 	}
 	powerups = append(powerups, &p1)
 
@@ -165,6 +167,16 @@ func (p *Physics) MoveBullet(bullet *state.Bullet, duration time.Duration) {
 
 	bullet.X = x
 	bullet.Y = y
+}
+
+func (p *Physics) ApplyBulletGravity(b *state.Bullet, v *state.Vehicle, t time.Duration) {
+	if b.OwnerId != v.Owner {
+		dist := distance(v.Point, b.Point)
+
+		b.X += dist.X  / 10
+		b.Y += dist.Y / 10
+	}
+
 }
 
 func (p *Physics) VehicleFrictionSlow(vehicle *state.Vehicle, duration time.Duration) {
@@ -310,6 +322,10 @@ func splitComponent(angle float64) (x, y float64) {
 
 func combineComponents(x, y float64) (resultant float64) {
 	return math.Sqrt(x*x + y*y)
+}
+
+func distance(p1, p2 state.Point) state.Point {
+	return state.NewPoint(p1.X-p2.X, p1.Y-p2.Y)
 }
 
 // calculates new x and y position for 2d motion
