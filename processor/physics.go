@@ -33,6 +33,7 @@ type Physics struct {
 	RocketDamage                int
 	VehicleHealth               int
 	VehicleRespawn              time.Duration
+	PowerupRespawn				time.Duration
 }
 
 func DefaultPhysics() Physics {
@@ -58,6 +59,7 @@ func DefaultPhysics() Physics {
 		RocketDamage:                20,
 		VehicleHealth:               300,
 		VehicleRespawn:              5 * time.Second,
+		PowerupRespawn:				 8 * time.Second,
 	}
 }
 
@@ -119,15 +121,6 @@ func (p *Physics) NewGameState() state.GameState {
 	g2.Shield = &s1
 	generators = append(generators, &g1, &g2)
 
-	powerups := []*state.Powerup{}
-
-	p1 := state.Powerup{
-		Point:       state.NewPoint(500, 500),
-		Sized:       state.NewSized(150, 150),
-		PowerupType: HEAL,
-	}
-	powerups = append(powerups, &p1)
-
 	state := state.GameState{
 		Val:              "",
 		Vehicles:         []*state.Vehicle{},
@@ -137,7 +130,7 @@ func (p *Physics) NewGameState() state.GameState {
 		Bullets:          []*state.Bullet{},
 		Shields:          shields,
 		Rockets:          []*state.Rocket{},
-		PowerUps:         powerups}
+		PowerUps:         []*state.Powerup{}}
 	return state
 }
 

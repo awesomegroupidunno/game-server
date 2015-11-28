@@ -8,6 +8,7 @@ import (
 	"log"
 	"sync"
 	"time"
+	"math/rand"
 )
 
 // used for synchronizing on state variables
@@ -19,15 +20,17 @@ var stateMutex sync.Mutex
 var commandsMutex sync.Mutex
 
 type GameManager struct {
-	startTime         time.Time
-	lastTick          time.Time
-	isStarted         bool
-	isPaused          bool
-	gameState         state.GameState
-	physicsManager    *processor.Physics
-	commandsToProcess []*cmd.GameCommand
-	commandFactory    *processor.CommandProcessorFactory
-	responses         chan state.StateResponse
+	startTime          time.Time
+	lastTick           time.Time
+	lastPowerupDespawn time.Time
+	isStarted          bool
+	isPaused           bool
+	gameState          state.GameState
+	physicsManager     *processor.Physics
+	commandsToProcess  []*cmd.GameCommand
+	commandFactory     *processor.CommandProcessorFactory
+	responses          chan state.StateResponse
+	rnd                *rand.Rand
 }
 
 // returns a new manager for a game
@@ -55,9 +58,12 @@ func (g *GameManager) Start() {
 	g.isPaused = false
 	g.startTime = time.Now()
 	g.lastTick = time.Now()
+	g.lastPowerupDespawn = time.Now()
 
 	commandsMutex.Unlock()
 	stateMutex.Unlock()
+
+	g.rnd = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	for {
 		if g.shouldTick() {
@@ -139,6 +145,21 @@ func (g *GameManager) tick() {
 		proc.Run(&(g.gameState), *command)
 	}
 
+	if time.Since(g.lastPowerupDespawn) >= g.physicsManager.PowerupRespawn && len(g.gameState.PowerUps) < 1 {
+		x := g.physicsManager.WorldWidth / 2
+		y := g.physicsManager.WorldHeight / 4
+		powerupType := g.rnd.Intn(3) + 1
+
+		newPowerup := state.Powerup{
+			Point:		  state.Point{x, y},
+			Sized:	      state.Sized{30, 30},
+			ShouldRemove: false,
+			PowerupType:  powerupType,
+		}
+
+		g.gameState.PowerUps = append(g.gameState.PowerUps, &newPowerup)
+	}
+
 	for _, bullet := range g.gameState.Bullets {
 		g.physicsManager.MoveBullet(bullet, tickDuration)
 		g.physicsManager.BoundBullet(bullet)
@@ -212,6 +233,7 @@ func (g *GameManager) tick() {
 		for _, powerup := range g.gameState.PowerUps {
 			if collision.Collides(powerup, vehicle) {
 				g.physicsManager.PickupPowerUp(vehicle, powerup)
+				g.lastPowerupDespawn = time.Now()
 			}
 		}
 
