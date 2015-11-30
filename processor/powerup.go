@@ -7,13 +7,11 @@ import (
 )
 
 const (
-	NO_POWERUP = -1
-	HEAL       = iota
-	SPEEDUP    = iota
-
+	NO_POWERUP   = -1
+	HEAL         = iota
+	SPEEDUP      = iota
+	ROCKET       = iota
 	NUM_POWERUPS = iota - 1
-
-	ROCKET = iota
 )
 
 type PowerupCommandProcessor struct {
@@ -55,7 +53,7 @@ func (t *PowerupCommandProcessor) applySpeedPowerUp(v *state.Vehicle) {
 
 func (t *PowerupCommandProcessor) fireRocket(v *state.Vehicle, g *state.GameState) {
 	v.StoredPowerup = NO_POWERUP
-	targetedVehicle := g.Vehicles[0]
+	targetedVehicle := targetVehicle(v, g)
 	r := state.Rocket{
 		Point:    state.NewPoint(v.X, v.Y),
 		Sized:    state.NewSized(t.Physics.BulletWidth*1.25, t.Physics.BulletWidth*1.25),
@@ -64,4 +62,13 @@ func (t *PowerupCommandProcessor) fireRocket(v *state.Vehicle, g *state.GameStat
 	}
 
 	g.Rockets = append(g.Rockets, &r)
+}
+
+func targetVehicle(v *state.Vehicle, g *state.GameState) *state.Vehicle {
+	for _, vehicle := range g.Vehicles {
+		if vehicle.Owner != v.Owner && vehicle.TeamId != v.TeamId {
+			return vehicle
+		}
+	}
+	return nil
 }
