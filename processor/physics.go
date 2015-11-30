@@ -161,6 +161,13 @@ func (p *Physics) MoveVehicle(vehicle *state.Vehicle, duration time.Duration) {
 	vehicle.Y = y
 }
 
+func (p *Physics) MoveRocket(rocket *state.Rocket, duration time.Duration) {
+	x, y := p.move2d(rocket.X, rocket.Y, rocket.Angle, rocket.Velocity, duration)
+
+	rocket.X = x
+	rocket.Y = y
+}
+
 func (p *Physics) MoveBullet(bullet *state.Bullet, duration time.Duration) {
 	x, y := p.move2d(bullet.X, bullet.Y, bullet.Angle, bullet.Velocity, duration)
 

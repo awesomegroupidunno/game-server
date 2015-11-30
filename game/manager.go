@@ -146,6 +146,10 @@ func (g *GameManager) tick() {
 		g.lastPowerupDespawn = time.Now()
 	}
 
+	for _, rocket := range g.gameState.Rockets {
+		g.physicsManager.MoveRocket(rocket, tickDuration)
+	}
+
 	for _, bullet := range g.gameState.Bullets {
 		g.physicsManager.MoveBullet(bullet, tickDuration)
 		g.physicsManager.BoundBullet(bullet)
