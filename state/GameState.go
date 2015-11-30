@@ -4,6 +4,12 @@ import (
 	"math"
 )
 
+const (
+	NOT_GAME_OVER	= -1
+	RED				= 0
+	BLUE			= 1
+)
+
 type Point struct {
 	X float64
 	Y float64
@@ -31,7 +37,7 @@ type GameState struct {
 	Shields          []*Shield
 	Rockets          []*Rocket
 	PowerUps         []*Powerup
-	GameOver         bool
+	GameOver         int
 }
 
 func (g *GameState) Copy() GameState {

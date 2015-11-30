@@ -78,30 +78,30 @@ func (p *Physics) NewGameState() state.GameState {
 		Sized:         state.NewSized(p.BaseWidth, p.BaseWidth),
 		CurrentHealth: p.BaseHealth,
 		MaxHealth:     p.BaseHealth,
-		TeamId:        0}
+		TeamId:        state.RED}
 
 	b2 := state.Base{
 		Point:         state.NewPoint(p.WorldWidth-p.BaseOffset, p.BaseOffset),
 		Sized:         state.NewSized(p.BaseWidth, p.BaseWidth),
 		CurrentHealth: p.BaseHealth,
 		MaxHealth:     p.BaseHealth,
-		TeamId:        1}
+		TeamId:        state.BLUE}
 
 	bases = append(bases, &b1, &b2)
 
 	shields := []*state.Shield{}
 
 	s1 := state.Shield{
-		Point:     state.NewPoint(p.WorldWidth-p.BaseOffset, p.BaseOffset),
-		Sized:     state.NewSized(p.BaseWidth*1.5, p.BaseWidth*1.5),
-		IsEnabled: true,
-		TeamId:    1}
-
-	s2 := state.Shield{
 		Point:     state.NewPoint(p.BaseOffset, p.WorldHeight-p.BaseOffset),
 		Sized:     state.NewSized(p.BaseWidth*1.5, p.BaseWidth*1.5),
 		IsEnabled: true,
-		TeamId:    0}
+		TeamId:    state.RED}
+
+	s2 := state.Shield{
+		Point:     state.NewPoint(p.WorldWidth-p.BaseOffset, p.BaseOffset),
+		Sized:     state.NewSized(p.BaseWidth*1.5, p.BaseWidth*1.5),
+		IsEnabled: true,
+		TeamId:    state.BLUE}
 
 	shields = append(shields, &s1, &s2)
 
@@ -111,20 +111,20 @@ func (p *Physics) NewGameState() state.GameState {
 		Sized:         state.NewSized(p.ShieldWidth, p.ShieldWidth),
 		CurrentHealth: p.ShieldGeneratorHealth,
 		MaxHealth:     p.ShieldGeneratorHealth,
-		TeamId:        0,
+		TeamId:        state.RED,
 		RespawnTime:   time.Now()}
 
-	g1.Shield = &s2
+	g1.Shield = &s1
 
 	g2 := state.ShieldGenerator{
 		Point:         state.NewPoint(p.ShieldOffset, p.ShieldOffset),
 		Sized:         state.NewSized(p.ShieldWidth, p.ShieldWidth),
 		CurrentHealth: p.ShieldGeneratorHealth,
 		MaxHealth:     p.ShieldGeneratorHealth,
-		TeamId:        1,
+		TeamId:        state.BLUE,
 		RespawnTime:   time.Now()}
 
-	g2.Shield = &s1
+	g2.Shield = &s2
 	generators = append(generators, &g1, &g2)
 
 	powerups := []*state.Powerup{}
@@ -141,7 +141,7 @@ func (p *Physics) NewGameState() state.GameState {
 		Vehicles:         []*state.Vehicle{},
 		Bases:            bases,
 		ShieldGenerators: generators,
-		GameOver:         false,
+		GameOver:         state.NOT_GAME_OVER,
 		Bullets:          []*state.Bullet{},
 		Shields:          shields,
 		Rockets:          []*state.Rocket{},
