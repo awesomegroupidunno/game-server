@@ -127,15 +127,6 @@ func (p *Physics) NewGameState() state.GameState {
 	g2.Shield = &s1
 	generators = append(generators, &g1, &g2)
 
-	powerups := []*state.Powerup{}
-
-	p1 := state.Powerup{
-		Point:       state.NewPoint(250, 250),
-		Sized:       state.NewSized(20, 20),
-		PowerupType: SPEEDUP,
-	}
-	powerups = append(powerups, &p1)
-
 	state := state.GameState{
 		Val:              "",
 		Vehicles:         []*state.Vehicle{},
