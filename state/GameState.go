@@ -31,7 +31,7 @@ type GameState struct {
 	Shields          []*Shield
 	Rockets          []*Rocket
 	PowerUps         []*Powerup
-	GameOver         bool
+	GameOver         int
 }
 
 func (g *GameState) Copy() GameState {

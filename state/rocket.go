@@ -7,9 +7,10 @@ var _ collision.Box2d = Bullet{}
 type Rocket struct {
 	Point
 	Sized
-	Velocity float64
-	Angle    float64
-	Target   *Vehicle
+	Velocity     float64
+	Angle        float64
+	Target       *Vehicle
+	ShouldRemove bool `json:"-"`
 }
 
 func (b Rocket) Position() (x float64, y float64) {

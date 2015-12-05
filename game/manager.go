@@ -107,7 +107,7 @@ func (g *GameManager) Resume() {
 func (g *GameManager) shouldTick() bool {
 	stateMutex.Lock()
 	defer stateMutex.Unlock()
-	return g.isStarted && !g.isPaused && !g.gameState.GameOver
+	return g.isStarted && !g.isPaused && g.gameState.GameOver == -1
 }
 
 // Adds a command to be processed by the GameManager
@@ -174,7 +174,7 @@ func (g *GameManager) tick() {
 		for _, base := range g.gameState.Bases {
 			if collision.Collides(bullet, base) {
 				if g.physicsManager.DamageBase(bullet, base) {
-					g.gameState.GameOver = true
+					g.gameState.GameOver = base.TeamId
 				}
 			}
 		}
@@ -196,9 +196,6 @@ func (g *GameManager) tick() {
 			if bullet.OwnerId != vehicle.Owner {
 				if collision.Collides(vehicle, bullet) {
 					g.physicsManager.DamageVehicle(vehicle, bullet)
-				}
-				if g.physicsManager.GravityBullets {
-					g.physicsManager.ApplyBulletGravity(bullet, vehicle, tickDuration)
 				}
 			}
 		}
@@ -234,6 +231,7 @@ func (g *GameManager) tick() {
 
 	g.gameState.Bullets = processor.CleanupBullets(g.gameState.Bullets)
 	g.gameState.PowerUps = processor.CleanupPowerups(g.gameState.PowerUps)
+	g.gameState.Rockets = processor.CleanupRockets(g.gameState.Rockets)
 
 	stateMutex.Unlock()
 

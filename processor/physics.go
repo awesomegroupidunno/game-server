@@ -132,7 +132,7 @@ func (p *Physics) NewGameState() state.GameState {
 		Vehicles:         []*state.Vehicle{},
 		Bases:            bases,
 		ShieldGenerators: generators,
-		GameOver:         false,
+		GameOver:         -1,
 		Bullets:          []*state.Bullet{},
 		Shields:          shields,
 		Rockets:          []*state.Rocket{},
@@ -164,10 +164,25 @@ func (p *Physics) MoveVehicle(vehicle *state.Vehicle, duration time.Duration) {
 }
 
 func (p *Physics) MoveRocket(rocket *state.Rocket, duration time.Duration) {
+
+	t := rocket.Target
+	if t == nil {
+		rocket.ShouldRemove = true
+		return
+	}
+
+	dx := t.X - rocket.X
+	dy := t.Y - rocket.Y
+	rocket.Angle = math.Atan2(dy, dx) * RadToDeg
 	x, y := p.move2d(rocket.X, rocket.Y, rocket.Angle, rocket.Velocity, duration)
 
 	rocket.X = x
 	rocket.Y = y
+
+	if collision.Collides(rocket, t) {
+		rocket.ShouldRemove = true
+		p.damageVehicle(t, p.BulletDamage*20)
+	}
 }
 
 func (p *Physics) MoveBullet(bullet *state.Bullet, duration time.Duration) {
@@ -175,16 +190,6 @@ func (p *Physics) MoveBullet(bullet *state.Bullet, duration time.Duration) {
 
 	bullet.X = x
 	bullet.Y = y
-}
-
-func (p *Physics) ApplyBulletGravity(b *state.Bullet, v *state.Vehicle, t time.Duration) {
-	if b.OwnerId != v.Owner {
-		dist := distance(v.Point, b.Point)
-
-		b.X += dist.X / 10
-		b.Y += dist.Y / 10
-	}
-
 }
 
 func (p *Physics) VehicleFrictionSlow(vehicle *state.Vehicle, duration time.Duration) {
@@ -246,9 +251,13 @@ func (p *Physics) VehicleKnockback(vehicle *state.Vehicle, kbAngle, kbVelocity f
 }
 
 func (p *Physics) DamageVehicle(v *state.Vehicle, b *state.Bullet) bool {
+	b.ShouldRemove = true
+	return p.damageVehicle(v, p.BulletDamage)
+}
+
+func (p *Physics) damageVehicle(v *state.Vehicle, amount int) bool {
 	if v.IsAlive {
-		v.CurrentHealth -= p.BulletDamage
-		b.ShouldRemove = true
+		v.CurrentHealth -= amount
 		if v.CurrentHealth <= 0 {
 			v.CurrentHealth = 0
 			v.IsAlive = false
@@ -373,6 +382,15 @@ func CleanupBullets(data []*state.Bullet) []*state.Bullet {
 
 func CleanupPowerups(data []*state.Powerup) []*state.Powerup {
 	retData := []*state.Powerup{}
+	for i := 0; i < len(data); i++ {
+		if !data[i].ShouldRemove {
+			retData = append(retData, data[i])
+		}
+	}
+	return retData
+}
+func CleanupRockets(data []*state.Rocket) []*state.Rocket {
+	retData := []*state.Rocket{}
 	for i := 0; i < len(data); i++ {
 		if !data[i].ShouldRemove {
 			retData = append(retData, data[i])
