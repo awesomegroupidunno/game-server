@@ -158,6 +158,8 @@ func (p *Physics) RespawnVehicle(v *state.Vehicle, g state.GameState) bool {
 			v.X = loc.X
 			v.Angle = 0
 			v.CurrentHealth = v.MaxHealth
+			v.ActivePowerup = NO_POWERUP
+			v.StoredPowerup = NO_POWERUP
 		}
 	}
 	return false
