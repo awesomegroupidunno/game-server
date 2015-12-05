@@ -31,6 +31,7 @@ type GameState struct {
 	Shields          []*Shield
 	Rockets          []*Rocket
 	PowerUps         []*Powerup
+	GravityWells     []*GravityWell
 	GameOver         int
 }
 
@@ -45,6 +46,7 @@ func (g *GameState) Copy() GameState {
 	stateCopy.Shields = []*Shield{}
 	stateCopy.Rockets = []*Rocket{}
 	stateCopy.PowerUps = []*Powerup{}
+	stateCopy.GravityWells = []*GravityWell{}
 	stateCopy.GameOver = g.GameOver
 
 	for i := 0; i < len(g.Vehicles); i++ {
@@ -52,6 +54,7 @@ func (g *GameState) Copy() GameState {
 		v.X = math.Floor(v.X)
 		v.Y = math.Floor(v.Y)
 		v.Angle = math.Floor(v.Angle)
+		v.Velocity = math.Floor(v.Velocity)
 		v.ActivePowerup = g.Vehicles[i].ActivePowerup
 		v.IsMe = false
 		if v.IsAlive {
@@ -63,6 +66,7 @@ func (g *GameState) Copy() GameState {
 		b.X = math.Floor(b.X)
 		b.Y = math.Floor(b.Y)
 		b.Angle = math.Floor(b.Angle)
+		b.Velocity = math.Floor(b.Velocity)
 		stateCopy.Bullets = append(stateCopy.Bullets, &b)
 	}
 	for i := 0; i < len(g.Bases); i++ {
@@ -96,6 +100,12 @@ func (g *GameState) Copy() GameState {
 		b.X = math.Floor(b.X)
 		b.Y = math.Floor(b.Y)
 		stateCopy.PowerUps = append(stateCopy.PowerUps, &b)
+	}
+	for i := 0; i < len(g.GravityWells); i++ {
+		var b GravityWell = *g.GravityWells[i]
+		b.X = math.Floor(b.X)
+		b.Y = math.Floor(b.Y)
+		stateCopy.GravityWells = append(stateCopy.GravityWells, &b)
 	}
 
 	return stateCopy

@@ -11,6 +11,7 @@ const (
 	HEAL         = iota
 	SPEEDUP      = iota
 	ROCKET       = iota
+	GRAVITY_WELL = iota
 	NUM_POWERUPS = iota - 1
 )
 
@@ -35,6 +36,9 @@ func (t *PowerupCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 		return
 	case ROCKET:
 		t.fireRocket(vehicle, g)
+		return
+	case GRAVITY_WELL:
+		//t.fireRocket(vehicle, g)
 		return
 	}
 
