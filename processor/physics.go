@@ -192,6 +192,37 @@ func (p *Physics) MoveBullet(bullet *state.Bullet, duration time.Duration) {
 	bullet.Y = y
 }
 
+func (p *Physics) ApplyGravity(state *state.GameState) {
+	for _, well := range state.GravityWells {
+		for _, v := range state.Vehicles {
+			if well.Owner != v.Owner {
+
+				delta := distance(well.Point, v.Point)
+				dist := combineComponents(delta.X, delta.Y)
+
+				pull := 1 / (dist * dist)
+
+				xPull := delta.X * pull * 100
+				yPull := delta.Y * pull * 100
+				if xPull >= 5 {
+					xPull = 5
+				}
+				if xPull <= -5 {
+					xPull = -5
+				}
+				if yPull >= 5 {
+					yPull = 5
+				}
+				if yPull <= -5 {
+					yPull = 5
+				}
+				v.X += xPull
+				v.Y += yPull
+			}
+		}
+	}
+}
+
 func (p *Physics) VehicleFrictionSlow(vehicle *state.Vehicle, duration time.Duration) {
 	speedLoss := p.FrictionSpeedLoss * duration.Seconds()
 	if vehicle.Velocity > 0 {
@@ -391,6 +422,15 @@ func CleanupPowerups(data []*state.Powerup) []*state.Powerup {
 }
 func CleanupRockets(data []*state.Rocket) []*state.Rocket {
 	retData := []*state.Rocket{}
+	for i := 0; i < len(data); i++ {
+		if !data[i].ShouldRemove {
+			retData = append(retData, data[i])
+		}
+	}
+	return retData
+}
+func CleanupWells(data []*state.GravityWell) []*state.GravityWell {
+	retData := []*state.GravityWell{}
 	for i := 0; i < len(data); i++ {
 		if !data[i].ShouldRemove {
 			retData = append(retData, data[i])

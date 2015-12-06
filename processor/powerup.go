@@ -38,7 +38,7 @@ func (t *PowerupCommandProcessor) Run(g *state.GameState, c cmd.GameCommand) {
 		t.fireRocket(vehicle, g)
 		return
 	case GRAVITY_WELL:
-		//t.fireRocket(vehicle, g)
+		t.placeWell(vehicle, g)
 		return
 	}
 
@@ -70,9 +70,21 @@ func (t *PowerupCommandProcessor) fireRocket(v *state.Vehicle, g *state.GameStat
 
 func targetVehicle(v *state.Vehicle, g *state.GameState) *state.Vehicle {
 	for _, vehicle := range g.Vehicles {
-		if vehicle.Owner != v.Owner && vehicle.TeamId != v.TeamId {
+		if vehicle.Owner != v.Owner && vehicle.TeamId != v.TeamId && v.IsAlive {
 			return vehicle
 		}
 	}
 	return nil
+}
+
+func (t *PowerupCommandProcessor) placeWell(v *state.Vehicle, g *state.GameState) {
+	v.StoredPowerup = NO_POWERUP
+	r := state.GravityWell{
+		Point:   state.NewPoint(v.X, v.Y),
+		Sized:   state.NewSized(10, 10),
+		Owner:   v.Owner,
+		Expires: time.Now().Add(5 * time.Second),
+	}
+
+	g.GravityWells = append(g.GravityWells, &r)
 }

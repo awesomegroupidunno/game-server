@@ -1,9 +1,14 @@
 package state
 
+import "time"
+
 type GravityWell struct {
 	Point
 	Sized
-	TeamId int
+	TeamId       int
+	Owner        string
+	Expires      time.Time `json:"-"`
+	ShouldRemove bool      `json:"-"`
 }
 
 func (v GravityWell) Position() (x float64, y float64) {

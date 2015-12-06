@@ -131,7 +131,6 @@ func (g *GameManager) tick() {
 
 	stateMutex.Lock()
 	tickDuration := time.Since(g.lastTick)
-
 	if tickDuration > (50 * time.Millisecond) {
 		log.Println("Lag spike detected")
 	}
@@ -141,6 +140,8 @@ func (g *GameManager) tick() {
 		proc.Run(&(g.gameState), *command)
 	}
 
+	g.physicsManager.ApplyGravity(&g.gameState)
+
 	if time.Since(g.lastPowerupDespawn) >= g.physicsManager.PowerupRespawn && len(g.gameState.PowerUps) < g.physicsManager.MaxPowerups {
 		g.physicsManager.SpawnPowerup(&g.gameState)
 		g.lastPowerupDespawn = time.Now()
@@ -148,6 +149,12 @@ func (g *GameManager) tick() {
 
 	for _, rocket := range g.gameState.Rockets {
 		g.physicsManager.MoveRocket(rocket, tickDuration)
+	}
+
+	for _, well := range g.gameState.GravityWells {
+		if time.Now().After(well.Expires) {
+			well.ShouldRemove = true
+		}
 	}
 
 	for _, bullet := range g.gameState.Bullets {
@@ -193,7 +200,7 @@ func (g *GameManager) tick() {
 			}
 		}
 		for _, bullet := range g.gameState.Bullets {
-			if bullet.OwnerId != vehicle.Owner {
+			if bullet.OwnerId != vehicle.Owner && vehicle.IsAlive {
 				if collision.Collides(vehicle, bullet) {
 					g.physicsManager.DamageVehicle(vehicle, bullet)
 				}
@@ -232,6 +239,7 @@ func (g *GameManager) tick() {
 	g.gameState.Bullets = processor.CleanupBullets(g.gameState.Bullets)
 	g.gameState.PowerUps = processor.CleanupPowerups(g.gameState.PowerUps)
 	g.gameState.Rockets = processor.CleanupRockets(g.gameState.Rockets)
+	g.gameState.GravityWells = processor.CleanupWells(g.gameState.GravityWells)
 
 	stateMutex.Unlock()
 
