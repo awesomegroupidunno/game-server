@@ -23,7 +23,7 @@ type GameManager struct {
 	lastTick           time.Time
 	lastPowerupDespawn time.Time
 	restartTime        time.Time
-	gameRestart		   int
+	gameRestart        int
 	isStarted          bool
 	isPaused           bool
 	gameState          state.GameState

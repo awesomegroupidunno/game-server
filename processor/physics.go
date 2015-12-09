@@ -137,7 +137,7 @@ func (p *Physics) NewGameState() state.GameState {
 		Shields:          shields,
 		Rockets:          []*state.Rocket{},
 		PowerUps:         []*state.Powerup{},
-		SecToRestart:	  -1,
+		SecToRestart:     -1,
 	}
 	return state
 }

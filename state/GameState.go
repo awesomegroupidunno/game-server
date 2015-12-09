@@ -33,7 +33,7 @@ type GameState struct {
 	PowerUps         []*Powerup
 	GravityWells     []*GravityWell
 	GameOver         int
-	SecToRestart	 int
+	SecToRestart     int
 }
 
 func (g *GameState) Copy() GameState {
