@@ -23,6 +23,7 @@ type GameManager struct {
 	lastTick           time.Time
 	lastPowerupDespawn time.Time
 	restartTime        time.Time
+	gameRestart		   int
 	isStarted          bool
 	isPaused           bool
 	gameState          state.GameState
@@ -54,6 +55,7 @@ func (g *GameManager) Start() {
 
 	g.commandsToProcess = []*cmd.GameCommand{}
 	g.restartTime = time.Now()
+	g.gameRestart = 5
 	g.isStarted = true
 	g.isPaused = false
 	g.startTime = time.Now()
@@ -63,10 +65,19 @@ func (g *GameManager) Start() {
 	commandsMutex.Unlock()
 	stateMutex.Unlock()
 
+	lastGameOverTick := time.Now()
 	for {
 		g.restartIfNeeded()
 		if g.shouldTick() {
 			g.tick()
+		}
+		if g.gameState.GameOver != -1 {
+			if time.Now().After(lastGameOverTick.Add(time.Second)) {
+				g.gameState.SecToRestart--
+				lastGameOverTick = time.Now()
+			}
+		} else {
+			lastGameOverTick = time.Now()
 		}
 		stateMutex.Lock()
 		g.lastTick = time.Now()
@@ -203,7 +214,8 @@ func (g *GameManager) tick() {
 			if collision.Collides(bullet, base) {
 				if g.physicsManager.DamageBase(bullet, base) {
 					g.gameState.GameOver = base.TeamId
-					g.restartTime = time.Now().Add(5 * time.Second)
+					g.restartTime = time.Now().Add(time.Duration(g.gameRestart) * time.Second)
+					g.gameState.SecToRestart = g.gameRestart
 				}
 			}
 		}

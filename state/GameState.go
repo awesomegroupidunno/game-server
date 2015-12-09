@@ -33,6 +33,7 @@ type GameState struct {
 	PowerUps         []*Powerup
 	GravityWells     []*GravityWell
 	GameOver         int
+	SecToRestart	 int
 }
 
 func (g *GameState) Copy() GameState {
@@ -47,7 +48,7 @@ func (g *GameState) Copy() GameState {
 	stateCopy.Rockets = []*Rocket{}
 	stateCopy.PowerUps = []*Powerup{}
 	stateCopy.GravityWells = []*GravityWell{}
-	stateCopy.GameOver = g.GameOver
+	stateCopy.SecToRestart = g.SecToRestart
 
 	for i := 0; i < len(g.Vehicles); i++ {
 		var v Vehicle = *g.Vehicles[i]

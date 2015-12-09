@@ -54,11 +54,11 @@ func DefaultPhysics() Physics {
 		BulletWidth:                 7,
 		BulletDelay:                 100.0 * time.Millisecond,
 		BaseOffset:                  45,
-		BaseHealth:                  1000,
+		BaseHealth:                  10,
 		BaseWidth:                   40,
 		ShieldWidth:                 20,
 		ShieldOffset:                30,
-		ShieldGeneratorHealth:       400,
+		ShieldGeneratorHealth:       10,
 		BulletDamage:                8,
 		RocketDamage:                20,
 		VehicleHealth:               300,
@@ -136,7 +136,9 @@ func (p *Physics) NewGameState() state.GameState {
 		Bullets:          []*state.Bullet{},
 		Shields:          shields,
 		Rockets:          []*state.Rocket{},
-		PowerUps:         []*state.Powerup{}}
+		PowerUps:         []*state.Powerup{},
+		SecToRestart:	  -1,
+	}
 	return state
 }
 
