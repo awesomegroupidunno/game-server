@@ -62,7 +62,7 @@ func (t *PowerupCommandProcessor) fireRocket(v *state.Vehicle, g *state.GameStat
 		Point:    state.NewPoint(v.X, v.Y),
 		Sized:    state.NewSized(t.Physics.BulletWidth*3, t.Physics.BulletWidth*1.25),
 		Target:   targetedVehicle,
-		Velocity: t.Physics.BulletVelocity * .75,
+		Velocity: t.Physics.MaxVehicleVelocity * .75,
 	}
 
 	g.Rockets = append(g.Rockets, &r)
