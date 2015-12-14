@@ -349,8 +349,12 @@ func (p *Physics) VehicleBounding(v *state.Vehicle) {
 
 }
 
+var powerupsSpawned int = 0
+
 func (p *Physics) SpawnPowerup(g *state.GameState) {
 	powerupType := rand.Intn(NUM_POWERUPS) + 1
+	powerupType = (powerupsSpawned % NUM_POWERUPS) + 1
+	powerupsSpawned++
 
 	size := state.Sized{30, 30}
 
